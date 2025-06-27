@@ -1,6 +1,4 @@
 export { default as AnimatedStatusIcon } from './AnimatedStatusIcon'
 export { default as VapiWidget } from './VapiWidget'
-export { default as ConsentForm } from './ConsentForm'
-export type { VapiWidgetProps } from './VapiWidget'
-export type { ConsentFormProps } from './ConsentForm'
+export type { VapiWidgetProps } from './types'
 export type { AnimatedStatusIconProps } from './AnimatedStatusIcon' 

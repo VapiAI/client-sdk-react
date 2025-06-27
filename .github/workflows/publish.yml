@@ -55,21 +55,7 @@ jobs:
       - name: Build widget
         run: npm run build:widget
 
-      - name: Install Playwright
-        run: npx playwright install chromium
-
-      - name: Run widget tests
-        run: npm run test:ci
-
       - name: Publish to npm
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 30

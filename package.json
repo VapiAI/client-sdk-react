@@ -40,8 +40,9 @@
     "test": "npm run test:widget",
     "test:widget": "npm run build:widget && playwright test",
     "test:widget:ui": "npm run build:widget && playwright test --ui",
-    "test:serve": "serve -s . -p 3000",
-    "test:ci": "npm run build:widget && playwright test --reporter=list"
+    "test:serve": "serve -l 4200 .",
+    "test:ci": "npm run build:widget && playwright test --reporter=list",
+    "test:ci:only": "playwright test --reporter=list"
   },
   "author": {
     "name": "Vapi AI",

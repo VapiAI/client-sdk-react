@@ -171,6 +171,7 @@ function initializeWidgets() {
   });
 }
 
+// Initialize widgets when DOM is ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initializeWidgets);
 } else {
@@ -183,6 +184,9 @@ declare global {
   }
 }
 
-window.WidgetLoader = WidgetLoader;
+// Ensure WidgetLoader is exposed globally for UMD builds
+if (typeof window !== 'undefined') {
+  (window as any).WidgetLoader = WidgetLoader;
+}
 
 export default WidgetLoader;

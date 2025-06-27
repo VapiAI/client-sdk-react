@@ -10,8 +10,7 @@ test.describe('VapiWidget Embed Tests', () => {
   test('should load widget from script tag with data attributes', async ({
     page,
   }) => {
-    // Navigate to the test page
-    await page.goto('/test-widget-embed.html');
+    await page.goto('/test-widget-embed');
 
     // Wait for the widget script to load
     await page.waitForFunction(
@@ -30,7 +29,7 @@ test.describe('VapiWidget Embed Tests', () => {
         return element && (element.shadowRoot || element.children.length > 0);
       },
       '#vapi-widget-1',
-      { timeout: 5000 }
+      { timeout: 3000 }
     );
 
     // Verify the widget has created some content (React root or shadow DOM)
@@ -50,7 +49,7 @@ test.describe('VapiWidget Embed Tests', () => {
   test('should load widget from script tag with data-props JSON', async ({
     page,
   }) => {
-    await page.goto('/test-widget-embed.html');
+    await page.goto('/test-widget-embed');
 
     // Wait for the widget script to load
     await page.waitForFunction(
@@ -69,7 +68,7 @@ test.describe('VapiWidget Embed Tests', () => {
         return element && (element.shadowRoot || element.children.length > 0);
       },
       '#vapi-widget-2',
-      { timeout: 5000 }
+      { timeout: 3000 }
     );
 
     // Verify the widget has been initialized
@@ -86,9 +85,15 @@ test.describe('VapiWidget Embed Tests', () => {
   });
 
   test('should expose WidgetLoader globally', async ({ page }) => {
-    await page.goto('/test-widget-embed.html');
+    await page.goto('/test-widget-embed');
 
-    // Check if WidgetLoader is available globally
+    // Wait for WidgetLoader to be available
+    await page.waitForFunction(
+      () => typeof (window as any).WidgetLoader === 'function',
+      { timeout: 5000 }
+    );
+
+    // Verify WidgetLoader is a function
     const hasWidgetLoader = await page.evaluate(() => {
       return typeof (window as any).WidgetLoader === 'function';
     });

@@ -26,7 +26,7 @@ npm install @vapi-ai/client-sdk-react
 ### As a React Component
 
 ```tsx
-import { VapiWidget } from 'vapi-client-widget-web'
+import { VapiWidget } from 'vapi-client-widget-web';
 
 function App() {
   return (
@@ -38,7 +38,7 @@ function App() {
       theme="light"
       accentColor="#3B82F6"
     />
-  )
+  );
 }
 ```
 
@@ -47,34 +47,34 @@ function App() {
 ```html
 <!DOCTYPE html>
 <html>
-<head>
-  <script src="https://unpkg.com/@vapi-ai/client-sdk-react/dist/widget.umd.js"></script>
-</head>
-<body>
-  <!-- Option 1: Using data attributes -->
-  <div 
-    data-client-widget="VapiWidget"
-    data-public-key="your-vapi-public-key"
-    data-assistant-id="your-assistant-id"
-    data-mode="hybrid"
-    data-theme="dark"
-  ></div>
+  <head>
+    <script src="https://unpkg.com/@vapi-ai/client-sdk-react/dist/widget.umd.js"></script>
+  </head>
+  <body>
+    <!-- Option 1: Using data attributes -->
+    <div
+      data-client-widget="VapiWidget"
+      data-public-key="your-vapi-public-key"
+      data-assistant-id="your-assistant-id"
+      data-mode="hybrid"
+      data-theme="dark"
+    ></div>
 
-  <!-- Option 2: Programmatic creation -->
-  <div id="vapi-widget"></div>
-  <script>
-    new WidgetLoader({
-      container: '#vapi-widget',
-      component: 'VapiWidget',
-      props: {
-        publicKey: 'your-vapi-public-key',
-        vapiConfig: 'your-assistant-id',
-        mode: 'chat',
-        theme: 'light'
-      }
-    });
-  </script>
-</body>
+    <!-- Option 2: Programmatic creation -->
+    <div id="vapi-widget"></div>
+    <script>
+      new WidgetLoader({
+        container: '#vapi-widget',
+        component: 'VapiWidget',
+        props: {
+          publicKey: 'your-vapi-public-key',
+          vapiConfig: 'your-assistant-id',
+          mode: 'chat',
+          theme: 'light',
+        },
+      });
+    </script>
+  </body>
 </html>
 ```
 
@@ -82,45 +82,45 @@ function App() {
 
 ### Required Props
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `publicKey` | `string` | Your VAPI public API key |
+| Prop         | Type               | Description                               |
+| ------------ | ------------------ | ----------------------------------------- |
+| `publicKey`  | `string`           | Your VAPI public API key                  |
 | `vapiConfig` | `string \| object` | VAPI assistant ID or configuration object |
 
 ### Optional Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `mode` | `'voice' \| 'chat' \| 'hybrid'` | `'voice'` | Widget interaction mode |
-| `theme` | `'light' \| 'dark'` | `'light'` | Color theme |
-| `position` | `'bottom-right' \| 'bottom-left' \| 'top-right' \| 'top-left'` | `'bottom-right'` | Screen position |
-| `size` | `'tiny' \| 'compact' \| 'full'` | `'compact'` | Widget size |
-| `radius` | `'none' \| 'small' \| 'medium' \| 'large'` | `'medium'` | Border radius |
-| `apiUrl` | `string` | - | Custom API endpoint for chat mode |
-| `baseColor` | `string` | - | Main background color |
-| `accentColor` | `string` | `'#14B8A6'` | Primary accent color |
-| `buttonBaseColor` | `string` | `'#000000'` | Floating button background |
-| `buttonAccentColor` | `string` | `'#FFFFFF'` | Floating button text/icon color |
-| `mainLabel` | `string` | `'Talk with AI'` | Widget header text |
-| `startButtonText` | `string` | `'Start'` | Voice call start button text |
-| `endButtonText` | `string` | `'End Call'` | Voice call end button text |
-| `emptyVoiceMessage` | `string` | - | Message when voice mode is empty |
-| `emptyVoiceActiveMessage` | `string` | - | Message during active voice call |
-| `emptyChatMessage` | `string` | - | Message when chat is empty |
-| `emptyHybridMessage` | `string` | - | Message for hybrid mode |
-| `requireConsent` | `boolean` | `false` | Show consent form before first use |
-| `termsContent` | `string` | - | Custom consent form text |
-| `localStorageKey` | `string` | `'vapi_widget_consent'` | Key for storing consent |
-| `showTranscript` | `boolean` | `true` | Show/hide voice transcript |
+| Prop                      | Type                                                           | Default                 | Description                        |
+| ------------------------- | -------------------------------------------------------------- | ----------------------- | ---------------------------------- |
+| `mode`                    | `'voice' \| 'chat' \| 'hybrid'`                                | `'voice'`               | Widget interaction mode            |
+| `theme`                   | `'light' \| 'dark'`                                            | `'light'`               | Color theme                        |
+| `position`                | `'bottom-right' \| 'bottom-left' \| 'top-right' \| 'top-left'` | `'bottom-right'`        | Screen position                    |
+| `size`                    | `'tiny' \| 'compact' \| 'full'`                                | `'compact'`             | Widget size                        |
+| `radius`                  | `'none' \| 'small' \| 'medium' \| 'large'`                     | `'medium'`              | Border radius                      |
+| `apiUrl`                  | `string`                                                       | -                       | Custom API endpoint for chat mode  |
+| `baseColor`               | `string`                                                       | -                       | Main background color              |
+| `accentColor`             | `string`                                                       | `'#14B8A6'`             | Primary accent color               |
+| `buttonBaseColor`         | `string`                                                       | `'#000000'`             | Floating button background         |
+| `buttonAccentColor`       | `string`                                                       | `'#FFFFFF'`             | Floating button text/icon color    |
+| `mainLabel`               | `string`                                                       | `'Talk with AI'`        | Widget header text                 |
+| `startButtonText`         | `string`                                                       | `'Start'`               | Voice call start button text       |
+| `endButtonText`           | `string`                                                       | `'End Call'`            | Voice call end button text         |
+| `emptyVoiceMessage`       | `string`                                                       | -                       | Message when voice mode is empty   |
+| `emptyVoiceActiveMessage` | `string`                                                       | -                       | Message during active voice call   |
+| `emptyChatMessage`        | `string`                                                       | -                       | Message when chat is empty         |
+| `emptyHybridMessage`      | `string`                                                       | -                       | Message for hybrid mode            |
+| `requireConsent`          | `boolean`                                                      | `false`                 | Show consent form before first use |
+| `termsContent`            | `string`                                                       | -                       | Custom consent form text           |
+| `localStorageKey`         | `string`                                                       | `'vapi_widget_consent'` | Key for storing consent            |
+| `showTranscript`          | `boolean`                                                      | `true`                  | Show/hide voice transcript         |
 
 ### Event Callbacks
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `onCallStart` | `() => void` | Triggered when voice call starts |
-| `onCallEnd` | `() => void` | Triggered when voice call ends |
-| `onMessage` | `(message: any) => void` | Triggered for all messages |
-| `onError` | `(error: Error) => void` | Triggered on errors |
+| Prop          | Type                     | Description                      |
+| ------------- | ------------------------ | -------------------------------- |
+| `onCallStart` | `() => void`             | Triggered when voice call starts |
+| `onCallEnd`   | `() => void`             | Triggered when voice call ends   |
+| `onMessage`   | `(message: any) => void` | Triggered for all messages       |
+| `onError`     | `(error: Error) => void` | Triggered on errors              |
 
 ## Usage Examples
 
@@ -154,8 +154,8 @@ function App() {
 <VapiWidget
   publicKey="pk_123"
   vapiConfig={{
-    assistantId: "asst_456",
-    model: "gpt-4"
+    assistantId: 'asst_456',
+    model: 'gpt-4',
   }}
   mode="hybrid"
   requireConsent={true}
@@ -218,7 +218,7 @@ Visit <http://localhost:5173> to see the example app.
 
 ```
 vapi-client-widget-web/
-├── src/                    
+├── src/
 │   ├── components/         # React components
 │   │   ├── VapiWidget.tsx  # Main widget component
 │   │   ├── AnimatedStatusIcon.tsx

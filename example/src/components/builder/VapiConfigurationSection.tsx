@@ -1,17 +1,18 @@
-import React from 'react'
-import type { WidgetConfig } from '../../types'
+import React from 'react';
+import type { WidgetConfig } from '../../types';
 
 interface VapiConfigurationSectionProps {
-  config: WidgetConfig
-  updateConfig: (key: keyof WidgetConfig, value: any) => void
+  config: WidgetConfig;
+  updateConfig: (key: keyof WidgetConfig, value: any) => void;
 }
 
-const VapiConfigurationSection: React.FC<VapiConfigurationSectionProps> = ({ config, updateConfig }) => (
+const VapiConfigurationSection: React.FC<VapiConfigurationSectionProps> = ({
+  config,
+  updateConfig,
+}) => (
   <div className="bg-gray-50 rounded-lg p-6">
     <div className="flex items-center justify-between mb-4">
-      <h2 className="text-lg font-medium text-gray-900">
-        Vapi Configuration
-      </h2>
+      <h2 className="text-lg font-medium text-gray-900">Vapi Configuration</h2>
     </div>
     <p className="text-sm mb-6 text-gray-600">
       Configure how the widget connects to Vapi AI
@@ -21,8 +22,12 @@ const VapiConfigurationSection: React.FC<VapiConfigurationSectionProps> = ({ con
     <div className="mb-6">
       <label className="block text-sm font-medium mb-2 text-gray-700">
         Vapi Public Key
-        <svg className="w-3 h-3 inline ml-1 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+        <svg
+          className="w-3 h-3 inline ml-1 text-gray-400"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
         </svg>
       </label>
       <input
@@ -43,7 +48,9 @@ const VapiConfigurationSection: React.FC<VapiConfigurationSectionProps> = ({ con
         Configuration Type
       </label>
       <div className="grid grid-cols-1 gap-3">
-        {(['assistantId', 'assistantWithOverrides', 'assistantObject'] as const).map((type) => (
+        {(
+          ['assistantId', 'assistantWithOverrides', 'assistantObject'] as const
+        ).map((type) => (
           <div
             key={type}
             className={`p-3 rounded-lg border-2 cursor-pointer transition-all ${
@@ -57,13 +64,16 @@ const VapiConfigurationSection: React.FC<VapiConfigurationSectionProps> = ({ con
               <div>
                 <h4 className="font-medium text-gray-900">
                   {type === 'assistantId' && 'Assistant ID'}
-                  {type === 'assistantWithOverrides' && 'Assistant ID + Overrides'}
+                  {type === 'assistantWithOverrides' &&
+                    'Assistant ID + Overrides'}
                   {type === 'assistantObject' && 'Assistant Object'}
                 </h4>
                 <p className="text-sm text-gray-600">
                   {type === 'assistantId' && 'Simple assistant ID string'}
-                  {type === 'assistantWithOverrides' && 'Assistant ID with custom overrides'}
-                  {type === 'assistantObject' && 'Complete assistant configuration'}
+                  {type === 'assistantWithOverrides' &&
+                    'Assistant ID with custom overrides'}
+                  {type === 'assistantObject' &&
+                    'Complete assistant configuration'}
                 </p>
               </div>
               {config.vapiConfigType === type && (
@@ -79,7 +89,8 @@ const VapiConfigurationSection: React.FC<VapiConfigurationSectionProps> = ({ con
 
     {/* Configuration Fields */}
     <div className="space-y-4">
-      {(config.vapiConfigType === 'assistantId' || config.vapiConfigType === 'assistantWithOverrides') && (
+      {(config.vapiConfigType === 'assistantId' ||
+        config.vapiConfigType === 'assistantWithOverrides') && (
         <div>
           <label className="block text-sm font-medium mb-2 text-gray-700">
             Assistant ID
@@ -125,6 +136,6 @@ const VapiConfigurationSection: React.FC<VapiConfigurationSectionProps> = ({ con
       )}
     </div>
   </div>
-)
+);
 
-export default VapiConfigurationSection 
+export default VapiConfigurationSection;

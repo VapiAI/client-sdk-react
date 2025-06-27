@@ -1,21 +1,21 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { useVapiWidget } from '../hooks'
+import React, { useState, useEffect, useRef } from 'react';
+import { useVapiWidget } from '../hooks';
 
-import { VapiWidgetProps, ColorScheme, StyleConfig } from './types'
+import { VapiWidgetProps, ColorScheme, StyleConfig } from './types';
 
-import { sizeClasses, radiusClasses, positionClasses } from './constants'
+import { sizeClasses, radiusClasses, positionClasses } from './constants';
 
-import ConsentForm from './widget/ConsentForm'
-import FloatingButton from './widget/FloatingButton'
-import WidgetHeader from './widget/WidgetHeader'
-import VolumeIndicator from './widget/conversation/VolumeIndicator'
-import ConversationMessage from './widget/conversation/Message'
-import EmptyConversation from './widget/conversation/EmptyState'
-import VoiceControls from './widget/controls/VoiceControls'
-import ChatControls from './widget/controls/ChatControls'
-import HybridControls from './widget/controls/HybridControls'
+import ConsentForm from './widget/ConsentForm';
+import FloatingButton from './widget/FloatingButton';
+import WidgetHeader from './widget/WidgetHeader';
+import VolumeIndicator from './widget/conversation/VolumeIndicator';
+import ConversationMessage from './widget/conversation/Message';
+import EmptyConversation from './widget/conversation/EmptyState';
+import VoiceControls from './widget/controls/VoiceControls';
+import ChatControls from './widget/controls/ChatControls';
+import HybridControls from './widget/controls/HybridControls';
 
-import '../styles/animations.css'
+import '../styles/animations.css';
 
 const VapiWidget: React.FC<VapiWidgetProps> = ({
   publicKey,
@@ -44,15 +44,15 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
   onCallStart,
   onCallEnd,
   onMessage,
-  onError
+  onError,
 }) => {
-  const [isExpanded, setIsExpanded] = useState(false)
-  const [hasConsent, setHasConsent] = useState(false)
-  const [chatInput, setChatInput] = useState('')
-  
-  const conversationEndRef = useRef<HTMLDivElement>(null)
-  
-  const inputRef = useRef<HTMLInputElement>(null)
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [hasConsent, setHasConsent] = useState(false);
+  const [chatInput, setChatInput] = useState('');
+
+  const conversationEndRef = useRef<HTMLDivElement>(null);
+
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const vapi = useVapiWidget({
     mode,
@@ -62,94 +62,98 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
     onCallStart,
     onCallEnd,
     onMessage,
-    onError
-  })
+    onError,
+  });
 
   const colors: ColorScheme = {
-    baseColor: baseColor 
-      ? (theme === 'dark' && baseColor === '#FFFFFF' ? '#000000' : baseColor)
-      : (theme === 'dark' ? '#000000' : '#FFFFFF'),
+    baseColor: baseColor
+      ? theme === 'dark' && baseColor === '#FFFFFF'
+        ? '#000000'
+        : baseColor
+      : theme === 'dark'
+        ? '#000000'
+        : '#FFFFFF',
     accentColor: accentColor || '#14B8A6',
     buttonBaseColor: buttonBaseColor || '#000000',
-    buttonAccentColor: buttonAccentColor || '#FFFFFF'
-  }
+    buttonAccentColor: buttonAccentColor || '#FFFFFF',
+  };
 
-  const effectiveSize = mode !== 'voice' && size === 'tiny' ? 'compact' : size
+  const effectiveSize = mode !== 'voice' && size === 'tiny' ? 'compact' : size;
 
   const styles: StyleConfig = {
     size: effectiveSize,
     radius,
-    theme
-  }
+    theme,
+  };
 
   useEffect(() => {
     if (requireConsent) {
-      const storedConsent = localStorage.getItem(localStorageKey)
-      const hasStoredConsent = storedConsent === 'true'
-      setHasConsent(hasStoredConsent)
+      const storedConsent = localStorage.getItem(localStorageKey);
+      const hasStoredConsent = storedConsent === 'true';
+      setHasConsent(hasStoredConsent);
     } else {
-      setHasConsent(true)
+      setHasConsent(true);
     }
-  }, [requireConsent, localStorageKey])
+  }, [requireConsent, localStorageKey]);
 
   useEffect(() => {
-    conversationEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [vapi.conversation, vapi.chat.isTyping])
+    conversationEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [vapi.conversation, vapi.chat.isTyping]);
 
   useEffect(() => {
     if (isExpanded && (mode === 'chat' || mode === 'hybrid')) {
       setTimeout(() => {
-        inputRef.current?.focus()
-      }, 100)
+        inputRef.current?.focus();
+      }, 100);
     }
-  }, [isExpanded, mode])
+  }, [isExpanded, mode]);
 
   const handleConsentAgree = () => {
-    localStorage.setItem(localStorageKey, 'true')
-    setHasConsent(true)
-  }
+    localStorage.setItem(localStorageKey, 'true');
+    setHasConsent(true);
+  };
 
   const handleConsentCancel = () => {
-    setIsExpanded(false)
-  }
+    setIsExpanded(false);
+  };
 
   const handleToggleCall = async () => {
-    await vapi.voice.toggleCall()
-  }
+    await vapi.voice.toggleCall();
+  };
 
   const handleSendMessage = async () => {
-    if (!chatInput.trim()) return
-    
-    const message = chatInput.trim()
-    setChatInput('')
-    
-    await vapi.chat.sendMessage(message)
-    
-    inputRef.current?.focus()
-  }
+    if (!chatInput.trim()) return;
+
+    const message = chatInput.trim();
+    setChatInput('');
+
+    await vapi.chat.sendMessage(message);
+
+    inputRef.current?.focus();
+  };
 
   const handleChatInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    setChatInput(value)
-    vapi.chat.handleInput(value)
-  }
+    const value = e.target.value;
+    setChatInput(value);
+    vapi.chat.handleInput(value);
+  };
 
   const handleReset = () => {
-    vapi.clearConversation()
-    
+    vapi.clearConversation();
+
     if (vapi.voice.isCallActive) {
-      vapi.voice.endCall()
+      vapi.voice.endCall();
     }
-    
-    setChatInput('')
-  }
+
+    setChatInput('');
+  };
 
   // Don't allow expanded view for tiny voice mode
-  const showExpandedView = isExpanded && !(mode === 'voice' && size === 'tiny')
+  const showExpandedView = isExpanded && !(mode === 'voice' && size === 'tiny');
 
   const handleFloatingButtonClick = () => {
-    setIsExpanded(true)
-  }
+    setIsExpanded(true);
+  };
 
   return (
     <>
@@ -165,15 +169,15 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
               radius={radius}
             />
           ) : (
-            <div 
+            <div
               className={`${sizeClasses[size].expanded} ${radiusClasses[radius]} border flex flex-col overflow-hidden ${
-                styles.theme === 'dark' 
-                  ? 'shadow-2xl shadow-black/50' 
+                styles.theme === 'dark'
+                  ? 'shadow-2xl shadow-black/50'
                   : 'shadow-2xl'
               }`}
-              style={{ 
+              style={{
                 backgroundColor: colors.baseColor,
-                borderColor: styles.theme === 'dark' ? '#1F2937' : '#E5E7EB'
+                borderColor: styles.theme === 'dark' ? '#1F2937' : '#E5E7EB',
               }}
             >
               <WidgetHeader
@@ -191,27 +195,32 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
               />
 
               {/* Conversation Area */}
-              <div 
+              <div
                 className={`flex-1 p-4 overflow-y-auto ${
                   // Apply flex centering for empty states and volume indicator
-                  (vapi.conversation.length === 0 || (!showTranscript && vapi.voice.isCallActive && (mode === 'voice' || mode === 'hybrid')))
+                  vapi.conversation.length === 0 ||
+                  (!showTranscript &&
+                    vapi.voice.isCallActive &&
+                    (mode === 'voice' || mode === 'hybrid'))
                     ? 'flex items-center justify-center'
                     : 'space-y-3'
                 }`}
                 style={{
                   backgroundColor: colors.baseColor,
-                  ...(styles.theme === 'dark' 
-                    ? { filter: 'brightness(1.1)' } 
-                    : {})
+                  ...(styles.theme === 'dark'
+                    ? { filter: 'brightness(1.1)' }
+                    : {}),
                 }}
               >
-                {(showTranscript || mode === 'chat' || (mode === 'hybrid' && !vapi.voice.isCallActive)) ? (
+                {showTranscript ||
+                mode === 'chat' ||
+                (mode === 'hybrid' && !vapi.voice.isCallActive) ? (
                   <>
                     {vapi.conversation.length === 0 ? (
-                      <EmptyConversation 
-                        mode={mode} 
-                        isCallActive={vapi.voice.isCallActive} 
-                        theme={styles.theme} 
+                      <EmptyConversation
+                        mode={mode}
+                        isCallActive={vapi.voice.isCallActive}
+                        theme={styles.theme}
                         emptyVoiceMessage={emptyVoiceMessage}
                         emptyVoiceActiveMessage={emptyVoiceActiveMessage}
                         emptyChatMessage={emptyChatMessage}
@@ -228,12 +237,20 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
                                 content={message.content || ''}
                                 colors={colors}
                                 styles={styles}
-                                isLoading={index === vapi.conversation.length - 1 && message.role === 'assistant' && vapi.chat.isTyping}
+                                isLoading={
+                                  index === vapi.conversation.length - 1 &&
+                                  message.role === 'assistant' &&
+                                  vapi.chat.isTyping
+                                }
                               />
-                            )
+                            );
                           } catch (error) {
-                            console.error('Error rendering message:', error, message)
-                            return null
+                            console.error(
+                              'Error rendering message:',
+                              error,
+                              message
+                            );
+                            return null;
                           }
                         })}
                         {/* Scroll anchor */}
@@ -241,41 +258,38 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
                       </>
                     )}
                   </>
+                ) : vapi.voice.isCallActive ? (
+                  <VolumeIndicator
+                    volumeLevel={vapi.voice.volumeLevel}
+                    isCallActive={vapi.voice.isCallActive}
+                    isSpeaking={vapi.voice.isSpeaking}
+                    theme={styles.theme}
+                  />
                 ) : (
-                  vapi.voice.isCallActive ? (
-                    <VolumeIndicator
-                      volumeLevel={vapi.voice.volumeLevel}
-                      isCallActive={vapi.voice.isCallActive}
-                      isSpeaking={vapi.voice.isSpeaking}
-                      theme={styles.theme}
-                    />
-                  ) : (
-                    <EmptyConversation 
-                      mode={mode} 
-                      isCallActive={vapi.voice.isCallActive} 
-                      theme={styles.theme} 
-                      emptyVoiceMessage={emptyVoiceMessage}
-                      emptyVoiceActiveMessage={emptyVoiceActiveMessage}
-                      emptyChatMessage={emptyChatMessage}
-                      emptyHybridMessage={emptyHybridMessage}
-                    />
-                  )
+                  <EmptyConversation
+                    mode={mode}
+                    isCallActive={vapi.voice.isCallActive}
+                    theme={styles.theme}
+                    emptyVoiceMessage={emptyVoiceMessage}
+                    emptyVoiceActiveMessage={emptyVoiceActiveMessage}
+                    emptyChatMessage={emptyChatMessage}
+                    emptyHybridMessage={emptyHybridMessage}
+                  />
                 )}
               </div>
 
               {/* Controls */}
-              <div 
+              <div
                 className={`p-4 border-t ${
-                  styles.theme === 'dark' 
-                    ? 'border-gray-800' 
+                  styles.theme === 'dark'
+                    ? 'border-gray-800'
                     : 'border-gray-200'
                 }`}
-                style={{ 
+                style={{
                   backgroundColor: colors.baseColor,
-                  ...(styles.theme === 'dark' 
-                    ? { filter: 'brightness(1.05)' } 
-                    : { filter: 'brightness(0.97)' }
-                  )
+                  ...(styles.theme === 'dark'
+                    ? { filter: 'brightness(1.05)' }
+                    : { filter: 'brightness(0.97)' }),
                 }}
               >
                 {mode === 'voice' && (
@@ -336,7 +350,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
         )}
       </div>
     </>
-  )
-}
+  );
+};
 
-export default VapiWidget
+export default VapiWidget;

@@ -1,20 +1,25 @@
-import React from 'react'
-import ColorPickerInput from '../ui/ColorPickerInput'
-import type { WidgetConfig } from '../../types'
+import React from 'react';
+import ColorPickerInput from '../ui/ColorPickerInput';
+import type { WidgetConfig } from '../../types';
 
 interface AppearanceSectionProps {
-  config: WidgetConfig
-  updateConfig: (key: keyof WidgetConfig, value: any) => void
+  config: WidgetConfig;
+  updateConfig: (key: keyof WidgetConfig, value: any) => void;
 }
 
-const AppearanceSection: React.FC<AppearanceSectionProps> = ({ config, updateConfig }) => (
+const AppearanceSection: React.FC<AppearanceSectionProps> = ({
+  config,
+  updateConfig,
+}) => (
   <div className="bg-gray-50 rounded-lg p-6">
     <div className="flex items-center justify-between mb-4">
-      <h2 className="text-lg font-medium text-gray-900">
-        Appearance
-      </h2>
-      <svg className="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+      <h2 className="text-lg font-medium text-gray-900">Appearance</h2>
+      <svg
+        className="w-5 h-5 text-gray-400"
+        fill="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
       </svg>
     </div>
     <p className="text-sm mb-6 text-gray-600">
@@ -29,13 +34,13 @@ const AppearanceSection: React.FC<AppearanceSectionProps> = ({ config, updateCon
       <select
         value={config.theme}
         onChange={(e) => {
-          const newTheme = e.target.value as 'light' | 'dark'
-          updateConfig('theme', newTheme)
+          const newTheme = e.target.value as 'light' | 'dark';
+          updateConfig('theme', newTheme);
           // Automatically adjust base color based on theme
           if (newTheme === 'dark') {
-            updateConfig('baseColor', '#000000')
+            updateConfig('baseColor', '#000000');
           } else {
-            updateConfig('baseColor', '#ffffff')
+            updateConfig('baseColor', '#ffffff');
           }
         }}
         className="w-full p-2 rounded-md border bg-white border-gray-300 text-gray-900"
@@ -83,6 +88,6 @@ const AppearanceSection: React.FC<AppearanceSectionProps> = ({ config, updateCon
       </div>
     </div>
   </div>
-)
+);
 
-export default AppearanceSection 
+export default AppearanceSection;

@@ -1,28 +1,32 @@
-import React, { useState } from 'react'
-import { HexColorPicker } from 'react-colorful'
+import React, { useState } from 'react';
+import { HexColorPicker } from 'react-colorful';
 
 interface ColorPickerInputProps {
-  label: string
-  value: string
-  onChange: (color: string) => void
-  description?: string
+  label: string;
+  value: string;
+  onChange: (color: string) => void;
+  description?: string;
 }
 
-const ColorPickerInput: React.FC<ColorPickerInputProps> = ({ 
-  label, 
-  value, 
-  onChange, 
-  description 
+const ColorPickerInput: React.FC<ColorPickerInputProps> = ({
+  label,
+  value,
+  onChange,
+  description,
 }) => {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className="relative">
       <label className="block text-sm font-medium mb-2 text-gray-700">
         {label}
         {description && (
-          <svg className="w-3 h-3 inline ml-1 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+          <svg
+            className="w-3 h-3 inline ml-1 text-gray-400"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
           </svg>
         )}
       </label>
@@ -44,8 +48,8 @@ const ColorPickerInput: React.FC<ColorPickerInputProps> = ({
       {isOpen && (
         <>
           {/* Backdrop */}
-          <div 
-            className="fixed inset-0 z-40" 
+          <div
+            className="fixed inset-0 z-40"
             onClick={() => setIsOpen(false)}
           />
           {/* Color Picker Popover */}
@@ -66,7 +70,7 @@ const ColorPickerInput: React.FC<ColorPickerInputProps> = ({
         </>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default ColorPickerInput 
+export default ColorPickerInput;

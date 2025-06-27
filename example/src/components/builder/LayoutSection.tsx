@@ -1,17 +1,18 @@
-import React from 'react'
-import type { WidgetConfig } from '../../types'
+import React from 'react';
+import type { WidgetConfig } from '../../types';
 
 interface LayoutSectionProps {
-  config: WidgetConfig
-  updateConfig: (key: keyof WidgetConfig, value: any) => void
+  config: WidgetConfig;
+  updateConfig: (key: keyof WidgetConfig, value: any) => void;
 }
 
-const LayoutSection: React.FC<LayoutSectionProps> = ({ config, updateConfig }) => (
+const LayoutSection: React.FC<LayoutSectionProps> = ({
+  config,
+  updateConfig,
+}) => (
   <div className="bg-gray-50 rounded-lg p-6">
     <div className="flex items-center justify-between mb-4">
-      <h2 className="text-lg font-medium text-gray-900">
-        Layout
-      </h2>
+      <h2 className="text-lg font-medium text-gray-900">Layout</h2>
     </div>
 
     {/* Position */}
@@ -24,9 +25,14 @@ const LayoutSection: React.FC<LayoutSectionProps> = ({ config, updateConfig }) =
         onChange={(e) => updateConfig('position', e.target.value as any)}
         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors bg-white text-gray-900"
       >
-        {(['top-left', 'top-right', 'bottom-left', 'bottom-right'] as const).map((position) => (
+        {(
+          ['top-left', 'top-right', 'bottom-left', 'bottom-right'] as const
+        ).map((position) => (
           <option key={position} value={position}>
-            {position.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+            {position
+              .split('-')
+              .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+              .join(' ')}
           </option>
         ))}
       </select>
@@ -49,18 +55,18 @@ const LayoutSection: React.FC<LayoutSectionProps> = ({ config, updateConfig }) =
             onClick={() => updateConfig('radius', radius)}
           >
             <div className="flex items-center gap-3">
-              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                config.radius === radius
-                  ? 'border-teal-500'
-                  : 'border-gray-400'
-              }`}>
+              <div
+                className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                  config.radius === radius
+                    ? 'border-teal-500'
+                    : 'border-gray-400'
+                }`}
+              >
                 {config.radius === radius && (
                   <div className="w-3 h-3 bg-teal-500 rounded-full"></div>
                 )}
               </div>
-              <span className="text-sm capitalize text-gray-900">
-                {radius}
-              </span>
+              <span className="text-sm capitalize text-gray-900">{radius}</span>
             </div>
           </div>
         ))}
@@ -74,7 +80,8 @@ const LayoutSection: React.FC<LayoutSectionProps> = ({ config, updateConfig }) =
       </label>
       {config.mode !== 'voice' && (
         <p className="text-xs text-gray-500 mb-2">
-          Note: "Tiny" size only works in Voice mode. Chat and Hybrid modes will use Compact size instead.
+          Note: "Tiny" size only works in Voice mode. Chat and Hybrid modes will
+          use Compact size instead.
         </p>
       )}
       <div className="flex gap-3">
@@ -89,29 +96,28 @@ const LayoutSection: React.FC<LayoutSectionProps> = ({ config, updateConfig }) =
             onClick={() => updateConfig('size', size)}
           >
             <div className="flex items-center gap-3">
-              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                config.size === size
-                  ? 'border-teal-500'
-                  : 'border-gray-400'
-              }`}>
+              <div
+                className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                  config.size === size ? 'border-teal-500' : 'border-gray-400'
+                }`}
+              >
                 {config.size === size && (
                   <div className="w-3 h-3 bg-teal-500 rounded-full"></div>
                 )}
               </div>
-              <span className="text-sm capitalize text-gray-900">
-                {size}
-              </span>
+              <span className="text-sm capitalize text-gray-900">{size}</span>
             </div>
           </div>
         ))}
       </div>
       {config.size === 'tiny' && config.mode === 'voice' && (
         <p className="text-xs text-teal-600 mt-2">
-          In tiny voice mode, clicking the button directly starts/stops the call. The widget shows a glowing indicator during calls.
+          In tiny voice mode, clicking the button directly starts/stops the
+          call. The widget shows a glowing indicator during calls.
         </p>
       )}
     </div>
   </div>
-)
+);
 
-export default LayoutSection 
+export default LayoutSection;

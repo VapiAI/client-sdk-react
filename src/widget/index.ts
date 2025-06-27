@@ -1,97 +1,104 @@
-import React from 'react'
-import { createRoot } from 'react-dom/client'
-import '../styles/globals.css'
-import VapiWidget from '../components/VapiWidget'
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import '../styles/globals.css';
+import VapiWidget from '../components/VapiWidget';
 
 export interface WidgetConfig {
-  container: string | HTMLElement
-  component: keyof typeof COMPONENTS
-  props?: any
+  container: string | HTMLElement;
+  component: keyof typeof COMPONENTS;
+  props?: any;
 }
 
 const COMPONENTS = {
   VapiWidget,
-}
+};
 
 class WidgetLoader {
-  private root: any
-  private container: HTMLElement
+  private root: any;
+  private container: HTMLElement;
 
   constructor(config: WidgetConfig) {
     // Get container element
-    this.container = typeof config.container === 'string' 
-      ? document.querySelector(config.container) as HTMLElement
-      : config.container
+    this.container =
+      typeof config.container === 'string'
+        ? (document.querySelector(config.container) as HTMLElement)
+        : config.container;
 
     if (!this.container) {
-      throw new Error('Container element not found')
+      throw new Error('Container element not found');
     }
 
-    const Component = COMPONENTS[config.component] as any
+    const Component = COMPONENTS[config.component] as any;
     if (!Component) {
-      throw new Error(`Component "${config.component}" not found`)
+      throw new Error(`Component "${config.component}" not found`);
     }
 
     // Create root and render component
-    this.root = createRoot(this.container)
-    this.root.render(React.createElement(Component, config.props || {}))
+    this.root = createRoot(this.container);
+    this.root.render(React.createElement(Component, config.props || {}));
   }
 
   destroy() {
     if (this.root) {
-      this.root.unmount()
-      this.root = null
+      this.root.unmount();
+      this.root = null;
     }
   }
 }
 
 function kebabToCamel(str: string): string {
-  return str.replace(/-([a-z])/g, (g) => g[1].toUpperCase())
+  return str.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
 }
 
 function parseAttributeValue(value: string): any {
-  if (value === 'true') return true
-  if (value === 'false') return false
-  
+  if (value === 'true') return true;
+  if (value === 'false') return false;
+
   if (!isNaN(Number(value)) && value !== '') {
-    return Number(value)
+    return Number(value);
   }
-  
-  return value
+
+  return value;
 }
 
 function initializeWidgets() {
-  const vapiElements = document.querySelectorAll('[data-client-widget="VapiWidget"]')
+  const vapiElements = document.querySelectorAll(
+    '[data-client-widget="VapiWidget"]'
+  );
   vapiElements.forEach((element) => {
-    const htmlElement = element as HTMLElement
-    
+    const htmlElement = element as HTMLElement;
+
     // Extract props from data-props attribute (legacy support)
-    let props: any = {}
-    const propsAttr = htmlElement.getAttribute('data-props')
+    let props: any = {};
+    const propsAttr = htmlElement.getAttribute('data-props');
     if (propsAttr) {
       try {
-        props = JSON.parse(propsAttr)
+        props = JSON.parse(propsAttr);
       } catch (e) {
-        console.error('Failed to parse data-props:', e)
+        console.error('Failed to parse data-props:', e);
       }
     }
 
-    Array.from(htmlElement.attributes).forEach(attr => {
-      if (attr.name.startsWith('data-') && attr.name !== 'data-client-widget' && attr.name !== 'data-props') {
-        const propName = kebabToCamel(attr.name.replace('data-', ''))
-        props[propName] = parseAttributeValue(attr.value)
+    Array.from(htmlElement.attributes).forEach((attr) => {
+      if (
+        attr.name.startsWith('data-') &&
+        attr.name !== 'data-client-widget' &&
+        attr.name !== 'data-props'
+      ) {
+        const propName = kebabToCamel(attr.name.replace('data-', ''));
+        props[propName] = parseAttributeValue(attr.value);
       }
-    })
+    });
 
     const attributeMap: Record<string, string> = {
-      'mode': 'mode',
-      'theme': 'theme',
+      mode: 'mode',
+      theme: 'theme',
       'base-color': 'baseColor',
       'accent-color': 'accentColor',
       'button-base-color': 'buttonBaseColor',
       'button-accent-color': 'buttonAccentColor',
-      'radius': 'radius',
-      'size': 'size',
+      radius: 'radius',
+      size: 'size',
       'main-label': 'mainLabel',
       'start-button-text': 'startButtonText',
       'end-button-text': 'endButtonText',
@@ -100,54 +107,54 @@ function initializeWidgets() {
       'local-storage-key': 'localStorageKey',
       'public-key': 'publicKey',
       'assistant-id': 'assistantId',
-      'position': 'position',
-      'primary-color': 'primaryColor' // legacy support
-    }
+      position: 'position',
+      'primary-color': 'primaryColor', // legacy support
+    };
 
     Object.entries(attributeMap).forEach(([htmlAttr, propName]) => {
-      const value = htmlElement.getAttribute(htmlAttr)
+      const value = htmlElement.getAttribute(htmlAttr);
       if (value !== null) {
-        props[propName] = parseAttributeValue(value)
+        props[propName] = parseAttributeValue(value);
       }
-    })
+    });
 
     if (!props.publicKey) {
-      console.warn('VapiWidget: publicKey is required but not provided')
-      props.publicKey = 'demo-key'
+      console.warn('VapiWidget: publicKey is required but not provided');
+      props.publicKey = 'demo-key';
     }
     if (!props.assistantId) {
-      console.warn('VapiWidget: assistantId is required but not provided')
-      props.assistantId = 'demo-assistant'
+      console.warn('VapiWidget: assistantId is required but not provided');
+      props.assistantId = 'demo-assistant';
     }
 
     try {
       new WidgetLoader({
         container: htmlElement,
         component: 'VapiWidget',
-        props
-      })
+        props,
+      });
     } catch (error) {
-      console.error('Failed to initialize VapiWidget:', error)
+      console.error('Failed to initialize VapiWidget:', error);
     }
-  })
+  });
 
-  const elements = document.querySelectorAll('[data-client-widget]')
+  const elements = document.querySelectorAll('[data-client-widget]');
   elements.forEach((element) => {
-    const htmlElement = element as HTMLElement
-    const componentName = htmlElement.getAttribute('data-client-widget')
-    
+    const htmlElement = element as HTMLElement;
+    const componentName = htmlElement.getAttribute('data-client-widget');
+
     // Skip if already processed as VapiWidget
-    if (componentName === 'VapiWidget') return
-    
+    if (componentName === 'VapiWidget') return;
+
     if (componentName && componentName in COMPONENTS) {
-      const propsAttr = htmlElement.getAttribute('data-props')
-      let props = {}
-      
+      const propsAttr = htmlElement.getAttribute('data-props');
+      let props = {};
+
       if (propsAttr) {
         try {
-          props = JSON.parse(propsAttr)
+          props = JSON.parse(propsAttr);
         } catch (e) {
-          console.error('Failed to parse data-props:', e)
+          console.error('Failed to parse data-props:', e);
         }
       }
 
@@ -155,27 +162,27 @@ function initializeWidgets() {
         new WidgetLoader({
           container: htmlElement,
           component: componentName as keyof typeof COMPONENTS,
-          props
-        })
+          props,
+        });
       } catch (error) {
-        console.error(`Failed to initialize ${componentName}:`, error)
+        console.error(`Failed to initialize ${componentName}:`, error);
       }
     }
-  })
+  });
 }
 
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initializeWidgets)
+  document.addEventListener('DOMContentLoaded', initializeWidgets);
 } else {
-  initializeWidgets()
+  initializeWidgets();
 }
 
 declare global {
   interface Window {
-    WidgetLoader: typeof WidgetLoader
+    WidgetLoader: typeof WidgetLoader;
   }
 }
 
-window.WidgetLoader = WidgetLoader
+window.WidgetLoader = WidgetLoader;
 
-export default WidgetLoader 
+export default WidgetLoader;

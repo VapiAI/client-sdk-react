@@ -107,4 +107,9 @@ Thumbs.db
 *.stackdump
 
 # NPM
-package-lock.json.bak 
+package-lock.json.bak
+
+# Playwright test artifacts
+playwright-report/
+test-results/
+playwright/.cache/

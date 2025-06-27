@@ -68,51 +68,51 @@ Located at `src/components/VapiWidget.tsx`, this component handles:
 ```typescript
 interface VapiWidgetProps {
   // Required
-  publicKey: string              // VAPI public key
-  vapiConfig: any               // Flexible VAPI configuration (assistantId, assistant object, etc.)
-  
+  publicKey: string; // VAPI public key
+  vapiConfig: any; // Flexible VAPI configuration (assistantId, assistant object, etc.)
+
   // API Configuration
-  apiUrl?: string               // Optional custom API URL for chat mode
-  
+  apiUrl?: string; // Optional custom API URL for chat mode
+
   // Layout & Position
-  position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'
-  size?: 'tiny' | 'compact' | 'full'
-  radius?: 'none' | 'small' | 'medium' | 'large'
-  
+  position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
+  size?: 'tiny' | 'compact' | 'full';
+  radius?: 'none' | 'small' | 'medium' | 'large';
+
   // Mode & Theme
-  mode?: 'voice' | 'chat' | 'hybrid'  // Default: 'voice'
-  theme?: 'light' | 'dark'            // Default: 'light'
-  
+  mode?: 'voice' | 'chat' | 'hybrid'; // Default: 'voice'
+  theme?: 'light' | 'dark'; // Default: 'light'
+
   // Colors
-  baseColor?: string           // Background color
-  accentColor?: string         // Primary accent color
-  buttonBaseColor?: string     // Floating button background
-  buttonAccentColor?: string   // Floating button text/icon color
-  
+  baseColor?: string; // Background color
+  accentColor?: string; // Primary accent color
+  buttonBaseColor?: string; // Floating button background
+  buttonAccentColor?: string; // Floating button text/icon color
+
   // Text & Labels
-  mainLabel?: string           // Widget header text (default: 'Talk with AI')
-  startButtonText?: string     // Voice start button (default: 'Start')
-  endButtonText?: string       // Voice end button (default: 'End Call')
-  
+  mainLabel?: string; // Widget header text (default: 'Talk with AI')
+  startButtonText?: string; // Voice start button (default: 'Start')
+  endButtonText?: string; // Voice end button (default: 'End Call')
+
   // Empty State Messages
-  emptyVoiceMessage?: string
-  emptyVoiceActiveMessage?: string
-  emptyChatMessage?: string
-  emptyHybridMessage?: string
-  
+  emptyVoiceMessage?: string;
+  emptyVoiceActiveMessage?: string;
+  emptyChatMessage?: string;
+  emptyHybridMessage?: string;
+
   // Legal & Consent
-  requireConsent?: boolean     // Show consent form on first use
-  termsContent?: string        // Custom consent text
-  localStorageKey?: string     // Key for storing consent
-  
+  requireConsent?: boolean; // Show consent form on first use
+  termsContent?: string; // Custom consent text
+  localStorageKey?: string; // Key for storing consent
+
   // Display Options
-  showTranscript?: boolean     // Show/hide transcript in voice mode
-  
+  showTranscript?: boolean; // Show/hide transcript in voice mode
+
   // Event Handlers
-  onCallStart?: () => void
-  onCallEnd?: () => void
-  onMessage?: (message: any) => void
-  onError?: (error: Error) => void
+  onCallStart?: () => void;
+  onCallEnd?: () => void;
+  onMessage?: (message: any) => void;
+  onError?: (error: Error) => void;
 }
 ```
 
@@ -156,7 +156,7 @@ vapiConfig: {
 #### Voice Mode (Default)
 
 ```tsx
-import { VapiWidget } from 'vapi-client-widget-web'
+import { VapiWidget } from 'vapi-client-widget-web';
 
 function App() {
   return (
@@ -170,7 +170,7 @@ function App() {
       onCallStart={() => console.log('Call started')}
       onCallEnd={() => console.log('Call ended')}
     />
-  )
+  );
 }
 ```
 
@@ -193,7 +193,7 @@ function App() {
 <VapiWidget
   publicKey="your-vapi-public-key"
   vapiConfig={{
-    assistantId: "your-assistant-id",
+    assistantId: 'your-assistant-id',
     // Additional VAPI options
   }}
   mode="hybrid"
@@ -208,13 +208,13 @@ function App() {
 ```html
 <!DOCTYPE html>
 <html>
-<head>
-  <script src="./dist/widget.umd.js"></script>
-</head>
-<body>
-  <div 
-    data-client-widget="VapiWidget" 
-    data-props='{
+  <head>
+    <script src="./dist/widget.umd.js"></script>
+  </head>
+  <body>
+    <div
+      data-client-widget="VapiWidget"
+      data-props='{
       "publicKey": "your-vapi-public-key",
       "vapiConfig": "your-assistant-id",
       "mode": "hybrid",
@@ -223,8 +223,8 @@ function App() {
       "accentColor": "#10b981",
       "size": "compact"
     }'
-  ></div>
-</body>
+    ></div>
+  </body>
 </html>
 ```
 
@@ -238,15 +238,15 @@ const widget = new WidgetLoader({
     publicKey: 'your-vapi-public-key',
     vapiConfig: {
       assistantId: 'your-assistant-id',
-      model: 'gpt-4'
+      model: 'gpt-4',
     },
     mode: 'chat',
     theme: 'light',
     baseColor: '#f3f4f6',
     accentColor: '#8b5cf6',
-    size: 'full'
-  }
-})
+    size: 'full',
+  },
+});
 ```
 
 ## UI States and Behavior
@@ -257,11 +257,9 @@ const widget = new WidgetLoader({
   - Small circular button (48×48px)
   - Expands to 80×80px with red glow when active
   - Direct voice toggle without expanded view
-  
 - **Compact Mode**:
   - Pill-shaped button with icon and label
   - Shows connection status via animated icon
-  
 - **Full Mode**:
   - Larger pill button with prominent label
   - Enhanced hover effects
@@ -273,13 +271,11 @@ const widget = new WidgetLoader({
   - Dynamic status message
   - Reset button (clears conversation)
   - Close button
-  
 - **Conversation Area**:
   - Message bubbles with role distinction
   - Markdown rendering support
   - Auto-scrolling to latest message
   - Typing indicators
-  
 - **Controls Section**:
   - Voice mode: Start/End call button
   - Chat mode: Text input with send button
@@ -375,7 +371,7 @@ Hide transcript for voice-only experiences:
 ```tsx
 <VapiWidget
   mode="voice"
-  showTranscript={false}  // Shows only volume indicator
+  showTranscript={false} // Shows only volume indicator
 />
 ```
 
@@ -504,7 +500,7 @@ Enable detailed logging:
 
 ```tsx
 // Check console for detailed logs
-window.DEBUG_VAPI = true
+window.DEBUG_VAPI = true;
 ```
 
 ## Migration Guide

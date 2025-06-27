@@ -1,4 +1,4 @@
-@import '../../src/styles/globals.css'; 
+@import '../../src/styles/globals.css';
 
 @tailwind base;
 @tailwind components;
@@ -26,4 +26,4 @@
 
 .react-colorful__interactive:focus .react-colorful__pointer {
   transform: scale(1.1);
-} 
+}

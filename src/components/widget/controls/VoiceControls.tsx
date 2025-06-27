@@ -1,15 +1,15 @@
-import React from 'react'
-import { MicrophoneIcon, StopIcon } from '@phosphor-icons/react'
-import { VoiceControlsProps } from '../../types'
+import React from 'react';
+import { MicrophoneIcon, StopIcon } from '@phosphor-icons/react';
+import { VoiceControlsProps } from '../../types';
 
-const VoiceControls: React.FC<VoiceControlsProps> = ({ 
+const VoiceControls: React.FC<VoiceControlsProps> = ({
   isCallActive,
   connectionStatus,
   isAvailable,
   onToggleCall,
   startButtonText,
   endButtonText,
-  colors
+  colors,
 }) => (
   <div className="flex items-center justify-center">
     <button
@@ -17,12 +17,12 @@ const VoiceControls: React.FC<VoiceControlsProps> = ({
       disabled={!isAvailable && !isCallActive}
       className={`px-6 py-3 rounded-full font-medium transition-all flex items-center space-x-2 ${
         !isAvailable && !isCallActive
-          ? 'opacity-50 cursor-not-allowed' 
+          ? 'opacity-50 cursor-not-allowed'
           : 'hover:opacity-90 active:scale-95'
       }`}
       style={{
         backgroundColor: isCallActive ? '#ef4444' : colors.accentColor,
-        color: colors.buttonAccentColor || 'white'
+        color: colors.buttonAccentColor || 'white',
       }}
     >
       {connectionStatus === 'connecting' ? (
@@ -43,6 +43,6 @@ const VoiceControls: React.FC<VoiceControlsProps> = ({
       )}
     </button>
   </div>
-)
+);
 
-export default VoiceControls 
+export default VoiceControls;

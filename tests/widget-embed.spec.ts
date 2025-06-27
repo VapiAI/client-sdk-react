@@ -7,12 +7,17 @@ declare global {
 }
 
 test.describe('VapiWidget Embed Tests', () => {
-  test('should load widget from script tag with data attributes', async ({ page }) => {
+  test('should load widget from script tag with data attributes', async ({
+    page,
+  }) => {
     // Navigate to the test page
     await page.goto('/test-widget-embed.html');
 
     // Wait for the widget script to load
-    await page.waitForFunction(() => (window as any).WidgetLoader !== undefined, { timeout: 5000 });
+    await page.waitForFunction(
+      () => (window as any).WidgetLoader !== undefined,
+      { timeout: 5000 }
+    );
 
     // Check if widget container exists
     const widget1 = await page.locator('#vapi-widget-1');
@@ -33,16 +38,25 @@ test.describe('VapiWidget Embed Tests', () => {
       const widget = document.querySelector('#vapi-widget-1');
       if (!widget) return false;
       // Check for React root or any child elements
-      return widget.children.length > 0 || widget.shadowRoot !== null || widget.innerHTML !== '';
+      return (
+        widget.children.length > 0 ||
+        widget.shadowRoot !== null ||
+        widget.innerHTML !== ''
+      );
     });
     expect(widgetInitialized).toBe(true);
   });
 
-  test('should load widget from script tag with data-props JSON', async ({ page }) => {
+  test('should load widget from script tag with data-props JSON', async ({
+    page,
+  }) => {
     await page.goto('/test-widget-embed.html');
 
     // Wait for the widget script to load
-    await page.waitForFunction(() => (window as any).WidgetLoader !== undefined, { timeout: 5000 });
+    await page.waitForFunction(
+      () => (window as any).WidgetLoader !== undefined,
+      { timeout: 5000 }
+    );
 
     // Check if widget container exists
     const widget2 = await page.locator('#vapi-widget-2');
@@ -62,7 +76,11 @@ test.describe('VapiWidget Embed Tests', () => {
     const widgetInitialized = await page.evaluate(() => {
       const widget = document.querySelector('#vapi-widget-2');
       if (!widget) return false;
-      return widget.children.length > 0 || widget.shadowRoot !== null || widget.innerHTML !== '';
+      return (
+        widget.children.length > 0 ||
+        widget.shadowRoot !== null ||
+        widget.innerHTML !== ''
+      );
     });
     expect(widgetInitialized).toBe(true);
   });
@@ -77,12 +95,14 @@ test.describe('VapiWidget Embed Tests', () => {
     expect(hasWidgetLoader).toBe(true);
   });
 
-  test('widget builds successfully and creates necessary files', async ({ page }) => {
+  test('widget builds successfully and creates necessary files', async ({
+    page,
+  }) => {
     // Navigate to check if built files are accessible
     const styleResponse = await page.goto('/dist/style.css');
     expect(styleResponse?.status()).toBe(200);
-    
+
     const scriptResponse = await page.goto('/dist/widget.umd.js');
     expect(scriptResponse?.status()).toBe(200);
   });
-}); 
+});

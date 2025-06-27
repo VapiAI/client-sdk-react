@@ -7,7 +7,6 @@ import AnimatedStatusIconPreview from './components/AnimatedStatusIconPreview'
 import type { WidgetConfig } from './types'
 import VapiLogomark from '../logomark-primary.svg'
 
-// Import extracted components
 import NavigationTabs from './components/builder/NavigationTabs'
 import WidgetEmbedSection from './components/builder/WidgetEmbedSection'
 import ModeSection from './components/builder/ModeSection'
@@ -17,7 +16,6 @@ import TextLabelsSection from './components/builder/TextLabelsSection'
 import LegalConsentSection from './components/builder/LegalConsentSection'
 import VapiConfigurationSection from './components/builder/VapiConfigurationSection'
 
-// Main App Component
 function App() {
   const [config, setConfig] = useState<WidgetConfig>({
     mode: 'voice',
@@ -66,7 +64,6 @@ function App() {
     setConfig(prev => ({ ...prev, [key]: value }))
   }
 
-  // Generate vapiConfig based on the selected type
   const generateVapiConfig = () => {
     try {
       switch (config.vapiConfigType) {

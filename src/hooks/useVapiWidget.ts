@@ -8,7 +8,7 @@ export interface UseVapiWidgetOptions {
   mode: VapiMode
   publicKey: string
   vapiConfig: any
-  apiUrl?: string // Optional API URL override
+  apiUrl?: string
   onCallStart?: () => void
   onCallEnd?: () => void
   onMessage?: (message: any) => void
@@ -25,15 +25,11 @@ export const useVapiWidget = ({
   onMessage,
   onError
 }: UseVapiWidgetOptions) => {
-  // Track which mode is currently active (for hybrid mode)
   const [activeMode, setActiveMode] = useState<'voice' | 'chat' | null>(null)
   const [isUserTyping, setIsUserTyping] = useState(false)
   
-  // Voice conversation history (only for voice mode messages)
   const [voiceConversation, setVoiceConversation] = useState<ChatMessage[]>([])
 
-  // Extract assistantId from vapiConfig
-  // vapiConfig can be: string (assistantId), { assistantId: string }, or { assistant: { ... } }
   const getAssistantId = (): string | undefined => {
     if (typeof vapiConfig === 'string') {
       return vapiConfig
@@ -142,7 +138,6 @@ export const useVapiWidget = ({
     setIsUserTyping(false)
   }, [chat])
 
-  // Determine if each mode is available - allow smooth transitions in hybrid mode
   const isVoiceAvailable = voiceEnabled && !voice.isCallActive && !chat.isLoading
   const isChatAvailable = chatEnabled && !chat.isLoading
 

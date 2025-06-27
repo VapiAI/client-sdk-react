@@ -1,11 +1,11 @@
 export interface VapiWidgetProps {
   publicKey: string
   
-  // Vapi Configuration - Generic support for all vapi.start() patterns
+  // Vapi Configuration
   vapiConfig: any // This gets passed directly to vapi.start()
   
   // API Configuration
-  apiUrl?: string // Optional custom API URL for chat
+  apiUrl?: string
   
   // Layout & Position
   position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'
@@ -41,7 +41,7 @@ export interface VapiWidgetProps {
   // Transcript
   showTranscript?: boolean
   
-  // Legacy props (for backwards compatibility)
+  // TODO: Remove this
   primaryColor?: string
   
   // Event handlers

@@ -15,10 +15,11 @@ export interface WidgetConfig {
   termsContent: string
   localStorageKey: string
   showTranscript: boolean
+
   // Vapi Configuration
   publicKey: string
   vapiConfigType: 'assistantId' | 'assistantWithOverrides' | 'assistantObject'
   assistantId: string
   assistantOverrides: string
   assistantObject: string
-} 
+}

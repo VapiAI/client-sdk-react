@@ -1,13 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useVapiWidget } from '../hooks'
 
-// Import extracted types
 import { VapiWidgetProps, ColorScheme, StyleConfig } from './types'
 
-// Import extracted constants
 import { sizeClasses, radiusClasses, positionClasses } from './constants'
 
-// Import extracted components
 import ConsentForm from './widget/ConsentForm'
 import FloatingButton from './widget/FloatingButton'
 import WidgetHeader from './widget/WidgetHeader'
@@ -18,7 +15,6 @@ import VoiceControls from './widget/controls/VoiceControls'
 import ChatControls from './widget/controls/ChatControls'
 import HybridControls from './widget/controls/HybridControls'
 
-// Import animations
 import '../styles/animations.css'
 
 const VapiWidget: React.FC<VapiWidgetProps> = ({
@@ -54,13 +50,10 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
   const [hasConsent, setHasConsent] = useState(false)
   const [chatInput, setChatInput] = useState('')
   
-  // Ref for auto-scrolling
   const conversationEndRef = useRef<HTMLDivElement>(null)
   
-  // Ref for input field focus
   const inputRef = useRef<HTMLInputElement>(null)
 
-  // Use the new combined hook
   const vapi = useVapiWidget({
     mode,
     publicKey,
@@ -72,7 +65,6 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
     onError
   })
 
-  // Create color scheme object
   const colors: ColorScheme = {
     baseColor: baseColor 
       ? (theme === 'dark' && baseColor === '#FFFFFF' ? '#000000' : baseColor)
@@ -82,17 +74,14 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
     buttonAccentColor: buttonAccentColor || '#FFFFFF'
   }
 
-  // Adjust size for chat/hybrid modes - tiny behaves as medium
   const effectiveSize = mode !== 'voice' && size === 'tiny' ? 'compact' : size
 
-  // Create style config object
   const styles: StyleConfig = {
     size: effectiveSize,
     radius,
     theme
   }
 
-  // Check consent on mount
   useEffect(() => {
     if (requireConsent) {
       const storedConsent = localStorage.getItem(localStorageKey)
@@ -103,15 +92,12 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
     }
   }, [requireConsent, localStorageKey])
 
-  // Auto-scroll to bottom when new messages arrive or content streams
   useEffect(() => {
     conversationEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [vapi.conversation, vapi.chat.isTyping])
 
-  // Auto-focus input when widget expands in chat or hybrid mode
   useEffect(() => {
     if (isExpanded && (mode === 'chat' || mode === 'hybrid')) {
-      // Small delay to ensure the DOM is ready
       setTimeout(() => {
         inputRef.current?.focus()
       }, 100)
@@ -121,11 +107,9 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
   const handleConsentAgree = () => {
     localStorage.setItem(localStorageKey, 'true')
     setHasConsent(true)
-    // Widget will automatically show since isExpanded is already true
   }
 
   const handleConsentCancel = () => {
-    // Just close the expanded view
     setIsExpanded(false)
   }
 
@@ -136,14 +120,11 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
   const handleSendMessage = async () => {
     if (!chatInput.trim()) return
     
-    // Store the message and clear input immediately
     const message = chatInput.trim()
     setChatInput('')
     
-    // Then send the message
     await vapi.chat.sendMessage(message)
     
-    // Maintain focus on the input field
     inputRef.current?.focus()
   }
 
@@ -154,22 +135,18 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
   }
 
   const handleReset = () => {
-    // Clear all conversation history and session states
     vapi.clearConversation()
     
-    // If there's an active call, end it
     if (vapi.voice.isCallActive) {
       vapi.voice.endCall()
     }
     
-    // Clear the chat input
     setChatInput('')
   }
 
   // Don't allow expanded view for tiny voice mode
   const showExpandedView = isExpanded && !(mode === 'voice' && size === 'tiny')
 
-  // Handle floating button click
   const handleFloatingButtonClick = () => {
     setIsExpanded(true)
   }
@@ -178,7 +155,6 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
     <>
       <div className={`fixed z-[50] ${positionClasses[position]}`}>
         {showExpandedView ? (
-          // Check if we need to show consent form or the actual widget
           requireConsent && !hasConsent ? (
             <ConsentForm
               termsContent={termsContent}
@@ -189,7 +165,6 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
               radius={radius}
             />
           ) : (
-            // Expanded Widget
             <div 
               className={`${sizeClasses[size].expanded} ${radiusClasses[radius]} border flex flex-col overflow-hidden ${
                 styles.theme === 'dark' 
@@ -230,7 +205,6 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
                     : {})
                 }}
               >
-                {/* Show transcript when: showTranscript is true OR in chat mode OR in hybrid mode but voice is not active */}
                 {(showTranscript || mode === 'chat' || (mode === 'hybrid' && !vapi.voice.isCallActive)) ? (
                   <>
                     {vapi.conversation.length === 0 ? (
@@ -268,7 +242,6 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
                     )}
                   </>
                 ) : (
-                  /* Show center volume indicator when transcript is hidden and voice call is active */
                   vapi.voice.isCallActive ? (
                     <VolumeIndicator
                       volumeLevel={vapi.voice.volumeLevel}
@@ -348,7 +321,6 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
             </div>
           )
         ) : (
-          // Floating Button - Always visible
           <FloatingButton
             isCallActive={vapi.voice.isCallActive}
             connectionStatus={vapi.voice.connectionStatus}

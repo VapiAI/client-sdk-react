@@ -3,7 +3,6 @@ import react from '@vitejs/plugin-react'
 import dts from 'vite-plugin-dts'
 import { resolve } from 'path'
 
-// Configuration for building embeddable widgets
 export default defineConfig({
   plugins: [
     react(),
@@ -27,6 +26,8 @@ export default defineConfig({
         globals: {},
       },
     },
+    // Ensure all CSS is bundled into a single file for embedding
+    cssCodeSplit: false,
   },
   define: {
     'process.env.NODE_ENV': '"production"',

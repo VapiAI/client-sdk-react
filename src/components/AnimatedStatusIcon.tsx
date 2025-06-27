@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 
-// Type definitions for bar objects
 type CircularBar = {
   x: number
   y: number

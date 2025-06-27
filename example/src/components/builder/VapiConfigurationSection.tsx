@@ -17,7 +17,7 @@ const VapiConfigurationSection: React.FC<VapiConfigurationSectionProps> = ({ con
       Configure how the widget connects to Vapi AI
     </p>
 
-    {/* Public Key - Always shown first */}
+    {/* Public Key */}
     <div className="mb-6">
       <label className="block text-sm font-medium mb-2 text-gray-700">
         Vapi Public Key

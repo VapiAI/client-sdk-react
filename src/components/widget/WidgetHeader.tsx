@@ -16,7 +16,7 @@ const WidgetHeader: React.FC<WidgetHeaderProps> = ({
   colors,
   styles
 }) => {
-  // Determine the status message based on current state
+
   const getStatusMessage = () => {
     if (connectionStatus === 'connecting') return 'Connecting...'
     
@@ -26,14 +26,12 @@ const WidgetHeader: React.FC<WidgetHeaderProps> = ({
     
     if (isTyping) return 'Assistant is typing...'
     
-    // If there's an active conversation, show appropriate status
     if (hasActiveConversation) {
       if (mode === 'chat') return 'Chat active'
       if (mode === 'hybrid') return 'Ready to assist'
       return 'Connected'
     }
     
-    // No conversation yet - show how to start
     if (mode === 'voice') return 'Click the microphone to start'
     if (mode === 'chat') return 'Type a message below'
     return 'Choose voice or text'

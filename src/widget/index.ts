@@ -3,20 +3,17 @@ import { createRoot } from 'react-dom/client'
 import '../styles/globals.css'
 import VapiWidget from '../components/VapiWidget'
 
-// Widget configuration interface
 export interface WidgetConfig {
   container: string | HTMLElement
   component: keyof typeof COMPONENTS
   props?: any
 }
 
-// Available components for embedding
 const COMPONENTS = {
   VapiWidget,
 }
 
-// Widget loader class for managing embedded components
-export class WidgetLoader {
+class WidgetLoader {
   private root: any
   private container: HTMLElement
 
@@ -48,29 +45,22 @@ export class WidgetLoader {
   }
 }
 
-// Helper function to convert kebab-case to camelCase
 function kebabToCamel(str: string): string {
   return str.replace(/-([a-z])/g, (g) => g[1].toUpperCase())
 }
 
-// Helper function to parse attribute values
 function parseAttributeValue(value: string): any {
-  // Try to parse as boolean
   if (value === 'true') return true
   if (value === 'false') return false
   
-  // Try to parse as number
   if (!isNaN(Number(value)) && value !== '') {
     return Number(value)
   }
   
-  // Return as string
   return value
 }
 
-// Auto-initialize widgets on page load
 function initializeWidgets() {
-  // Initialize VAPI widgets with data attributes
   const vapiElements = document.querySelectorAll('[data-client-widget="VapiWidget"]')
   vapiElements.forEach((element) => {
     const htmlElement = element as HTMLElement
@@ -86,7 +76,6 @@ function initializeWidgets() {
       }
     }
 
-    // Extract props from individual data attributes (new approach)
     Array.from(htmlElement.attributes).forEach(attr => {
       if (attr.name.startsWith('data-') && attr.name !== 'data-client-widget' && attr.name !== 'data-props') {
         const propName = kebabToCamel(attr.name.replace('data-', ''))
@@ -94,7 +83,6 @@ function initializeWidgets() {
       }
     })
 
-    // Map HTML attributes to component props
     const attributeMap: Record<string, string> = {
       'mode': 'mode',
       'theme': 'theme',
@@ -116,7 +104,6 @@ function initializeWidgets() {
       'primary-color': 'primaryColor' // legacy support
     }
 
-    // Extract attributes directly from the element
     Object.entries(attributeMap).forEach(([htmlAttr, propName]) => {
       const value = htmlElement.getAttribute(htmlAttr)
       if (value !== null) {
@@ -124,7 +111,6 @@ function initializeWidgets() {
       }
     })
 
-    // Default values if not provided
     if (!props.publicKey) {
       console.warn('VapiWidget: publicKey is required but not provided')
       props.publicKey = 'demo-key'
@@ -145,7 +131,6 @@ function initializeWidgets() {
     }
   })
 
-  // Initialize other widgets (legacy support)
   const elements = document.querySelectorAll('[data-client-widget]')
   elements.forEach((element) => {
     const htmlElement = element as HTMLElement
@@ -179,14 +164,12 @@ function initializeWidgets() {
   })
 }
 
-// Initialize when DOM is ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initializeWidgets)
 } else {
   initializeWidgets()
 }
 
-// Make WidgetLoader available globally
 declare global {
   interface Window {
     WidgetLoader: typeof WidgetLoader

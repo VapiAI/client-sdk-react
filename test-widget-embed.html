@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VapiWidget Embed Test</title>
+    <!-- Include the widget CSS -->
+    <link rel="stylesheet" href="./dist/style.css">
+</head>
+<body>
+    <h1>VapiWidget Embed Test</h1>
+    <p>This page tests embedding the VapiWidget using static HTML.</p>
+    
+    <!-- Example 1: Using data attributes -->
+    <div id="vapi-widget-1"
+         data-client-widget="VapiWidget"
+         data-public-key="your-public-key-here"
+         data-assistant-id="your-assistant-id-here"
+         data-mode="voice"
+         data-theme="light"
+         data-position="bottom-right"
+         data-size="compact"
+         data-main-label="Talk with AI"
+         data-start-button-text="Start"
+         data-end-button-text="End Call">
+    </div>
+    
+    <!-- Example 2: Using data-props JSON -->
+    <div id="vapi-widget-2"
+         data-client-widget="VapiWidget"
+         data-props='{"publicKey":"your-public-key-here","assistantId":"your-assistant-id-here","mode":"chat","theme":"dark","position":"bottom-left"}'>
+    </div>
+    
+    <!-- Include the widget JavaScript (UMD build for HTML embedding) -->
+    <script src="./dist/widget.umd.js"></script>
+    
+    <!-- Optional: Manual initialization example -->
+    <script>
+        // The widget should auto-initialize from data attributes
+        // But you can also manually initialize if needed:
+        /*
+        window.addEventListener('DOMContentLoaded', function() {
+            if (window.WidgetLoader) {
+                new window.WidgetLoader({
+                    container: '#manual-widget',
+                    component: 'VapiWidget',
+                    props: {
+                        publicKey: 'your-public-key-here',
+                        assistantId: 'your-assistant-id-here',
+                        mode: 'hybrid',
+                        theme: 'light',
+                        position: 'bottom-right'
+                    }
+                });
+            }
+        });
+        */
+    </script>
+</body>
+</html> 

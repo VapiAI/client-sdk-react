@@ -90,7 +90,6 @@ export const useVapiChat = ({
     try {
       setIsLoading(true)
       
-      // Add user message
       const userMessage: ChatMessage = {
         role: 'user',
         content: text.trim(),
@@ -103,7 +102,6 @@ export const useVapiChat = ({
       assistantMessageIndexRef.current = null
       setIsTyping(true)
       
-      // Start streaming
       const abort = await clientRef.current.streamChat(
         {
           input: text.trim(),
@@ -111,7 +109,6 @@ export const useVapiChat = ({
           sessionId,  // Use current sessionId if available
           stream: true
         },
-        // On chunk callback
         (chunk) => {
           // Update sessionId if provided in response
           if (chunk.sessionId && chunk.sessionId !== sessionId) {
@@ -122,23 +119,19 @@ export const useVapiChat = ({
           if (content) {
             currentAssistantMessageRef.current += content
             
-            // Update the assistant message in real-time
             setMessages(prev => {
               const newMessages = [...prev]
               
               // Check if we already have an assistant message index for this stream
               if (assistantMessageIndexRef.current !== null && assistantMessageIndexRef.current < newMessages.length) {
-                // Update existing message by creating a new object
                 const existingMessage = newMessages[assistantMessageIndexRef.current]
                 if (existingMessage && existingMessage.role === 'assistant') {
-                  // Create a new message object to trigger React re-render
                   newMessages[assistantMessageIndexRef.current] = {
                     ...existingMessage,
                     content: currentAssistantMessageRef.current
                   }
                 }
               } else {
-                // Create new assistant message and track its index
                 assistantMessageIndexRef.current = newMessages.length
                 newMessages.push({
                   role: 'assistant',

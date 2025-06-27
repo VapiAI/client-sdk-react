@@ -3,12 +3,10 @@ import ReactMarkdown from 'react-markdown'
 import { ConversationMessageProps, MarkdownMessageProps } from '../../types'
 import { messageRadiusClasses } from '../../constants'
 
-// Markdown message renderer component
 const MarkdownMessage: React.FC<MarkdownMessageProps> = ({ content, isLoading, role }) => (
   <div className="markdown-content">
     <ReactMarkdown
       components={{
-        // Style markdown elements to fit the chat bubble design
         p: ({children}) => <p className="mb-1 last:mb-0">{children}</p>,
         ul: ({children}) => <ul className="list-disc list-inside mb-1 last:mb-0">{children}</ul>,
         ol: ({children}) => <ol className="list-decimal list-inside mb-1 last:mb-0">{children}</ol>,

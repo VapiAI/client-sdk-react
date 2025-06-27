@@ -1,4 +1,3 @@
-// Utility functions for the library
 
 export const classNames = (...classes: (string | undefined | null | false)[]): string => {
   return classes.filter(Boolean).join(' ')
@@ -29,5 +28,4 @@ export const generateId = (): string => {
   return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
 }
 
-// Export Vapi chat client utilities
 export * from './vapiChatClient'

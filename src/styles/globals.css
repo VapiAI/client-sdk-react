@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom base styles for the library */
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+}

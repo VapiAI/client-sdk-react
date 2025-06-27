@@ -1,0 +1,87 @@
+{
+  "name": "client-sdk-react",
+  "description": "Vapi Client React SDK",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./widget": {
+      "import": "./dist/widget.js",
+      "require": "./dist/widget.cjs",
+      "types": "./dist/widget.d.ts"
+    }
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "build:widget": "vite build --config vite.widget.config.ts",
+    "build:all": "npm run build && npm run build:widget",
+    "preview": "vite preview",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "type-check": "tsc --noEmit",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": {
+    "name": "Vapi AI",
+    "url": "https://vapi.ai"
+  },
+  "contributors": [
+    {
+      "name": "ramsrib",
+      "url": "https://github.com/ramsrib"
+    }
+  ],
+  "homepage": "https://github.com/VapiAI/client-sdk-react#readme",
+  "repository": "https://github.com/VapiAI/client-sdk-react",
+  "bugs": {
+    "url": "https://github.com/VapiAI/client-sdk-react/issues"
+  },
+  "keywords": [
+    "vapi",
+    "react",
+    "components",
+    "widget",
+    "embeddable",
+    "library"
+  ],
+  "license": "ISC",
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "@typescript-eslint/eslint-plugin": "^7.2.0",
+    "@typescript-eslint/parser": "^7.2.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.19",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.6",
+    "postcss": "^8.4.38",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tailwindcss": "^3.4.4",
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0",
+    "vite-plugin-dts": "^3.9.1"
+  },
+  "dependencies": {
+    "@microsoft/fetch-event-source": "^2.0.1",
+    "@phosphor-icons/react": "^2.1.10",
+    "@vapi-ai/web": "^2.3.7",
+    "react-colorful": "^5.6.1",
+    "react-markdown": "^10.1.0"
+  }
+}

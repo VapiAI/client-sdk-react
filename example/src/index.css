@@ -1,0 +1,29 @@
+@import '../../src/styles/globals.css'; 
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles for react-colorful color picker */
+.react-colorful {
+  width: 200px;
+  height: 150px;
+}
+
+.react-colorful__saturation {
+  border-radius: 8px 8px 0 0;
+}
+
+.react-colorful__hue {
+  height: 24px;
+  border-radius: 0 0 8px 8px;
+}
+
+.react-colorful__pointer {
+  width: 18px;
+  height: 18px;
+}
+
+.react-colorful__interactive:focus .react-colorful__pointer {
+  transform: scale(1.1);
+} 

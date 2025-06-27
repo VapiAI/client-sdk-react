@@ -22,7 +22,8 @@
     }
   },
   "scripts": {
-    "dev": "vite",
+    "dev": "cd example && npm run dev",
+    "dev:widget": "vite",
     "build": "tsc && vite build",
     "build:widget": "vite build --config vite.widget.config.ts",
     "build:all": "npm run build && npm run build:widget",

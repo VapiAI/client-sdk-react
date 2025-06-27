@@ -1,5 +1,7 @@
 # VAPI Client React SDK
 
+> ⚠️ **Beta Version**: This library is currently in beta. APIs may change and some features might be unstable. Use with caution in production environments.
+
 A modern React component library with embeddable voice and chat widgets built with Vite, TypeScript, and Tailwind CSS. Featuring seamless VAPI AI integration for voice conversations.
 
 ## Features

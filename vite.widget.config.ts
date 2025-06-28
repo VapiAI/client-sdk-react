@@ -9,11 +9,11 @@ export default defineConfig({
     dts({
       insertTypesEntry: true,
       include: ['src/widget/**/*'],
-      outDir: 'dist',
+      outDir: 'dist/embed',
     }),
   ],
   build: {
-    outDir: 'dist',
+    outDir: 'dist/embed',
     lib: {
       entry: resolve(__dirname, 'src/widget/index.ts'),
       name: 'WidgetLoader',

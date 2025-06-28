@@ -20,9 +20,9 @@
       "types": "./dist/index.d.ts"
     },
     "./widget": {
-      "import": "./dist/widget.js",
-      "require": "./dist/widget.cjs",
-      "types": "./dist/widget.d.ts"
+      "import": "./dist/embed/widget.js",
+      "require": "./dist/embed/widget.cjs",
+      "types": "./dist/embed/index.d.ts"
     }
   },
   "scripts": {

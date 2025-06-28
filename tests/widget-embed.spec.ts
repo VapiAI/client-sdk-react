@@ -104,10 +104,10 @@ test.describe('VapiWidget Embed Tests', () => {
     page,
   }) => {
     // Navigate to check if built files are accessible
-    const styleResponse = await page.goto('/dist/style.css');
+    const styleResponse = await page.goto('/dist/embed/style.css');
     expect(styleResponse?.status()).toBe(200);
 
-    const scriptResponse = await page.goto('/dist/widget.umd.js');
+    const scriptResponse = await page.goto('/dist/embed/widget.umd.js');
     expect(scriptResponse?.status()).toBe(200);
   });
 });

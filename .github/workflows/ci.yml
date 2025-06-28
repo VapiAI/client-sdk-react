@@ -104,8 +104,8 @@ jobs:
         with:
           name: widget-build
           path: |
-            dist/widget.*
-            dist/style.css
+            dist/embed/widget.*
+            dist/embed/style.css
           retention-days: 1
 
   test-widget:
@@ -127,15 +127,17 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: widget-build
-          path: dist/
+          path: dist/embed/
 
       - name: Verify downloaded files
         run: |
           echo "Contents of dist directory:"
           ls -la dist/
+          echo "Contents of dist/embed directory:"
+          ls -la dist/embed/
           echo "Checking for required files..."
-          test -f dist/widget.umd.js || (echo "widget.umd.js not found!" && exit 1)
-          test -f dist/style.css || (echo "style.css not found!" && exit 1)
+          test -f dist/embed/widget.umd.js || (echo "widget.umd.js not found!" && exit 1)
+          test -f dist/embed/style.css || (echo "style.css not found!" && exit 1)
           echo "Contents of root directory:"
           ls -la
           echo "Checking test-widget-embed.html exists:"

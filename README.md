@@ -1,4 +1,4 @@
-# VAPI Client React SDK
+# VAPI React Client SDK
 
 > ⚠️ **Beta Version**: This library is currently in beta. APIs may change and some features might be unstable. Use with caution in production environments.
 

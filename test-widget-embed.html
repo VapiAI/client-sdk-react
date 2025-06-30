@@ -1,40 +1,69 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VapiWidget Embed Test</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VapiWidget Embed Test</title>
-</head>
+  <body>
+    <h1>VapiWidget Embed Test</h1>
+    <p>This page tests embedding the VapiWidget using static HTML.</p>
 
-<body>
-  <h1>VapiWidget Embed Test</h1>
-  <p>This page tests embedding the VapiWidget using static HTML.</p>
+    <!-- Example 1: Using data attributes -->
+    <div
+      id="vapi-widget-1"
+      data-client-widget="VapiWidget"
+      data-public-key="your-public-key-here"
+      data-assistant-id="your-assistant-id-here"
+      data-mode="voice"
+      data-theme="light"
+      data-position="bottom-right"
+      data-size="compact"
+      data-main-label="Talk with AI"
+      data-start-button-text="Start"
+      data-end-button-text="End Call"
+    ></div>
 
-  <!-- Example 1: Using data attributes -->
-  <div id="vapi-widget-1" data-client-widget="VapiWidget" data-public-key="your-public-key-here"
-    data-assistant-id="your-assistant-id-here" data-mode="voice" data-theme="light" data-position="bottom-right"
-    data-size="compact" data-main-label="Talk with AI" data-start-button-text="Start" data-end-button-text="End Call">
-  </div>
+    <!-- Example 2: Using data-props JSON -->
+    <div
+      id="vapi-widget-2"
+      data-client-widget="VapiWidget"
+      data-props='{"publicKey":"your-public-key-here","assistantId":"your-assistant-id-here","mode":"chat","theme":"dark","position":"bottom-left"}'
+    ></div>
 
-  <!-- Example 2: Using data-props JSON -->
-  <div id="vapi-widget-2" data-client-widget="VapiWidget"
-    data-props='{"publicKey":"your-public-key-here","assistantId":"your-assistant-id-here","mode":"chat","theme":"dark","position":"bottom-left"}'>
-  </div>
+    <!-- Example 3: Using <vapi-widget> custom element -->
+    <vapi-widget
+      mode="voice"
+      theme="light"
+      base-color="#ffffff"
+      accent-color="#14B8A6"
+      button-base-color="#000000"
+      button-accent-color="#ffffff"
+      radius="large"
+      size="full"
+      position="top-right"
+      main-label="TALK WITH AI"
+      start-button-text="Start"
+      end-button-text="End Call"
+      require-consent="true"
+      local-storage-key="vapi_widget_consent"
+      show-transcript="true"
+      public-key="your-public-key-here"
+      assistant-id="your-assistant-id-here"
+    ></vapi-widget>
 
-  <!-- Example 3: Using <vapi-widget> custom element -->
-  <vapi-widget mode="voice" theme="light" base-color="#ffffff" accent-color="#14B8A6" button-base-color="#000000"
-    button-accent-color="#ffffff" radius="large" size="full" position="top-right" main-label="TALK WITH AI"
-    start-button-text="Start" end-button-text="End Call" require-consent="true" local-storage-key="vapi_widget_consent"
-    show-transcript="true" public-key="your-public-key-here" assistant-id="your-assistant-id-here"></vapi-widget>
+    <script
+      src="./dist/embed/widget.umd.js"
+      async
+      type="text/javascript"
+    ></script>
 
-  <script src="./dist/embed/widget.umd.js" async type="text/javascript"></script>
-
-  <!-- Optional: Manual initialization example -->
-  <script>
-    // The widget should auto-initialize from data attributes
-    // But you can also manually initialize if needed:
-    /*
+    <!-- Optional: Manual initialization example -->
+    <script>
+      // The widget should auto-initialize from data attributes
+      // But you can also manually initialize if needed:
+      /*
       window.addEventListener('DOMContentLoaded', function() {
           if (window.WidgetLoader) {
               new window.WidgetLoader({
@@ -51,7 +80,6 @@
           }
       });
       */
-  </script>
-</body>
-
+    </script>
+  </body>
 </html>

@@ -105,7 +105,6 @@ jobs:
           name: widget-build
           path: |
             dist/embed/widget.*
-            dist/embed/style.css
           retention-days: 1
 
   test-widget:
@@ -137,7 +136,6 @@ jobs:
           ls -la dist/embed/
           echo "Checking for required files..."
           test -f dist/embed/widget.umd.js || (echo "widget.umd.js not found!" && exit 1)
-          test -f dist/embed/style.css || (echo "style.css not found!" && exit 1)
           echo "Contents of root directory:"
           ls -la
           echo "Checking test-widget-embed.html exists:"

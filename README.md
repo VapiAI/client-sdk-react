@@ -23,57 +23,22 @@ npm install @vapi-ai/client-sdk-react
 
 ## Quick Start
 
-### As a React Component
-
-```tsx
-import { VapiWidget } from 'vapi-client-widget-web';
-
-function App() {
-  return (
-    <VapiWidget
-      publicKey="your-vapi-public-key"
-      vapiConfig="your-assistant-id"
-      mode="hybrid"
-      position="bottom-right"
-      theme="light"
-      accentColor="#3B82F6"
-    />
-  );
-}
-```
-
-### As an Embedded Widget
+The simplest way to add the widget to your website:
 
 ```html
 <!DOCTYPE html>
 <html>
   <head>
-    <script src="https://unpkg.com/@vapi-ai/client-sdk-react/dist/widget.umd.js"></script>
+    <script src="https://unpkg.com/@vapi-ai/client-sdk-react/dist/embed/widget.umd.js"></script>
   </head>
   <body>
-    <!-- Option 1: Using data attributes -->
-    <div
-      data-client-widget="VapiWidget"
-      data-public-key="your-vapi-public-key"
-      data-assistant-id="your-assistant-id"
-      data-mode="hybrid"
-      data-theme="dark"
-    ></div>
-
-    <!-- Option 2: Programmatic creation -->
-    <div id="vapi-widget"></div>
-    <script>
-      new WidgetLoader({
-        container: '#vapi-widget',
-        component: 'VapiWidget',
-        props: {
-          publicKey: 'your-vapi-public-key',
-          vapiConfig: 'your-assistant-id',
-          mode: 'chat',
-          theme: 'light',
-        },
-      });
-    </script>
+    <vapi-widget
+      public-key="your-vapi-public-key"
+      assistant-id="your-assistant-id"
+      mode="chat"
+      theme="light"
+      size="full"
+    ></vapi-widget>
   </body>
 </html>
 ```
@@ -94,7 +59,7 @@ function App() {
 | `mode`                    | `'voice' \| 'chat' \| 'hybrid'`                                | `'voice'`               | Widget interaction mode            |
 | `theme`                   | `'light' \| 'dark'`                                            | `'light'`               | Color theme                        |
 | `position`                | `'bottom-right' \| 'bottom-left' \| 'top-right' \| 'top-left'` | `'bottom-right'`        | Screen position                    |
-| `size`                    | `'tiny' \| 'compact' \| 'full'`                                | `'compact'`             | Widget size                        |
+| `size`                    | `'tiny' \| 'compact' \| 'full'`                                | `'full'`                | Widget size                        |
 | `radius`                  | `'none' \| 'small' \| 'medium' \| 'large'`                     | `'medium'`              | Border radius                      |
 | `apiUrl`                  | `string`                                                       | -                       | Custom API endpoint for chat mode  |
 | `baseColor`               | `string`                                                       | -                       | Main background color              |
@@ -121,6 +86,96 @@ function App() {
 | `onCallEnd`   | `() => void`             | Triggered when voice call ends   |
 | `onMessage`   | `(message: any) => void` | Triggered for all messages       |
 | `onError`     | `(error: Error) => void` | Triggered on errors              |
+
+## React Component Usage
+
+If you're using React, you can import and use the widget as a component:
+
+```tsx
+import { VapiWidget } from '@vapi-ai/client-sdk-react';
+
+function App() {
+  return (
+    <VapiWidget
+      publicKey="your-vapi-public-key"
+      vapiConfig="your-assistant-id"
+      mode="hybrid"
+      position="bottom-right"
+      theme="light"
+      accentColor="#3B82F6"
+    />
+  );
+}
+```
+
+## Embedding Methods
+
+### 1. Data Attributes
+
+The simplest way to embed the widget using HTML data attributes:
+
+```html
+<div
+  data-client-widget="VapiWidget"
+  data-public-key="pk_123"
+  data-assistant-id="asst_456"
+  data-mode="voice"
+  data-theme="dark"
+  data-size="compact"
+></div>
+```
+
+### 2. JSON Props
+
+Pass complex configuration using JSON in the `data-props` attribute:
+
+```html
+<div
+  data-client-widget="VapiWidget"
+  data-props='{
+    "publicKey": "pk_123",
+    "assistantId": "asst_456",
+    "mode": "hybrid",
+    "theme": "light",
+    "accentColor": "#3B82F6",
+    "requireConsent": true
+  }'
+></div>
+```
+
+### 3. Custom Element
+
+Use the widget as a custom HTML element with kebab-case attributes:
+
+```html
+<vapi-widget
+  public-key="pk_123"
+  assistant-id="asst_456"
+  mode="chat"
+  theme="dark"
+  accent-color="#8B5CF6"
+  require-consent="true"
+></vapi-widget>
+```
+
+### 4. Programmatic
+
+Create widgets dynamically with JavaScript:
+
+```html
+<div id="my-widget"></div>
+<script>
+  new WidgetLoader({
+    container: '#my-widget',
+    component: 'VapiWidget',
+    props: {
+      publicKey: 'pk_123',
+      vapiConfig: 'asst_456',
+      mode: 'hybrid',
+    },
+  });
+</script>
+```
 
 ## Usage Examples
 
@@ -217,7 +272,7 @@ Visit <http://localhost:5173> to see the example app.
 ## Project Structure
 
 ```
-vapi-client-widget-web/
+@vapi-ai/client-sdk-react/
 ├── src/
 │   ├── components/         # React components
 │   │   ├── VapiWidget.tsx  # Main widget component

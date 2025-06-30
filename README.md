@@ -110,42 +110,9 @@ function App() {
 
 ## Embedding Methods
 
-### 1. Data Attributes
+### 1. Custom Element (Recommended)
 
-The simplest way to embed the widget using HTML data attributes:
-
-```html
-<div
-  data-client-widget="VapiWidget"
-  data-public-key="pk_123"
-  data-assistant-id="asst_456"
-  data-mode="voice"
-  data-theme="dark"
-  data-size="compact"
-></div>
-```
-
-### 2. JSON Props
-
-Pass complex configuration using JSON in the `data-props` attribute:
-
-```html
-<div
-  data-client-widget="VapiWidget"
-  data-props='{
-    "publicKey": "pk_123",
-    "assistantId": "asst_456",
-    "mode": "hybrid",
-    "theme": "light",
-    "accentColor": "#3B82F6",
-    "requireConsent": true
-  }'
-></div>
-```
-
-### 3. Custom Element
-
-Use the widget as a custom HTML element with kebab-case attributes:
+Use the widget as a custom HTML element with kebab-case attributes - the cleanest and most modern approach:
 
 ```html
 <vapi-widget
@@ -158,23 +125,19 @@ Use the widget as a custom HTML element with kebab-case attributes:
 ></vapi-widget>
 ```
 
-### 4. Programmatic
+### 2. Data Attributes
 
-Create widgets dynamically with JavaScript:
+Use this approach if your environment doesn't support custom elements or for better compatibility with older systems:
 
 ```html
-<div id="my-widget"></div>
-<script>
-  new WidgetLoader({
-    container: '#my-widget',
-    component: 'VapiWidget',
-    props: {
-      publicKey: 'pk_123',
-      vapiConfig: 'asst_456',
-      mode: 'hybrid',
-    },
-  });
-</script>
+<div
+  data-client-widget="VapiWidget"
+  data-public-key="pk_123"
+  data-assistant-id="asst_456"
+  data-mode="voice"
+  data-theme="dark"
+  data-size="compact"
+></div>
 ```
 
 ## Usage Examples
@@ -269,31 +232,6 @@ npm run dev
 
 Visit <http://localhost:5173> to see the example app.
 
-## Project Structure
-
-```
-@vapi-ai/client-sdk-react/
-├── src/
-│   ├── components/         # React components
-│   │   ├── VapiWidget.tsx  # Main widget component
-│   │   ├── AnimatedStatusIcon.tsx
-│   │   └── ConsentForm.tsx
-│   ├── hooks/              # Custom React hooks
-│   │   ├── useVapiWidget.ts
-│   │   ├── useVapiCall.ts
-│   │   └── useVapiChat.ts
-│   ├── widget/             # Widget loader for embedding
-│   │   └── index.ts        # WidgetLoader class
-│   ├── styles/             # Global styles
-│   └── utils/              # Utility functions
-├── example/                # Example application
-├── dist/                   # Built files
-│   ├── index.js           # React library (ES)
-│   ├── index.cjs          # React library (CommonJS)
-│   └── widget.umd.js      # Embeddable widget
-└── docs/                   # Documentation
-```
-
 ## Browser Support
 
 - Chrome/Edge 79+
@@ -306,10 +244,6 @@ Visit <http://localhost:5173> to see the example app.
 - Microphone access for voice mode
 - HTTPS required in production
 - VAPI account and API key
-
-## License
-
-ISC
 
 ## Contributing
 

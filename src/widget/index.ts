@@ -138,6 +138,63 @@ function initializeWidgets() {
     }
   });
 
+  const customVapiElements = document.querySelectorAll('vapi-widget');
+  customVapiElements.forEach((element) => {
+    const htmlElement = element as HTMLElement;
+    const props: any = {};
+
+    const attributeMap: Record<string, string> = {
+      mode: 'mode',
+      theme: 'theme',
+      'base-color': 'baseColor',
+      'accent-color': 'accentColor',
+      'button-base-color': 'buttonBaseColor',
+      'button-accent-color': 'buttonAccentColor',
+      radius: 'radius',
+      size: 'size',
+      'main-label': 'mainLabel',
+      'start-button-text': 'startButtonText',
+      'end-button-text': 'endButtonText',
+      'require-consent': 'requireConsent',
+      'terms-content': 'termsContent',
+      'local-storage-key': 'localStorageKey',
+      'show-transcript': 'showTranscript',
+      'public-key': 'publicKey',
+      'assistant-id': 'assistantId',
+      position: 'position',
+      'primary-color': 'primaryColor', // legacy support
+    };
+
+    Object.entries(attributeMap).forEach(([htmlAttr, propName]) => {
+      const value = htmlElement.getAttribute(htmlAttr);
+      if (value !== null) {
+        props[propName] = parseAttributeValue(value);
+      }
+    });
+
+    if (!props.publicKey) {
+      console.warn('VapiWidget: publicKey is required but not provided');
+      props.publicKey = 'demo-key';
+    }
+    if (!props.assistantId) {
+      console.warn('VapiWidget: assistantId is required but not provided');
+      props.assistantId = 'demo-assistant';
+    }
+
+    try {
+      new WidgetLoader({
+        container: htmlElement,
+        component: 'VapiWidget',
+        props,
+      });
+    } catch (error) {
+      console.error(
+        'Failed to initialize VapiWidget from custom element:',
+        error
+      );
+    }
+  });
+
   const elements = document.querySelectorAll('[data-client-widget]');
   elements.forEach((element) => {
     const htmlElement = element as HTMLElement;

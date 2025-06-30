@@ -84,6 +84,43 @@ test.describe('VapiWidget Embed Tests', () => {
     expect(widgetInitialized).toBe(true);
   });
 
+  test('should load widget from vapi-widget custom element', async ({
+    page,
+  }) => {
+    await page.goto('/test-widget-embed');
+
+    // Wait for the widget script to load
+    await page.waitForFunction(
+      () => (window as any).WidgetLoader !== undefined,
+      { timeout: 5000 }
+    );
+
+    // Check if custom element exists
+    const customWidget = await page.locator('vapi-widget');
+    await expect(customWidget).toBeAttached();
+
+    // Wait for widget initialization
+    await page.waitForFunction(
+      () => {
+        const element = document.querySelector('vapi-widget');
+        return element && (element.shadowRoot || element.children.length > 0);
+      },
+      { timeout: 3000 }
+    );
+
+    // Verify the custom element has been initialized
+    const widgetInitialized = await page.evaluate(() => {
+      const widget = document.querySelector('vapi-widget');
+      if (!widget) return false;
+      return (
+        widget.children.length > 0 ||
+        widget.shadowRoot !== null ||
+        widget.innerHTML !== ''
+      );
+    });
+    expect(widgetInitialized).toBe(true);
+  });
+
   test('should expose WidgetLoader globally', async ({ page }) => {
     await page.goto('/test-widget-embed');
 
@@ -100,14 +137,34 @@ test.describe('VapiWidget Embed Tests', () => {
     expect(hasWidgetLoader).toBe(true);
   });
 
-  test('widget builds successfully and creates necessary files', async ({
+  test('widget builds successfully with CSS inlined in JavaScript', async ({
     page,
   }) => {
-    // Navigate to check if built files are accessible
-    const styleResponse = await page.goto('/dist/embed/style.css');
-    expect(styleResponse?.status()).toBe(200);
+    // Simply verify that the widget JavaScript file is accessible
+    const response = await page.request.get('/dist/embed/widget.umd.js');
+    expect(response.status()).toBe(200);
 
-    const scriptResponse = await page.goto('/dist/embed/widget.umd.js');
-    expect(scriptResponse?.status()).toBe(200);
+    // Verify it's a substantial file (CSS is inlined)
+    const scriptContent = await response.text();
+    expect(scriptContent.length).toBeGreaterThan(500000); // Should be large with inlined CSS
+  });
+
+  test('should automatically inject CSS styles when widget loads', async ({
+    page,
+  }) => {
+    await page.goto('/test-widget-embed');
+
+    // Wait for the widget script to load
+    await page.waitForFunction(
+      () => (window as any).WidgetLoader !== undefined,
+      { timeout: 5000 }
+    );
+
+    // Check if any style elements exist (CSS should be injected)
+    const hasStyleElements = await page.evaluate(() => {
+      return document.querySelectorAll('style').length > 0;
+    });
+
+    expect(hasStyleElements).toBe(true);
   });
 });

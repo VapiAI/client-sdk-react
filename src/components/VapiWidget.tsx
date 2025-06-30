@@ -22,7 +22,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
   vapiConfig,
   apiUrl,
   position = 'bottom-right',
-  size = 'compact',
+  size = 'full',
   radius = 'medium',
   mode = 'voice',
   theme = 'light',

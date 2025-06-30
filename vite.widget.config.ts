@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import dts from 'vite-plugin-dts';
 import { resolve } from 'path';
+import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 
 export default defineConfig({
   plugins: [
@@ -11,6 +12,8 @@ export default defineConfig({
       include: ['src/widget/**/*'],
       outDir: 'dist/embed',
     }),
+    // Inject CSS into JS for single-file widget
+    cssInjectedByJsPlugin(),
   ],
   build: {
     outDir: 'dist/embed',
@@ -27,7 +30,6 @@ export default defineConfig({
         globals: {},
       },
     },
-    // Ensure all CSS is bundled into a single file for embedding
     cssCodeSplit: false,
   },
   define: {

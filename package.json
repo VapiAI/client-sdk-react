@@ -21,7 +21,8 @@
     "./widget": {
       "import": "./dist/embed/widget.js",
       "require": "./dist/embed/widget.cjs"
-    }
+    },
+    "./styles": "./dist/client-sdk-react.css"
   },
   "scripts": {
     "dev": "cd example && npm run dev",

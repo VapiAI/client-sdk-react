@@ -38,32 +38,21 @@ function App() {
     showTranscript: true,
     // Vapi Configuration
     publicKey: import.meta.env.VITE_VAPI_API_KEY || 'your-vapi-public-key',
-    vapiConfigType: 'assistantId',
     assistantId: import.meta.env.VITE_VAPI_ASSISTANT_ID || 'demo-assistant-id',
-    assistantOverrides: JSON.stringify(
-      {
-        variableValues: { name: 'John' },
+    assistantOverrides: {
+      variableValues: { name: 'John' },
+    },
+    assistant: {
+      model: {
+        provider: 'openai',
+        model: 'gpt-4o-mini',
+        messages: [{ role: 'system', content: 'You are a helpful assistant.' }],
       },
-      null,
-      2
-    ),
-    assistantObject: JSON.stringify(
-      {
-        model: {
-          provider: 'openai',
-          model: 'gpt-4o-mini',
-          messages: [
-            { role: 'system', content: 'You are a helpful assistant.' },
-          ],
-        },
-        voice: {
-          provider: '11labs',
-          voiceId: 'burt',
-        },
+      voice: {
+        provider: '11labs',
+        voiceId: 'burt',
       },
-      null,
-      2
-    ),
+    },
   });
 
   const [copied, setCopied] = useState(false);
@@ -71,27 +60,6 @@ function App() {
 
   const updateConfig = (key: keyof WidgetConfig, value: any) => {
     setConfig((prev) => ({ ...prev, [key]: value }));
-  };
-
-  const generateVapiConfig = () => {
-    try {
-      switch (config.vapiConfigType) {
-        case 'assistantId':
-          return config.assistantId;
-        case 'assistantWithOverrides':
-          return {
-            assistantId: config.assistantId,
-            assistantOverrides: JSON.parse(config.assistantOverrides),
-          };
-        case 'assistantObject':
-          return JSON.parse(config.assistantObject);
-        default:
-          return config.assistantId;
-      }
-    } catch (error) {
-      console.error('Invalid JSON in vapi config:', error);
-      return config.assistantId; // Fallback
-    }
   };
 
   const generateEmbedCode = () => {
@@ -198,16 +166,15 @@ function App() {
             </div>
 
             {/* Preview Panel */}
-            <WidgetPreview
-              config={config}
-              generateVapiConfig={generateVapiConfig}
-            />
+            <WidgetPreview config={config} />
           </div>
 
           {/* Live Widget - Only show for widget view */}
           <VapiWidget
             publicKey={config.publicKey}
-            vapiConfig={generateVapiConfig()}
+            assistantId={config.assistantId}
+            assistantOverrides={config.assistantOverrides}
+            assistant={config.assistant}
             position={config.position}
             mode={config.mode}
             theme={config.theme}

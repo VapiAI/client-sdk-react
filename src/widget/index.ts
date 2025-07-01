@@ -93,28 +93,38 @@ function initializeWidgets() {
     const attributeMap: Record<string, string> = {
       mode: 'mode',
       theme: 'theme',
+      radius: 'radius',
+      size: 'size',
+      position: 'position',
       'base-color': 'baseColor',
       'accent-color': 'accentColor',
       'button-base-color': 'buttonBaseColor',
       'button-accent-color': 'buttonAccentColor',
-      radius: 'radius',
-      size: 'size',
       'main-label': 'mainLabel',
       'start-button-text': 'startButtonText',
       'end-button-text': 'endButtonText',
       'require-consent': 'requireConsent',
       'terms-content': 'termsContent',
       'local-storage-key': 'localStorageKey',
+      // Vapi Configuration
       'public-key': 'publicKey',
       'assistant-id': 'assistantId',
-      position: 'position',
-      'primary-color': 'primaryColor', // legacy support
+      'assistant-overrides': 'assistantOverrides',
+      assistant: 'assistant',
     };
 
     Object.entries(attributeMap).forEach(([htmlAttr, propName]) => {
       const value = htmlElement.getAttribute(htmlAttr);
       if (value !== null) {
-        props[propName] = parseAttributeValue(value);
+        if (propName === 'assistantOverrides' || propName === 'assistant') {
+          try {
+            props[propName] = JSON.parse(value);
+          } catch (e) {
+            console.warn(`Failed to parse ${htmlAttr} JSON:`, e);
+          }
+        } else {
+          props[propName] = parseAttributeValue(value);
+        }
       }
     });
 
@@ -146,12 +156,13 @@ function initializeWidgets() {
     const attributeMap: Record<string, string> = {
       mode: 'mode',
       theme: 'theme',
+      radius: 'radius',
+      size: 'size',
+      position: 'position',
       'base-color': 'baseColor',
       'accent-color': 'accentColor',
       'button-base-color': 'buttonBaseColor',
       'button-accent-color': 'buttonAccentColor',
-      radius: 'radius',
-      size: 'size',
       'main-label': 'mainLabel',
       'start-button-text': 'startButtonText',
       'end-button-text': 'endButtonText',
@@ -159,16 +170,25 @@ function initializeWidgets() {
       'terms-content': 'termsContent',
       'local-storage-key': 'localStorageKey',
       'show-transcript': 'showTranscript',
+      // Vapi Configuration
       'public-key': 'publicKey',
       'assistant-id': 'assistantId',
-      position: 'position',
-      'primary-color': 'primaryColor', // legacy support
+      'assistant-overrides': 'assistantOverrides',
+      assistant: 'assistant',
     };
 
     Object.entries(attributeMap).forEach(([htmlAttr, propName]) => {
       const value = htmlElement.getAttribute(htmlAttr);
       if (value !== null) {
-        props[propName] = parseAttributeValue(value);
+        if (propName === 'assistantOverrides' || propName === 'assistant') {
+          try {
+            props[propName] = JSON.parse(value);
+          } catch (e) {
+            console.warn(`Failed to parse ${htmlAttr} JSON:`, e);
+          }
+        } else {
+          props[propName] = parseAttributeValue(value);
+        }
       }
     });
 

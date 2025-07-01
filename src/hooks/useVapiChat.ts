@@ -2,6 +2,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import {
   VapiChatClient,
   extractContentFromPath,
+  AssistantOverrides,
 } from '../utils/vapiChatClient';
 
 export interface ChatMessage {
@@ -26,6 +27,7 @@ export interface UseVapiChatOptions {
   enabled?: boolean;
   publicKey?: string;
   assistantId?: string;
+  assistantOverrides?: AssistantOverrides;
   apiUrl?: string;
   sessionId?: string;
   onMessage?: (message: ChatMessage) => void;
@@ -36,6 +38,7 @@ export const useVapiChat = ({
   enabled = true,
   publicKey,
   assistantId,
+  assistantOverrides,
   apiUrl,
   sessionId: initialSessionId,
   onMessage,
@@ -118,7 +121,8 @@ export const useVapiChat = ({
           {
             input: text.trim(),
             assistantId,
-            sessionId, // Use current sessionId if available
+            assistantOverrides,
+            sessionId,
             stream: true,
           },
           (chunk) => {
@@ -195,7 +199,16 @@ export const useVapiChat = ({
         setIsLoading(false);
       }
     },
-    [enabled, publicKey, assistantId, sessionId, addMessage, onError, onMessage]
+    [
+      enabled,
+      publicKey,
+      assistantId,
+      assistantOverrides,
+      sessionId,
+      addMessage,
+      onError,
+      onMessage,
+    ]
   );
 
   const clearMessages = useCallback(() => {

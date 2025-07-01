@@ -4,13 +4,9 @@ import type { WidgetConfig } from '../types';
 
 interface WidgetPreviewProps {
   config: WidgetConfig;
-  generateVapiConfig: () => any;
 }
 
-const WidgetPreview: React.FC<WidgetPreviewProps> = ({
-  config,
-  generateVapiConfig,
-}) => {
+const WidgetPreview: React.FC<WidgetPreviewProps> = ({ config }) => {
   const [showPreview, setShowPreview] = useState(false);
 
   return (
@@ -72,7 +68,9 @@ const WidgetPreview: React.FC<WidgetPreviewProps> = ({
                 `}</style>
                 <VapiWidget
                   publicKey={config.publicKey}
-                  vapiConfig={generateVapiConfig()}
+                  assistantId={config.assistantId}
+                  assistantOverrides={config.assistantOverrides}
+                  assistant={config.assistant}
                   position={config.position}
                   mode={config.mode}
                   theme={config.theme}
@@ -142,9 +140,9 @@ const WidgetPreview: React.FC<WidgetPreviewProps> = ({
                 </span>
               </div>
               <div className="flex justify-between py-1">
-                <span className="text-gray-600">Vapi Config:</span>
-                <span className="font-medium capitalize">
-                  {config.vapiConfigType.replace(/([A-Z])/g, ' $1')}
+                <span className="text-gray-600">Assistant ID:</span>
+                <span className="font-medium font-mono text-xs">
+                  {config.assistantId || 'Not set'}
                 </span>
               </div>
             </div>

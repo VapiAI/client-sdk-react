@@ -17,9 +17,13 @@ export interface WidgetConfig {
   showTranscript: boolean;
 
   // Vapi Configuration
+  apiUrl?: string;
   publicKey: string;
-  vapiConfigType: 'assistantId' | 'assistantWithOverrides' | 'assistantObject';
-  assistantId: string;
-  assistantOverrides: string;
-  assistantObject: string;
+  assistantId?: string;
+  assistantOverrides?: {
+    variableValues?: {
+      [key: string]: string;
+    };
+  };
+  assistant?: any;
 }

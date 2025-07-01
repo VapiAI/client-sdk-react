@@ -1,8 +1,15 @@
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 
+export interface AssistantOverrides {
+  variableValues?: {
+    [key: string]: string;
+  };
+}
+
 export interface VapiChatMessage {
   input: string;
   assistantId: string;
+  assistantOverrides?: AssistantOverrides;
   sessionId?: string;
   stream?: boolean;
 }

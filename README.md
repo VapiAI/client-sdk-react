@@ -47,16 +47,25 @@ The simplest way to add the widget to your website:
 
 ### Required Props
 
-| Prop         | Type               | Description                               |
-| ------------ | ------------------ | ----------------------------------------- |
-| `publicKey`  | `string`           | Your VAPI public API key                  |
-| `vapiConfig` | `string \| object` | VAPI assistant ID or configuration object |
+| Prop        | Type     | Description              |
+| ----------- | -------- | ------------------------ |
+| `publicKey` | `string` | Your VAPI public API key |
+
+### VAPI Configuration Props
+
+| Prop                 | Type     | Description                                            |
+| -------------------- | -------- | ------------------------------------------------------ |
+| `assistantId`        | `string` | VAPI assistant ID (supported by both voice and chat)   |
+| `assistant`          | `object` | Full assistant configuration object (voice only)       |
+| `assistantOverrides` | `object` | Assistant overrides (supported by both voice and chat) |
+
+> **Note**: You must provide at least one of `assistantId`, `assistant`, or both `assistantId` and `assistantOverrides`.
 
 ### Optional Props
 
 | Prop                      | Type                                                           | Default                 | Description                        |
 | ------------------------- | -------------------------------------------------------------- | ----------------------- | ---------------------------------- |
-| `mode`                    | `'voice' \| 'chat' \| 'hybrid'`                                | `'voice'`               | Widget interaction mode            |
+| `mode`                    | `'voice' \| 'chat' \| 'hybrid'`                                | `'chat'`                | Widget interaction mode            |
 | `theme`                   | `'light' \| 'dark'`                                            | `'light'`               | Color theme                        |
 | `position`                | `'bottom-right' \| 'bottom-left' \| 'top-right' \| 'top-left'` | `'bottom-right'`        | Screen position                    |
 | `size`                    | `'tiny' \| 'compact' \| 'full'`                                | `'full'`                | Widget size                        |
@@ -98,7 +107,7 @@ function App() {
   return (
     <VapiWidget
       publicKey="your-vapi-public-key"
-      vapiConfig="your-assistant-id"
+      assistantId="your-assistant-id"
       mode="hybrid"
       position="bottom-right"
       theme="light"
@@ -147,7 +156,7 @@ Use this approach if your environment doesn't support custom elements or for bet
 ```tsx
 <VapiWidget
   publicKey="pk_123"
-  vapiConfig="asst_456"
+  assistantId="asst_456"
   mode="voice"
   size="tiny"
   showTranscript={false}
@@ -159,21 +168,21 @@ Use this approach if your environment doesn't support custom elements or for bet
 ```tsx
 <VapiWidget
   publicKey="pk_123"
-  vapiConfig="asst_456"
+  assistantId="asst_456"
   mode="chat"
   theme="dark"
   accentColor="#8B5CF6"
 />
 ```
 
-### Hybrid Mode with Consent
+### Hybrid Mode with Assistant Overrides
 
 ```tsx
 <VapiWidget
   publicKey="pk_123"
-  vapiConfig={{
-    assistantId: 'asst_456',
-    model: 'gpt-4',
+  assistantId="asst_456"
+  assistantOverrides={{
+    variableValues: { name: 'John' },
   }}
   mode="hybrid"
   requireConsent={true}
@@ -182,12 +191,33 @@ Use this approach if your environment doesn't support custom elements or for bet
 />
 ```
 
+### Voice-Only with Full Assistant Object
+
+```tsx
+<VapiWidget
+  publicKey="pk_123"
+  assistant={{
+    model: {
+      provider: 'openai',
+      model: 'gpt-4o-mini',
+      messages: [{ role: 'system', content: 'You are a helpful assistant.' }],
+    },
+    voice: {
+      provider: '11labs',
+      voiceId: 'burt',
+    },
+  }}
+  mode="voice"
+  size="full"
+/>
+```
+
 ### Custom Styling
 
 ```tsx
 <VapiWidget
   publicKey="pk_123"
-  vapiConfig="asst_456"
+  assistantId="asst_456"
   baseColor="#1a1a1a"
   accentColor="#ff6b6b"
   buttonBaseColor="#2a2a2a"

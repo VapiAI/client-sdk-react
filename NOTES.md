@@ -69,7 +69,11 @@ Located at `src/components/VapiWidget.tsx`, this component handles:
 interface VapiWidgetProps {
   // Required
   publicKey: string; // VAPI public key
-  vapiConfig: any; // Flexible VAPI configuration (assistantId, assistant object, etc.)
+
+  // VAPI Configuration (provide at least one)
+  assistantId?: string; // VAPI assistant ID (supported by both voice and chat)
+  assistant?: any; // Full assistant object (voice only)
+  assistantOverrides?: any; // Assistant overrides (supported by both voice and chat)
 
   // API Configuration
   apiUrl?: string; // Optional custom API URL for chat mode
@@ -129,23 +133,32 @@ The widget manages several state variables:
 
 ### VAPI Integration
 
-The widget uses a flexible `vapiConfig` prop that supports:
+The widget supports three types of VAPI configuration:
 
 ```typescript
-// Simple assistant ID
-vapiConfig: "assistant-id"
+// Simple assistant ID (supports both voice and chat)
+assistantId: "assistant-id"
 
-// Assistant configuration object
-vapiConfig: {
-  assistantId: "assistant-id",
-  // ... other VAPI options
+// Assistant with overrides (supports both voice and chat)
+assistantId: "assistant-id"
+assistantOverrides: {
+  variableValues: { name: 'John' },
 }
 
-// Inline assistant definition
-vapiConfig: {
-  assistant: {
-    // ... full assistant configuration
+// Full assistant object (voice only)
+assistant: {
+  model: {
+    provider: 'openai',
+    model: 'gpt-4o-mini',
+    messages: [
+      { role: 'system', content: 'You are a helpful assistant.' }
+    ]
+  },
+  voice: {
+    provider: '11labs',
+    voiceId: 'burt'
   }
+  // ... full assistant configuration
 }
 ```
 
@@ -162,7 +175,7 @@ function App() {
   return (
     <VapiWidget
       publicKey="your-vapi-public-key"
-      vapiConfig="your-assistant-id"
+      assistantId="your-assistant-id"
       position="bottom-right"
       theme="light"
       accentColor="#3B82F6"
@@ -179,7 +192,7 @@ function App() {
 ```tsx
 <VapiWidget
   publicKey="your-vapi-public-key"
-  vapiConfig="your-assistant-id"
+  assistantId="your-assistant-id"
   mode="chat"
   theme="dark"
   size="full"
@@ -187,19 +200,40 @@ function App() {
 />
 ```
 
-#### Hybrid Mode
+#### Hybrid Mode with Assistant Overrides
 
 ```tsx
 <VapiWidget
   publicKey="your-vapi-public-key"
-  vapiConfig={{
-    assistantId: 'your-assistant-id',
-    // Additional VAPI options
+  assistantId="your-assistant-id"
+  assistantOverrides={{
+    variableValues: { name: 'John' },
   }}
   mode="hybrid"
   showTranscript={true}
   requireConsent={true}
   termsContent="Custom terms and conditions..."
+/>
+```
+
+#### Voice Mode with Full Assistant Object
+
+```tsx
+<VapiWidget
+  publicKey="your-vapi-public-key"
+  assistant={{
+    model: {
+      provider: 'openai',
+      model: 'gpt-4o-mini',
+      messages: [{ role: 'system', content: 'You are a helpful assistant.' }],
+    },
+    voice: {
+      provider: '11labs',
+      voiceId: 'burt',
+    },
+  }}
+  mode="voice"
+  size="full"
 />
 ```
 
@@ -216,7 +250,7 @@ function App() {
       data-client-widget="VapiWidget"
       data-props='{
       "publicKey": "your-vapi-public-key",
-      "vapiConfig": "your-assistant-id",
+      "assistantId": "your-assistant-id",
       "mode": "hybrid",
       "position": "bottom-right",
       "theme": "dark",
@@ -236,8 +270,8 @@ const widget = new WidgetLoader({
   component: 'VapiWidget',
   props: {
     publicKey: 'your-vapi-public-key',
-    vapiConfig: {
-      assistantId: 'your-assistant-id',
+    assistantId: 'your-assistant-id',
+    assistantOverrides: {
       model: 'gpt-4',
     },
     mode: 'chat',
@@ -456,13 +490,13 @@ Test different configurations:
 
 ```tsx
 // Test voice mode
-<VapiWidget publicKey="..." vapiConfig="..." mode="voice" />
+<VapiWidget publicKey="..." assistantId="..." mode="voice" />
 
 // Test chat mode
-<VapiWidget publicKey="..." vapiConfig="..." mode="chat" />
+<VapiWidget publicKey="..." assistantId="..." mode="chat" />
 
 // Test hybrid mode
-<VapiWidget publicKey="..." vapiConfig="..." mode="hybrid" />
+<VapiWidget publicKey="..." assistantId="..." mode="hybrid" />
 ```
 
 ## Troubleshooting
@@ -502,12 +536,3 @@ Enable detailed logging:
 // Check console for detailed logs
 window.DEBUG_VAPI = true;
 ```
-
-## Migration Guide
-
-If upgrading from an older version:
-
-1. Replace `assistantId` prop with `vapiConfig`
-2. Update size values: `sm` → `compact`, `md` → `compact`, `lg` → `full`
-3. Update color prop: `primaryColor` → `accentColor`
-4. Add `mode` prop if using chat or hybrid functionality

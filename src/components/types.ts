@@ -1,11 +1,12 @@
 export interface VapiWidgetProps {
-  publicKey: string;
-
-  // Vapi Configuration
-  vapiConfig: any; // This gets passed directly to vapi.start()
-
   // API Configuration
   apiUrl?: string;
+
+  // Vapi Configuration
+  publicKey: string;
+  assistantId?: string; // Supported by both voice and chat
+  assistant?: any; // Full assistant object - voice only
+  assistantOverrides?: any; // Assistant overrides - supported by both voice and chat
 
   // Layout & Position
   position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
@@ -40,9 +41,6 @@ export interface VapiWidgetProps {
 
   // Transcript
   showTranscript?: boolean;
-
-  // TODO: Remove this
-  primaryColor?: string;
 
   // Event handlers
   onCallStart?: () => void;

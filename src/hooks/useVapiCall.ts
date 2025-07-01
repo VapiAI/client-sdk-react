@@ -16,7 +16,8 @@ export interface VapiCallHandlers {
 
 export interface UseVapiCallOptions {
   publicKey: string;
-  vapiConfig: any;
+  callOptions: any;
+  apiUrl?: string;
   enabled?: boolean;
   onCallStart?: () => void;
   onCallEnd?: () => void;
@@ -31,7 +32,8 @@ export interface UseVapiCallOptions {
 
 export const useVapiCall = ({
   publicKey,
-  vapiConfig,
+  callOptions,
+  apiUrl,
   enabled = true,
   onCallStart,
   onCallEnd,
@@ -39,8 +41,9 @@ export const useVapiCall = ({
   onError,
   onTranscript,
 }: UseVapiCallOptions): VapiCallState & VapiCallHandlers => {
-  // Create Vapi instance once, just like the working example
-  const [vapi] = useState(() => (publicKey ? new Vapi(publicKey) : null));
+  const [vapi] = useState(() =>
+    publicKey ? new Vapi(publicKey, apiUrl) : null
+  );
 
   const [isCallActive, setIsCallActive] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -49,7 +52,6 @@ export const useVapiCall = ({
     'disconnected' | 'connecting' | 'connected'
   >('disconnected');
 
-  // Store latest callbacks in a ref to avoid stale closures
   const callbacksRef = useRef({
     onCallStart,
     onCallEnd,
@@ -67,13 +69,11 @@ export const useVapiCall = ({
     };
   });
 
-  // Set up event listeners with proper cleanup
   useEffect(() => {
     if (!vapi) return;
 
     console.log('Setting up Vapi event listeners');
 
-    // Define event handlers so we can remove them later
     const handleCallStart = () => {
       console.log('Call started');
       setIsCallActive(true);
@@ -107,7 +107,6 @@ export const useVapiCall = ({
     const handleMessage = (message: any) => {
       console.log('Received message:', message);
 
-      // Handle transcripts - matching the working example
       if (message.type === 'transcript' && message.transcriptType === 'final') {
         if (message.role === 'user' || message.role === 'assistant') {
           callbacksRef.current.onTranscript?.({
@@ -118,7 +117,6 @@ export const useVapiCall = ({
         }
       }
 
-      // Pass through all messages
       callbacksRef.current.onMessage?.(message);
     };
 
@@ -130,7 +128,6 @@ export const useVapiCall = ({
       callbacksRef.current.onError?.(error);
     };
 
-    // Add event listeners
     vapi.on('call-start', handleCallStart);
     vapi.on('call-end', handleCallEnd);
     vapi.on('speech-start', handleSpeechStart);
@@ -139,7 +136,6 @@ export const useVapiCall = ({
     vapi.on('message', handleMessage);
     vapi.on('error', handleError);
 
-    // Cleanup - remove all listeners
     return () => {
       console.log('Cleaning up Vapi event listeners');
       vapi.removeListener('call-start', handleCallStart);
@@ -150,9 +146,8 @@ export const useVapiCall = ({
       vapi.removeListener('message', handleMessage);
       vapi.removeListener('error', handleError);
     };
-  }, [vapi]); // Only depend on vapi instance
+  }, [vapi]);
 
-  // Cleanup Vapi instance on unmount
   useEffect(() => {
     return () => {
       if (vapi) {
@@ -169,15 +164,15 @@ export const useVapiCall = ({
     }
 
     try {
-      console.log('Starting call with config:', vapiConfig);
+      console.log('Starting call with options:', callOptions);
       setConnectionStatus('connecting');
-      await vapi.start(vapiConfig);
+      await vapi.start(callOptions);
     } catch (error) {
       console.error('Error starting call:', error);
       setConnectionStatus('disconnected');
       callbacksRef.current.onError?.(error as Error);
     }
-  }, [vapi, vapiConfig, enabled]);
+  }, [vapi, callOptions, enabled]);
 
   const endCall = useCallback(async () => {
     if (!vapi) {

@@ -1,3 +1,6 @@
+// Import global styles
+import './styles/globals.css';
+
 // Main library exports
 export { default as VapiWidget } from './components/VapiWidget';
 

@@ -1,13 +1,16 @@
 import { useState, useCallback } from 'react';
 import { useVapiCall, UseVapiCallOptions } from './useVapiCall';
 import { useVapiChat, UseVapiChatOptions, ChatMessage } from './useVapiChat';
+import { AssistantOverrides } from '../utils/vapiChatClient';
 
 export type VapiMode = 'voice' | 'chat' | 'hybrid';
 
 export interface UseVapiWidgetOptions {
   mode: VapiMode;
   publicKey: string;
-  vapiConfig: any;
+  assistantId?: string;
+  assistant?: any;
+  assistantOverrides?: AssistantOverrides;
   apiUrl?: string;
   onCallStart?: () => void;
   onCallEnd?: () => void;
@@ -18,7 +21,9 @@ export interface UseVapiWidgetOptions {
 export const useVapiWidget = ({
   mode,
   publicKey,
-  vapiConfig,
+  assistantId,
+  assistant,
+  assistantOverrides,
   apiUrl,
   onCallStart,
   onCallEnd,
@@ -30,24 +35,29 @@ export const useVapiWidget = ({
 
   const [voiceConversation, setVoiceConversation] = useState<ChatMessage[]>([]);
 
-  const getAssistantId = (): string | undefined => {
-    if (typeof vapiConfig === 'string') {
-      return vapiConfig;
+  const buildCallOptions = (): any => {
+    // Priority: assistant object > assistantId with overrides > assistantId alone
+    if (assistant) {
+      return assistant;
     }
-    if (vapiConfig?.assistantId) {
-      return vapiConfig.assistantId;
+    if (assistantId) {
+      if (assistantOverrides) {
+        return {
+          assistantId,
+          assistantOverrides,
+        };
+      }
+      return assistantId;
     }
-    // If using inline assistant config, we might not have an ID
     return undefined;
   };
-
-  const assistantId = getAssistantId();
 
   // Voice call hook - only enabled in voice or hybrid mode
   const voiceEnabled = mode === 'voice' || mode === 'hybrid';
   const voice = useVapiCall({
     publicKey,
-    vapiConfig,
+    callOptions: buildCallOptions(),
+    apiUrl,
     enabled: voiceEnabled,
     onCallStart: () => {
       // In hybrid mode, clear all conversations when starting voice
@@ -75,12 +85,13 @@ export const useVapiWidget = ({
     },
   } as UseVapiCallOptions);
 
-  // Chat hook - only enabled in chat or hybrid mode
+  // Chat only supports assistantId and assistantOverrides
   const chatEnabled = mode === 'chat' || mode === 'hybrid';
   const chat = useVapiChat({
     enabled: chatEnabled,
     publicKey: chatEnabled ? publicKey : undefined,
     assistantId: chatEnabled ? assistantId : undefined,
+    assistantOverrides: chatEnabled ? assistantOverrides : undefined,
     apiUrl,
     onMessage, // Keep the callback for external notifications
     onError,
@@ -134,7 +145,6 @@ export const useVapiWidget = ({
     await voice.toggleCall();
   }, [mode, voice, chat]);
 
-  // Clear conversation
   const clearConversation = useCallback(() => {
     setVoiceConversation([]);
     chat.clearMessages();

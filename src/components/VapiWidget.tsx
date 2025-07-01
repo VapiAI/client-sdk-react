@@ -3,7 +3,7 @@ import { useVapiWidget } from '../hooks';
 
 import { VapiWidgetProps, ColorScheme, StyleConfig } from './types';
 
-import { sizeClasses, radiusClasses, positionClasses } from './constants';
+import { sizeStyles, radiusStyles, positionStyles } from './constants';
 
 import ConsentForm from './widget/ConsentForm';
 import FloatingButton from './widget/FloatingButton';
@@ -19,12 +19,14 @@ import '../styles/animations.css';
 
 const VapiWidget: React.FC<VapiWidgetProps> = ({
   publicKey,
-  vapiConfig,
+  assistantId,
+  assistant,
+  assistantOverrides,
   apiUrl,
   position = 'bottom-right',
   size = 'full',
   radius = 'medium',
-  mode = 'voice',
+  mode = 'chat',
   theme = 'light',
   baseColor,
   accentColor,
@@ -57,7 +59,9 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
   const vapi = useVapiWidget({
     mode,
     publicKey,
-    vapiConfig,
+    assistantId,
+    assistant,
+    assistantOverrides,
     apiUrl,
     onCallStart,
     onCallEnd,
@@ -155,9 +159,48 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
     setIsExpanded(true);
   };
 
+  const expandedWidgetStyle: React.CSSProperties = {
+    ...sizeStyles[size].expanded,
+    ...radiusStyles[radius],
+    backgroundColor: colors.baseColor,
+    borderColor: styles.theme === 'dark' ? '#1F2937' : '#E5E7EB',
+    border: '1px solid',
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden',
+    boxShadow:
+      styles.theme === 'dark'
+        ? '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+        : '0 25px 50px -12px rgb(0 0 0 / 0.25)',
+  };
+
+  const conversationAreaStyle: React.CSSProperties = {
+    flex: '1 1 0%',
+    padding: '1rem',
+    overflowY: 'auto',
+    backgroundColor: colors.baseColor,
+    ...(styles.theme === 'dark' ? { filter: 'brightness(1.1)' } : {}),
+  };
+
+  const controlsAreaStyle: React.CSSProperties = {
+    padding: '1rem',
+    borderTop: '1px solid',
+    borderTopColor: styles.theme === 'dark' ? '#1F2937' : '#E5E7EB',
+    backgroundColor: colors.baseColor,
+    ...(styles.theme === 'dark'
+      ? { filter: 'brightness(1.05)' }
+      : { filter: 'brightness(0.97)' }),
+  };
+
   return (
-    <>
-      <div className={`fixed z-[50] ${positionClasses[position]}`}>
+    <div className="vapi-widget-wrapper">
+      <div
+        style={{
+          position: 'fixed',
+          zIndex: 9999,
+          ...positionStyles[position],
+        }}
+      >
         {showExpandedView ? (
           requireConsent && !hasConsent ? (
             <ConsentForm
@@ -169,17 +212,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
               radius={radius}
             />
           ) : (
-            <div
-              className={`${sizeClasses[size].expanded} ${radiusClasses[radius]} border flex flex-col overflow-hidden ${
-                styles.theme === 'dark'
-                  ? 'shadow-2xl shadow-black/50'
-                  : 'shadow-2xl'
-              }`}
-              style={{
-                backgroundColor: colors.baseColor,
-                borderColor: styles.theme === 'dark' ? '#1F2937' : '#E5E7EB',
-              }}
-            >
+            <div style={expandedWidgetStyle}>
               <WidgetHeader
                 mode={mode}
                 connectionStatus={vapi.voice.connectionStatus}
@@ -196,20 +229,22 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
 
               {/* Conversation Area */}
               <div
-                className={`flex-1 p-4 overflow-y-auto ${
-                  // Apply flex centering for empty states and volume indicator
-                  vapi.conversation.length === 0 ||
+                style={{
+                  ...conversationAreaStyle,
+                  ...(vapi.conversation.length === 0 ||
                   (!showTranscript &&
                     vapi.voice.isCallActive &&
                     (mode === 'voice' || mode === 'hybrid'))
-                    ? 'flex items-center justify-center'
-                    : 'space-y-3'
-                }`}
-                style={{
-                  backgroundColor: colors.baseColor,
-                  ...(styles.theme === 'dark'
-                    ? { filter: 'brightness(1.1)' }
-                    : {}),
+                    ? {
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }
+                    : {
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.75rem', // space-y-3
+                      }),
                 }}
               >
                 {showTranscript ||
@@ -279,19 +314,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
               </div>
 
               {/* Controls */}
-              <div
-                className={`p-4 border-t ${
-                  styles.theme === 'dark'
-                    ? 'border-gray-800'
-                    : 'border-gray-200'
-                }`}
-                style={{
-                  backgroundColor: colors.baseColor,
-                  ...(styles.theme === 'dark'
-                    ? { filter: 'brightness(1.05)' }
-                    : { filter: 'brightness(0.97)' }),
-                }}
-              >
+              <div style={controlsAreaStyle}>
                 {mode === 'voice' && (
                   <VoiceControls
                     isCallActive={vapi.voice.isCallActive}
@@ -349,7 +372,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
           />
         )}
       </div>
-    </>
+    </div>
   );
 };
 

@@ -70,22 +70,14 @@ const WidgetHeader: React.FC<WidgetHeaderProps> = ({
       <div className="flex items-center space-x-2">
         <button
           onClick={onReset}
-          className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
-            styles.theme === 'dark'
-              ? 'bg-white bg-opacity-10 hover:bg-opacity-20 text-gray-300'
-              : 'bg-black bg-opacity-5 hover:bg-opacity-10 text-gray-600'
-          }`}
+          className={`w-8 h-8 rounded-full flex items-center justify-center transition-all}`}
           title="Reset conversation"
         >
           <ArrowsClockwiseIcon size={16} weight="bold" />
         </button>
         <button
           onClick={onClose}
-          className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
-            styles.theme === 'dark'
-              ? 'bg-white bg-opacity-10 hover:bg-opacity-20 text-gray-300'
-              : 'bg-black bg-opacity-5 hover:bg-opacity-10 text-gray-600'
-          }`}
+          className={`w-8 h-8 rounded-full flex items-center justify-center transition-all`}
         >
           <XIcon size={16} weight="bold" />
         </button>

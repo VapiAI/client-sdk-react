@@ -112,13 +112,13 @@ jobs:
             3. The publish workflow will automatically run and deploy to npm
 
             ---
-            
+
             *This PR was created automatically by the Version Bump workflow.*
               `
             });
-            
+
             console.log(`Pull request created: ${pullRequest.html_url}`);
-            
+
             // Add labels if they exist
             try {
               await github.rest.issues.addLabels({
@@ -140,4 +140,4 @@ jobs:
           echo "- **Type:** ${{ github.event.inputs.version_type }}" >> $GITHUB_STEP_SUMMARY
           if [ -n "${{ github.event.inputs.custom_version }}" ]; then
             echo "- **Custom version used:** Yes" >> $GITHUB_STEP_SUMMARY
-          fi 
+          fi

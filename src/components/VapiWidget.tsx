@@ -162,8 +162,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
     ...sizeStyles[size].expanded,
     ...radiusStyles[radius],
     backgroundColor: colors.baseColor,
-    borderColor: styles.theme === 'dark' ? '#1F2937' : '#E5E7EB',
-    border: '1px solid',
+    border: `1px solid ${styles.theme === 'dark' ? '#1F2937' : '#E5E7EB'}`,
     display: 'flex',
     flexDirection: 'column',
     overflow: 'hidden',
@@ -183,8 +182,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
 
   const controlsAreaStyle: React.CSSProperties = {
     padding: '1rem',
-    borderTop: '1px solid',
-    borderTopColor: styles.theme === 'dark' ? '#1F2937' : '#E5E7EB',
+    borderTop: `1px solid ${styles.theme === 'dark' ? '#1F2937' : '#E5E7EB'}`,
     backgroundColor: colors.baseColor,
     ...(styles.theme === 'dark'
       ? { filter: 'brightness(1.05)' }

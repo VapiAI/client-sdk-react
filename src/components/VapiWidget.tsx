@@ -53,7 +53,6 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
   const [chatInput, setChatInput] = useState('');
 
   const conversationEndRef = useRef<HTMLDivElement>(null);
-
   const inputRef = useRef<HTMLInputElement>(null);
 
   const vapi = useVapiWidget({

@@ -18,8 +18,10 @@ A modern React component library with embeddable voice and chat widgets built wi
 ## Installation
 
 ```bash
-npm install @vapi-ai/client-sdk-react
+npm install @vapi-ai/client-sdk-react @vapi-ai/web
 ```
+
+> **Note**: `@vapi-ai/web` is a peer dependency that must be installed separately to avoid WebRTC connection conflicts.
 
 ## Quick Start
 

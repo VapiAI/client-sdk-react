@@ -59,6 +59,7 @@ export const useVapiCall = ({
     onError,
     onTranscript,
   });
+
   useEffect(() => {
     callbacksRef.current = {
       onCallStart,
@@ -72,17 +73,13 @@ export const useVapiCall = ({
   useEffect(() => {
     if (!vapi) return;
 
-    console.log('Setting up Vapi event listeners');
-
     const handleCallStart = () => {
-      console.log('Call started');
       setIsCallActive(true);
       setConnectionStatus('connected');
       callbacksRef.current.onCallStart?.();
     };
 
     const handleCallEnd = () => {
-      console.log('Call ended');
       setIsCallActive(false);
       setConnectionStatus('disconnected');
       setVolumeLevel(0);
@@ -91,12 +88,10 @@ export const useVapiCall = ({
     };
 
     const handleSpeechStart = () => {
-      console.log('Assistant started speaking');
       setIsSpeaking(true);
     };
 
     const handleSpeechEnd = () => {
-      console.log('Assistant stopped speaking');
       setIsSpeaking(false);
     };
 
@@ -137,7 +132,6 @@ export const useVapiCall = ({
     vapi.on('error', handleError);
 
     return () => {
-      console.log('Cleaning up Vapi event listeners');
       vapi.removeListener('call-start', handleCallStart);
       vapi.removeListener('call-end', handleCallEnd);
       vapi.removeListener('speech-start', handleSpeechStart);
@@ -151,7 +145,6 @@ export const useVapiCall = ({
   useEffect(() => {
     return () => {
       if (vapi) {
-        console.log('Stopping Vapi instance on unmount');
         vapi.stop();
       }
     };

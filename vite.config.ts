@@ -19,11 +19,12 @@ export default defineConfig({
       fileName: (format) => `index.${format === 'es' ? 'js' : 'cjs'}`,
     },
     rollupOptions: {
-      external: ['react', 'react-dom'],
+      external: ['react', 'react-dom', '@vapi-ai/web'],
       output: {
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
+          '@vapi-ai/web': 'Vapi',
         },
       },
     },

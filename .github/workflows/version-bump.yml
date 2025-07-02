@@ -1,0 +1,143 @@
+name: Version Bump
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: 'Version bump type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+      custom_version:
+        description: 'Custom version (optional, overrides version_type)'
+        required: false
+        type: string
+
+jobs:
+  version-bump:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Configure git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Get current version
+        id: current_version
+        run: |
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "current=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Bump version
+        id: bump_version
+        run: |
+          if [ -n "${{ github.event.inputs.custom_version }}" ]; then
+            # Use custom version
+            CUSTOM_VERSION="${{ github.event.inputs.custom_version }}"
+            # Remove 'v' prefix if present
+            CUSTOM_VERSION=${CUSTOM_VERSION#v}
+            
+            # Basic version validation (semver format)
+            if ! echo "$CUSTOM_VERSION" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*)?(\+[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*)?$'; then
+              echo "Error: Custom version '$CUSTOM_VERSION' is not a valid semver format"
+              exit 1
+            fi
+            
+            NEW_VERSION="$CUSTOM_VERSION"
+            npm version $NEW_VERSION --no-git-tag-version
+            echo "new=$NEW_VERSION" >> $GITHUB_OUTPUT
+          else
+            # Use version type bump
+            NEW_VERSION=$(npm version ${{ github.event.inputs.version_type }} --no-git-tag-version)
+            # Remove 'v' prefix if present
+            NEW_VERSION=${NEW_VERSION#v}
+            echo "new=$NEW_VERSION" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create pull request branch
+        run: |
+          BRANCH_NAME="version-bump/v${{ steps.bump_version.outputs.new }}"
+          git checkout -b $BRANCH_NAME
+          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+
+      - name: Commit changes
+        run: |
+          git add package.json package-lock.json
+          git commit -m "chore: bump version to v${{ steps.bump_version.outputs.new }}"
+
+      - name: Push branch
+        run: |
+          git push origin $BRANCH_NAME
+
+      - name: Create Pull Request
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: pullRequest } = await github.rest.pulls.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `chore: bump version to v${{ steps.bump_version.outputs.new }}`,
+              head: process.env.BRANCH_NAME,
+              base: 'main',
+              body: `
+            ## Version Bump
+
+            This PR updates the package version from \`${{ steps.current_version.outputs.current }}\` to \`${{ steps.bump_version.outputs.new }}\`.
+
+            ### Changes
+            - 📦 Updated \`package.json\` version
+            - 🔒 Updated \`package-lock.json\` (if applicable)
+
+            ### Next Steps
+            1. Review and merge this PR
+            2. Create a GitHub release with tag \`v${{ steps.bump_version.outputs.new }}\`
+            3. The publish workflow will automatically run and deploy to npm
+
+            ---
+            
+            *This PR was created automatically by the Version Bump workflow.*
+              `
+            });
+            
+            console.log(`Pull request created: ${pullRequest.html_url}`);
+            
+            // Add labels if they exist
+            try {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pullRequest.number,
+                labels: ['version-bump', 'chore']
+              });
+            } catch (error) {
+              console.log('Could not add labels (they may not exist):', error.message);
+            }
+
+      - name: Summary
+        run: |
+          echo "## Version Bump Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Previous version:** ${{ steps.current_version.outputs.current }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **New version:** ${{ steps.bump_version.outputs.new }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch:** $BRANCH_NAME" >> $GITHUB_STEP_SUMMARY
+          echo "- **Type:** ${{ github.event.inputs.version_type }}" >> $GITHUB_STEP_SUMMARY
+          if [ -n "${{ github.event.inputs.custom_version }}" ]; then
+            echo "- **Custom version used:** Yes" >> $GITHUB_STEP_SUMMARY
+          fi 

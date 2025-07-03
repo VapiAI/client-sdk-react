@@ -29,6 +29,8 @@ export interface AnimatedStatusIconProps {
   isTyping?: boolean;
   /** Whether there's an error */
   isError?: boolean;
+  /** Volume level (0-1) for volume-responsive animations */
+  volumeLevel?: number;
   /** Base color for inactive bars */
   baseColor?: string;
   /** Override animation type */
@@ -61,6 +63,7 @@ const AnimatedStatusIcon: React.FC<AnimatedStatusIconProps> = ({
   isSpeaking,
   isTyping,
   isError,
+  volumeLevel = 0,
   baseColor = '#9CA3AF',
   animationType: overrideAnimationType,
   animationSpeed: overrideAnimationSpeed,
@@ -226,30 +229,97 @@ const AnimatedStatusIcon: React.FC<AnimatedStatusIconProps> = ({
       }
 
       case 'scale': {
-        // Scale animation for line layout
+        // Speech pattern animation - each bar reacts differently to volume
         if (useLineLayout && 'delay' in bar) {
           const lineBar = bar as LineBar;
-          const cycleTime = (time + lineBar.delay) % 1;
-          const scaleTime = cycleTime < 0.5 ? cycleTime * 2 : 2 - cycleTime * 2;
 
-          // Ease in-out cubic
-          const easeInOutCubic = (t: number) => {
-            return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-          };
+          // Use volume level to determine overall activity
+          const volumeIntensity = Math.max(0, Math.min(1, volumeLevel));
 
-          const easedTime = easeInOutCubic(scaleTime);
-          // Scale from base height to max height while maintaining the relative proportions
-          const scaleFactor = 1 + easedTime * 0.5; // Scale up to 1.5x
-          const height = lineBar.baseHeight * scaleFactor;
-          const y = 12 - height / 2; // Keep bars centered vertically
+          // Each bar has different sensitivity and frequency response
+          const barCharacteristics = [
+            { sensitivity: 0.8, frequency: 1.2, baseActivity: 0.3 }, // Bar 0 - Low freq, less sensitive
+            { sensitivity: 1.0, frequency: 1.8, baseActivity: 0.4 }, // Bar 1 - Mid-low freq
+            { sensitivity: 1.2, frequency: 2.5, baseActivity: 0.5 }, // Bar 2 - Center, most responsive
+            { sensitivity: 1.0, frequency: 2.0, baseActivity: 0.4 }, // Bar 3 - Mid-high freq
+            { sensitivity: 0.9, frequency: 1.5, baseActivity: 0.35 }, // Bar 4 - High freq
+          ];
+
+          const barChar = barCharacteristics[index] || barCharacteristics[2];
+
+          // Create dynamic time-based variation for each bar
+          const time = animationTime % 1;
+          const barTime = (time * barChar.frequency) % 1;
+
+          // Generate pseudo-random speech-like pattern
+          const speechPattern =
+            Math.sin(barTime * 2 * Math.PI) * 0.3 +
+            Math.sin(barTime * 6 * Math.PI) * 0.2 +
+            Math.sin(barTime * 12 * Math.PI) * 0.1;
+
+          // Each bar responds differently based on volume and its characteristics
+          const barResponse = volumeIntensity * barChar.sensitivity;
+
+          // Combine base activity, volume response, and speech pattern
+          const activity = Math.max(
+            0,
+            Math.min(
+              1,
+              barChar.baseActivity +
+                barResponse * 0.6 +
+                speechPattern * volumeIntensity * 0.4
+            )
+          );
+
+          // Scale the bar height based on activity
+          const heightScale = 0.7 + activity * 1.1; // Range from 0.7x to 1.8x
+          const height = lineBar.baseHeight * heightScale;
+          const y = 12 - height / 2;
+
+          // Opacity varies with activity
+          const opacity = 0.4 + activity * 0.6;
 
           return {
-            opacity: 1,
+            opacity,
             height,
             y,
             transform: '',
           };
         }
+
+        // For circular layout, create a wave-like speech pattern
+        if (!useLineLayout) {
+          const volumeIntensity = Math.max(0, Math.min(1, volumeLevel));
+          const time = animationTime % 1;
+
+          // Create different wave patterns for each bar
+          const barAngle = (index / actualBarCount) * 2 * Math.PI;
+          const wavePattern =
+            Math.sin(time * 4 * Math.PI + barAngle) * 0.3 +
+            Math.sin(time * 8 * Math.PI + barAngle * 2) * 0.2 +
+            Math.sin(time * 16 * Math.PI + barAngle * 3) * 0.1;
+
+          // Each bar has different sensitivity based on position
+          const positionSensitivity =
+            0.7 + 0.3 * Math.sin(barAngle + Math.PI / 4);
+
+          const activity = Math.max(
+            0,
+            Math.min(
+              1,
+              0.3 +
+                volumeIntensity * positionSensitivity * 0.5 +
+                wavePattern * volumeIntensity * 0.2
+            )
+          );
+
+          return {
+            opacity: 0.4 + activity * 0.6,
+            transform:
+              activity > 0.5 ? `scale(${1 + (activity - 0.5) * 0.4})` : '',
+          };
+        }
+
         return { opacity: 1, transform: '' };
       }
 

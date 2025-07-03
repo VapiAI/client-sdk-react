@@ -111,7 +111,7 @@ const AnimatedStatusIcon: React.FC<AnimatedStatusIconProps> = ({
       return {
         animationType: 'sequential' as const,
         colors: '#60A5FA', // Blue
-        animationSpeed: 100,
+        animationSpeed: 1000,
       };
     } else {
       // When call is not active, show rotating circle

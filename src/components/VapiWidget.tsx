@@ -127,7 +127,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
       !showTranscript &&
       vapi.voice.isCallActive &&
       (mode === 'voice' || mode === 'hybrid');
-    const showingEmptyState = !vapi.voice.isCallActive;
+    const showingEmptyState = mode === 'voice' && !vapi.voice.isCallActive;
 
     if (isEmpty || hideTranscript || showingEmptyState) {
       return {
@@ -203,6 +203,12 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
     }
 
     setChatInput('');
+
+    if (mode === 'chat' || mode === 'hybrid') {
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
+    }
   };
 
   const handleFloatingButtonClick = () => {
@@ -254,11 +260,16 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
   };
 
   const renderConversationArea = () => {
-    if (vapi.voice.isCallActive) {
-      const shouldShowTranscript =
-        showTranscript || mode === 'chat' || mode === 'hybrid';
+    // Chat mode: always show conversation messages
+    if (mode === 'chat') {
+      return renderConversationMessages();
+    }
 
-      if (shouldShowTranscript) {
+    // Hybrid mode: show messages when call is not active, respect showTranscript when active
+    if (mode === 'hybrid') {
+      if (!vapi.voice.isCallActive) {
+        return renderConversationMessages();
+      } else if (showTranscript) {
         return renderConversationMessages();
       } else {
         return (
@@ -276,6 +287,29 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
       }
     }
 
+    // Voice mode: respect showTranscript when call is active
+    if (mode === 'voice') {
+      if (vapi.voice.isCallActive) {
+        if (showTranscript) {
+          return renderConversationMessages();
+        } else {
+          return (
+            <AnimatedStatusIcon
+              size={150}
+              connectionStatus={vapi.voice.connectionStatus}
+              isCallActive={vapi.voice.isCallActive}
+              isSpeaking={vapi.voice.isSpeaking}
+              isTyping={vapi.chat.isTyping}
+              volumeLevel={vapi.voice.volumeLevel}
+              baseColor={colors.accentColor}
+              colors={colors.accentColor}
+            />
+          );
+        }
+      }
+    }
+
+    // Default: show empty conversation
     return (
       <EmptyConversation
         mode={mode}

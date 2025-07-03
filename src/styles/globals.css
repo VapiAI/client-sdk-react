@@ -8,14 +8,3 @@
     box-sizing: border-box;
   }
 }
-
-/* Hide scrollbar completely */
-.vapi-conversation-area {
-  /* Firefox */
-  scrollbar-width: none;
-}
-
-/* Webkit browsers */
-.vapi-conversation-area::-webkit-scrollbar {
-  display: none;
-}

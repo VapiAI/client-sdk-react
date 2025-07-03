@@ -74,7 +74,6 @@ export interface FloatingButtonProps {
   connectionStatus: 'disconnected' | 'connecting' | 'connected';
   isSpeaking: boolean;
   isTyping: boolean;
-  volumeLevel: number;
   onClick: () => void;
   onToggleCall?: () => void;
   mainLabel: string;

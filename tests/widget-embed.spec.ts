@@ -35,9 +35,7 @@ test.describe('VapiWidget Embed Tests', () => {
     // Verify the widget has created some content (React root or shadow DOM)
     const widgetInitialized = await page.evaluate(() => {
       const widget = document.querySelector('#vapi-widget-1');
-      if (!widget) {
-        return false;
-      }
+      if (!widget) return false;
       // Check for React root or any child elements
       return (
         widget.children.length > 0 ||
@@ -76,9 +74,7 @@ test.describe('VapiWidget Embed Tests', () => {
     // Verify the widget has been initialized
     const widgetInitialized = await page.evaluate(() => {
       const widget = document.querySelector('#vapi-widget-2');
-      if (!widget) {
-        return false;
-      }
+      if (!widget) return false;
       return (
         widget.children.length > 0 ||
         widget.shadowRoot !== null ||
@@ -115,9 +111,7 @@ test.describe('VapiWidget Embed Tests', () => {
     // Verify the custom element has been initialized
     const widgetInitialized = await page.evaluate(() => {
       const widget = document.querySelector('vapi-widget');
-      if (!widget) {
-        return false;
-      }
+      if (!widget) return false;
       return (
         widget.children.length > 0 ||
         widget.shadowRoot !== null ||

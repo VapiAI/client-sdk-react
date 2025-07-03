@@ -1,7 +1,9 @@
 import { useState, useCallback } from 'react';
-import { useVapiCall, UseVapiCallOptions } from './useVapiCall';
-import { useVapiChat, UseVapiChatOptions, ChatMessage } from './useVapiChat';
-import { AssistantOverrides } from '../utils/vapiChatClient';
+import type { UseVapiCallOptions } from './useVapiCall';
+import { useVapiCall } from './useVapiCall';
+import type { UseVapiChatOptions, ChatMessage } from './useVapiChat';
+import { useVapiChat } from './useVapiChat';
+import type { AssistantOverrides } from '../utils/vapiChatClient';
 
 export type VapiMode = 'voice' | 'chat' | 'hybrid';
 
@@ -113,7 +115,6 @@ export const useVapiWidget = ({
     // Don't force mode switch just by typing
   }, []);
 
-  // Send message handler that manages mode switching
   const sendMessage = useCallback(
     async (text: string) => {
       // In hybrid mode, switch to chat and clear all conversations only if switching from voice
@@ -133,7 +134,6 @@ export const useVapiWidget = ({
     [mode, chat, voice, activeMode]
   );
 
-  // Toggle call handler that manages mode switching
   const toggleCall = useCallback(async () => {
     if (mode === 'hybrid' && !voice.isCallActive) {
       // Clear all conversations when switching to voice

@@ -97,7 +97,7 @@ export interface WidgetHeaderProps {
 }
 
 export interface ConversationMessageProps {
-  role: 'user' | 'assistant';
+  role: 'user' | 'assistant' | 'tool';
   content: string;
   colors: ColorScheme;
   styles: StyleConfig;
@@ -107,7 +107,7 @@ export interface ConversationMessageProps {
 export interface MarkdownMessageProps {
   content: string;
   isLoading?: boolean;
-  role: 'user' | 'assistant';
+  role: 'user' | 'assistant' | 'tool';
 }
 
 export interface EmptyConversationProps {

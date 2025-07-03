@@ -11,12 +11,12 @@ const MarkdownMessage: React.FC<MarkdownMessageProps> = ({
   <div className="markdown-content">
     <ReactMarkdown
       components={{
-        p: ({ children }) => <p className="mb-1 last:mb-0">{children}</p>,
+        p: ({ children }) => <p className="mb-3 last:mb-0">{children}</p>,
         ul: ({ children }) => (
-          <ul className="list-disc list-inside mb-1 last:mb-0">{children}</ul>
+          <ul className="list-disc list-inside mb-3 last:mb-0">{children}</ul>
         ),
         ol: ({ children }) => (
-          <ol className="list-decimal list-inside mb-1 last:mb-0">
+          <ol className="list-decimal list-inside mb-3 last:mb-0">
             {children}
           </ol>
         ),
@@ -57,7 +57,7 @@ const MarkdownMessage: React.FC<MarkdownMessageProps> = ({
           <h3 className="text-sm font-bold mb-1">{children}</h3>
         ),
         blockquote: ({ children }) => (
-          <blockquote className="border-l-2 pl-2 my-1 opacity-80">
+          <blockquote className="border-l-2 pl-2 my-3 opacity-80">
             {children}
           </blockquote>
         ),

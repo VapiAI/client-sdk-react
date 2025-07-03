@@ -8,6 +8,7 @@ const FloatingButton: React.FC<FloatingButtonProps> = ({
   connectionStatus,
   isSpeaking,
   isTyping,
+  volumeLevel,
   onClick,
   onToggleCall,
   mainLabel,
@@ -68,6 +69,7 @@ const FloatingButton: React.FC<FloatingButtonProps> = ({
           isTyping={isTyping}
           baseColor={colors.accentColor}
           colors={colors.accentColor}
+          volumeLevel={volumeLevel}
         />
 
         {(styles.size === 'compact' || styles.size === 'full') &&

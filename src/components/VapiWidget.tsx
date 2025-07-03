@@ -8,7 +8,7 @@ import { sizeStyles, radiusStyles, positionStyles } from './constants';
 import ConsentForm from './widget/ConsentForm';
 import FloatingButton from './widget/FloatingButton';
 import WidgetHeader from './widget/WidgetHeader';
-import VolumeIndicator from './widget/conversation/VolumeIndicator';
+import AnimatedStatusIcon from './AnimatedStatusIcon';
 import ConversationMessage from './widget/conversation/Message';
 import EmptyConversation from './widget/conversation/EmptyState';
 import VoiceControls from './widget/controls/VoiceControls';
@@ -35,7 +35,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
   mainLabel = 'Talk with AI',
   startButtonText = 'Start',
   endButtonText = 'End Call',
-  emptyVoiceMessage = 'Click the microphone to start talking',
+  emptyVoiceMessage = 'Click the start button to begin a conversation',
   emptyVoiceActiveMessage = 'Listening...',
   emptyChatMessage = 'Type a message to start chatting',
   emptyHybridMessage = 'Use voice or text to communicate',
@@ -127,8 +127,9 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
       !showTranscript &&
       vapi.voice.isCallActive &&
       (mode === 'voice' || mode === 'hybrid');
+    const showingEmptyState = !vapi.voice.isCallActive;
 
-    if (isEmpty || hideTranscript) {
+    if (isEmpty || hideTranscript || showingEmptyState) {
       return {
         display: 'flex',
         alignItems: 'center',
@@ -253,27 +254,26 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
   };
 
   const renderConversationArea = () => {
-    const shouldShowTranscript =
-      showTranscript ||
-      mode === 'chat' ||
-      (mode === 'hybrid' && !vapi.voice.isCallActive);
+    if (vapi.voice.isCallActive) {
+      const shouldShowTranscript =
+        showTranscript || mode === 'chat' || mode === 'hybrid';
 
-    const shouldShowVolumeIndicator =
-      !shouldShowTranscript && vapi.voice.isCallActive;
-
-    if (shouldShowTranscript) {
-      return renderConversationMessages();
-    }
-
-    if (shouldShowVolumeIndicator) {
-      return (
-        <VolumeIndicator
-          volumeLevel={vapi.voice.volumeLevel}
-          isCallActive={vapi.voice.isCallActive}
-          isSpeaking={vapi.voice.isSpeaking}
-          theme={styles.theme}
-        />
-      );
+      if (shouldShowTranscript) {
+        return renderConversationMessages();
+      } else {
+        return (
+          <AnimatedStatusIcon
+            size={150}
+            connectionStatus={vapi.voice.connectionStatus}
+            isCallActive={vapi.voice.isCallActive}
+            isSpeaking={vapi.voice.isSpeaking}
+            isTyping={vapi.chat.isTyping}
+            volumeLevel={vapi.voice.volumeLevel}
+            baseColor={colors.accentColor}
+            colors={colors.accentColor}
+          />
+        );
+      }
     }
 
     return (
@@ -371,6 +371,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
 
         {/* Conversation Area */}
         <div
+          className="vapi-conversation-area"
           style={{
             ...getConversationAreaStyle(),
             ...getConversationLayoutStyle(),
@@ -402,6 +403,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
             connectionStatus={vapi.voice.connectionStatus}
             isSpeaking={vapi.voice.isSpeaking}
             isTyping={vapi.chat.isTyping}
+            volumeLevel={vapi.voice.volumeLevel}
             onClick={handleFloatingButtonClick}
             onToggleCall={handleToggleCall}
             mainLabel={mainLabel}

@@ -45,8 +45,12 @@ function App() {
     assistant: {
       model: {
         provider: 'openai',
-        model: 'gpt-4.1-nano',
+        model: 'gpt-4o-mini',
         messages: [{ role: 'system', content: 'You are a helpful assistant.' }],
+      },
+      voice: {
+        provider: '11labs',
+        voiceId: 'burt',
       },
     },
   });

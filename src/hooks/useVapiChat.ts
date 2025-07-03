@@ -1,14 +1,12 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import type { AssistantOverrides } from '../utils/vapiChatClient';
 import {
   VapiChatClient,
   extractContentFromPath,
+  AssistantOverrides,
 } from '../utils/vapiChatClient';
 
 export interface ChatMessage {
-  id?: string;
-  sessionId?: string;
-  role: 'user' | 'assistant' | 'tool';
+  role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
 }
@@ -36,130 +34,6 @@ export interface UseVapiChatOptions {
   onError?: (error: Error) => void;
 }
 
-export const validateChatInput = (
-  text: string,
-  enabled: boolean,
-  publicKey?: string,
-  assistantId?: string,
-  client?: VapiChatClient | null
-): void => {
-  if (!enabled || !text.trim()) {
-    throw new Error('Chat is disabled or message is empty');
-  }
-
-  if (!publicKey || !assistantId) {
-    throw new Error(
-      'Missing required configuration: publicKey and assistantId'
-    );
-  }
-
-  if (!client) {
-    throw new Error('Chat client not initialized');
-  }
-};
-
-export const createUserMessage = (text: string): ChatMessage => ({
-  role: 'user',
-  content: text.trim(),
-  timestamp: new Date(),
-});
-
-export const createAssistantMessage = (content: string): ChatMessage => ({
-  role: 'assistant',
-  content,
-  timestamp: new Date(),
-});
-
-export const resetAssistantMessageTracking = (
-  currentAssistantMessageRef: React.MutableRefObject<string>,
-  assistantMessageIndexRef: React.MutableRefObject<number | null>
-): void => {
-  currentAssistantMessageRef.current = '';
-  assistantMessageIndexRef.current = null;
-};
-
-export const preallocateAssistantMessage = (
-  assistantMessageIndexRef: React.MutableRefObject<number | null>,
-  setMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>
-): void => {
-  // Pre-allocate the assistant message slot
-  setMessages((prev) => {
-    const newMessages = [...prev];
-    assistantMessageIndexRef.current = newMessages.length; // Set index BEFORE adding
-    newMessages.push({
-      role: 'assistant',
-      content: '', // Start with empty content
-      timestamp: new Date(),
-    });
-    return newMessages;
-  });
-};
-
-export const handleStreamError = (
-  error: Error,
-  setIsTyping: (typing: boolean) => void,
-  assistantMessageIndexRef: React.MutableRefObject<number | null>,
-  onError?: (error: Error) => void
-): void => {
-  console.error('Stream error:', error);
-  setIsTyping(false);
-  assistantMessageIndexRef.current = null;
-  onError?.(error);
-};
-
-export const handleStreamChunk = (
-  chunk: any,
-  sessionId: string | undefined,
-  setSessionId: (id: string | undefined) => void,
-  currentAssistantMessageRef: React.MutableRefObject<string>,
-  assistantMessageIndexRef: React.MutableRefObject<number | null>,
-  setMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>
-): void => {
-  // Update sessionId if provided in response
-  if (chunk.sessionId && chunk.sessionId !== sessionId) {
-    setSessionId(chunk.sessionId);
-  }
-
-  const content = extractContentFromPath(chunk);
-  if (content) {
-    currentAssistantMessageRef.current += content;
-
-    // Since we pre-allocated, we know the index is always valid
-    if (assistantMessageIndexRef.current !== null) {
-      setMessages((prev) => {
-        const newMessages = [...prev];
-        const targetIndex = assistantMessageIndexRef.current!;
-
-        if (targetIndex < newMessages.length) {
-          newMessages[targetIndex] = {
-            ...newMessages[targetIndex],
-            content: currentAssistantMessageRef.current,
-          };
-        }
-
-        return newMessages;
-      });
-    }
-  }
-};
-
-export const handleStreamComplete = (
-  setIsTyping: (typing: boolean) => void,
-  assistantMessageIndexRef: React.MutableRefObject<number | null>,
-  currentAssistantMessageRef: React.MutableRefObject<string>,
-  onMessage?: (message: ChatMessage) => void
-): void => {
-  setIsTyping(false);
-  assistantMessageIndexRef.current = null;
-
-  if (currentAssistantMessageRef.current) {
-    const finalMessage = createAssistantMessage(
-      currentAssistantMessageRef.current
-    );
-    onMessage?.(finalMessage);
-  }
-};
-
 export const useVapiChat = ({
   enabled = true,
   publicKey,
@@ -180,8 +54,8 @@ export const useVapiChat = ({
 
   const clientRef = useRef<VapiChatClient | null>(null);
   const abortFnRef = useRef<(() => void) | null>(null);
-  const currentAssistantMessageRef = useRef<string>(''); // Accumulates assistant message content
-  const assistantMessageIndexRef = useRef<number | null>(null); // Tracks array position
+  const currentAssistantMessageRef = useRef<string>('');
+  const assistantMessageIndexRef = useRef<number | null>(null); // Track current assistant message index
 
   useEffect(() => {
     if (publicKey && enabled) {
@@ -211,64 +85,107 @@ export const useVapiChat = ({
 
   const sendMessage = useCallback(
     async (text: string) => {
-      try {
-        validateChatInput(
-          text,
-          enabled,
-          publicKey,
-          assistantId,
-          clientRef.current
-        );
+      if (!enabled || !text.trim()) return;
 
+      // Check if we have required configuration
+      if (!publicKey || !assistantId) {
+        const error = new Error(
+          'Missing required configuration: publicKey and assistantId'
+        );
+        onError?.(error);
+        throw error;
+      }
+
+      if (!clientRef.current) {
+        const error = new Error('Chat client not initialized');
+        onError?.(error);
+        throw error;
+      }
+
+      try {
         setIsLoading(true);
 
-        const userMessage = createUserMessage(text);
+        const userMessage: ChatMessage = {
+          role: 'user',
+          content: text.trim(),
+          timestamp: new Date(),
+        };
         addMessage(userMessage);
 
-        resetAssistantMessageTracking(
-          currentAssistantMessageRef,
-          assistantMessageIndexRef
-        );
-        preallocateAssistantMessage(assistantMessageIndexRef, setMessages);
+        // Reset current assistant message and index
+        currentAssistantMessageRef.current = '';
+        assistantMessageIndexRef.current = null;
         setIsTyping(true);
 
-        const onStreamError = (error: Error) =>
-          handleStreamError(
-            error,
-            setIsTyping,
-            assistantMessageIndexRef,
-            onError
-          );
-
-        const onChunk = (chunk: any) =>
-          handleStreamChunk(
-            chunk,
-            sessionId,
-            setSessionId,
-            currentAssistantMessageRef,
-            assistantMessageIndexRef,
-            setMessages
-          );
-
-        const onComplete = () =>
-          handleStreamComplete(
-            setIsTyping,
-            assistantMessageIndexRef,
-            currentAssistantMessageRef,
-            onMessage
-          );
-
-        const abort = await clientRef.current!.streamChat(
+        const abort = await clientRef.current.streamChat(
           {
             input: text.trim(),
-            assistantId: assistantId!,
+            assistantId,
             assistantOverrides,
             sessionId,
             stream: true,
           },
-          onChunk,
-          onStreamError,
-          onComplete
+          (chunk) => {
+            // Update sessionId if provided in response
+            if (chunk.sessionId && chunk.sessionId !== sessionId) {
+              setSessionId(chunk.sessionId);
+            }
+
+            const content = extractContentFromPath(chunk);
+            if (content) {
+              currentAssistantMessageRef.current += content;
+
+              setMessages((prev) => {
+                const newMessages = [...prev];
+
+                // Check if we already have an assistant message index for this stream
+                if (
+                  assistantMessageIndexRef.current !== null &&
+                  assistantMessageIndexRef.current < newMessages.length
+                ) {
+                  const existingMessage =
+                    newMessages[assistantMessageIndexRef.current];
+                  if (existingMessage && existingMessage.role === 'assistant') {
+                    newMessages[assistantMessageIndexRef.current] = {
+                      ...existingMessage,
+                      content: currentAssistantMessageRef.current,
+                    };
+                  }
+                } else {
+                  assistantMessageIndexRef.current = newMessages.length;
+                  newMessages.push({
+                    role: 'assistant',
+                    content: currentAssistantMessageRef.current,
+                    timestamp: new Date(),
+                  });
+                }
+
+                return newMessages;
+              });
+            }
+          },
+
+          (error) => {
+            console.error('Stream error:', error);
+            setIsTyping(false);
+            assistantMessageIndexRef.current = null;
+            onError?.(error);
+          },
+
+          // On complete callback
+          () => {
+            setIsTyping(false);
+            assistantMessageIndexRef.current = null;
+
+            if (currentAssistantMessageRef.current) {
+              const finalMessage: ChatMessage = {
+                role: 'assistant',
+                content: currentAssistantMessageRef.current,
+                timestamp: new Date(),
+              };
+              onMessage?.(finalMessage);
+            }
+          }
         );
 
         abortFnRef.current = abort;
@@ -303,11 +220,8 @@ export const useVapiChat = ({
     setIsLoading(false);
 
     // Reset assistant message tracking
-    resetAssistantMessageTracking(
-      currentAssistantMessageRef,
-      assistantMessageIndexRef
-    );
-
+    currentAssistantMessageRef.current = '';
+    assistantMessageIndexRef.current = null;
     // Clear sessionId when clearing messages to start fresh
     setSessionId(undefined);
   }, []);

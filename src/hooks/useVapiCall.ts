@@ -71,9 +71,7 @@ export const useVapiCall = ({
   });
 
   useEffect(() => {
-    if (!vapi) {
-      return;
-    }
+    if (!vapi) return;
 
     const handleCallStart = () => {
       setIsCallActive(true);
@@ -102,6 +100,8 @@ export const useVapiCall = ({
     };
 
     const handleMessage = (message: any) => {
+      console.log('Received message:', message);
+
       if (message.type === 'transcript' && message.transcriptType === 'final') {
         if (message.role === 'user' || message.role === 'assistant') {
           callbacksRef.current.onTranscript?.({

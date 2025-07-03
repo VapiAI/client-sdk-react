@@ -125,7 +125,7 @@ const VapiConfigurationSection: React.FC<VapiConfigurationSectionProps> = ({
             onChange={(e) => handleAssistantObjectChange(e.target.value)}
             rows={12}
             className="w-full p-2 rounded-md border bg-white border-gray-300 text-gray-900 font-mono text-sm"
-            placeholder='{"model": {"provider": "openai", "model": "gpt-4-1-mini"}}'
+            placeholder='{"model": {"provider": "openai", "model": "gpt-3.5-turbo"}, "voice": {"provider": "11labs", "voiceId": "burt"}}'
           />
           <p className="text-xs mt-1 text-gray-500">
             Complete assistant configuration object (only used for voice calls)

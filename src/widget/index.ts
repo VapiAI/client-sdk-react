@@ -51,8 +51,12 @@ function kebabToCamel(str: string): string {
 }
 
 function parseAttributeValue(value: string): any {
-  if (value === 'true') return true;
-  if (value === 'false') return false;
+  if (value === 'true') {
+    return true;
+  }
+  if (value === 'false') {
+    return false;
+  }
 
   if (!isNaN(Number(value)) && value !== '') {
     return Number(value);
@@ -221,7 +225,9 @@ function initializeWidgets() {
     const componentName = htmlElement.getAttribute('data-client-widget');
 
     // Skip if already processed as VapiWidget
-    if (componentName === 'VapiWidget') return;
+    if (componentName === 'VapiWidget') {
+      return;
+    }
 
     if (componentName && componentName in COMPONENTS) {
       const propsAttr = htmlElement.getAttribute('data-props');

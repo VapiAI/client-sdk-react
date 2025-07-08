@@ -36,35 +36,6 @@ const ModeSection: React.FC<ModeSectionProps> = ({
     <div className="grid grid-cols-2 gap-4">
       <div
         className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
-          mode === 'voice'
-            ? 'border-teal-500 bg-teal-50'
-            : 'border-gray-300 hover:border-gray-400'
-        }`}
-        onClick={() => onModeChange('voice')}
-      >
-        <div className="flex items-center space-x-3">
-          <div
-            className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-              mode === 'voice' ? 'bg-teal-500' : 'bg-gray-200'
-            }`}
-          >
-            <MicrophoneIcon
-              size={20}
-              weight="fill"
-              className={mode === 'voice' ? 'text-white' : 'text-gray-500'}
-            />
-          </div>
-          <div>
-            <h3 className="font-medium text-gray-900">Voice</h3>
-            <p className="text-sm text-gray-600">
-              Users will speak with the widget
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div
-        className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
           mode === 'chat'
             ? 'border-teal-500 bg-teal-50'
             : 'border-gray-300 hover:border-gray-400'
@@ -87,6 +58,35 @@ const ModeSection: React.FC<ModeSectionProps> = ({
             <h3 className="font-medium text-gray-900">Chat</h3>
             <p className="text-sm text-gray-600">
               Users will text with the widget
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div
+        className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
+          mode === 'voice'
+            ? 'border-teal-500 bg-teal-50'
+            : 'border-gray-300 hover:border-gray-400'
+        }`}
+        onClick={() => onModeChange('voice')}
+      >
+        <div className="flex items-center space-x-3">
+          <div
+            className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+              mode === 'voice' ? 'bg-teal-500' : 'bg-gray-200'
+            }`}
+          >
+            <MicrophoneIcon
+              size={20}
+              weight="fill"
+              className={mode === 'voice' ? 'text-white' : 'text-gray-500'}
+            />
+          </div>
+          <div>
+            <h3 className="font-medium text-gray-900">Voice</h3>
+            <p className="text-sm text-gray-600">
+              Users will speak with the widget
             </p>
           </div>
         </div>

@@ -84,10 +84,11 @@ The simplest way to add the widget to your website:
 | `emptyVoiceActiveMessage` | `string`                                                       | -                       | Message during active voice call   |
 | `emptyChatMessage`        | `string`                                                       | -                       | Message when chat is empty         |
 | `emptyHybridMessage`      | `string`                                                       | -                       | Message for hybrid mode            |
+| `firstChatMessage`        | `string`                                                       | -                       | Initial assistant message in chat  |
 | `requireConsent`          | `boolean`                                                      | `false`                 | Show consent form before first use |
-| `termsContent`            | `string`                                                       | -                       | Custom consent form text           |
-| `localStorageKey`         | `string`                                                       | `'vapi_widget_consent'` | Key for storing consent            |
-| `showTranscript`          | `boolean`                                                      | `true`                  | Show/hide voice transcript         |
+| `termsContent`            | `string`                                                       | _(default message)_     | Terms & conditions text            |
+| `localStorageKey`         | `string`                                                       | `"vapi_widget_consent"` | Key for storing consent            |
+| `showTranscript`          | `boolean`                                                      | `false`                 | Show/hide voice transcript         |
 
 ### Event Callbacks
 
@@ -133,6 +134,7 @@ Use the widget as a custom HTML element with kebab-case attributes - the cleanes
   theme="dark"
   accent-color="#8B5CF6"
   require-consent="true"
+  first-chat-message="Welcome! How can I assist you?"
 ></vapi-widget>
 ```
 
@@ -174,6 +176,7 @@ Use this approach if your environment doesn't support custom elements or for bet
   mode="chat"
   theme="dark"
   accentColor="#8B5CF6"
+  firstChatMessage="Hello! How can I help you today?"
 />
 ```
 

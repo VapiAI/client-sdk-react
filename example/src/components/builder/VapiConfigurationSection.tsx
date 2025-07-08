@@ -131,6 +131,24 @@ const VapiConfigurationSection: React.FC<VapiConfigurationSectionProps> = ({
             Complete assistant configuration object (only used for voice calls)
           </p>
         </div>
+
+        {/* First Chat Message */}
+        <div>
+          <label className="block text-sm font-medium mb-2 text-gray-700">
+            First Chat Message
+            <span className="text-xs text-gray-500 ml-2">(Chat Only)</span>
+          </label>
+          <input
+            type="text"
+            value={config.firstChatMessage || ''}
+            onChange={(e) => updateConfig('firstChatMessage', e.target.value)}
+            className="w-full p-2 rounded-md border bg-white border-gray-300 text-gray-900 text-sm"
+            placeholder="Hey, How can I help you today?"
+          />
+          <p className="text-xs mt-1 text-gray-500">
+            The initial message displayed when the chat opens
+          </p>
+        </div>
       </div>
     </div>
   );

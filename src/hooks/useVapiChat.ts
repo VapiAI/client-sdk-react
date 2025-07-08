@@ -32,6 +32,7 @@ export interface UseVapiChatOptions {
   assistantOverrides?: AssistantOverrides;
   apiUrl?: string;
   sessionId?: string;
+  firstChatMessage?: string;
   onMessage?: (message: ChatMessage) => void;
   onError?: (error: Error) => void;
 }
@@ -167,11 +168,23 @@ export const useVapiChat = ({
   assistantOverrides,
   apiUrl,
   sessionId: initialSessionId,
+  firstChatMessage,
   onMessage,
   onError,
 }: UseVapiChatOptions): VapiChatState &
   VapiChatHandlers & { isEnabled: boolean } => {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>(() => {
+    if (enabled && firstChatMessage) {
+      return [
+        {
+          role: 'assistant',
+          content: firstChatMessage,
+          timestamp: new Date(),
+        },
+      ];
+    }
+    return [];
+  });
   const [isTyping, setIsTyping] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [sessionId, setSessionId] = useState<string | undefined>(
@@ -258,9 +271,30 @@ export const useVapiChat = ({
             onMessage
           );
 
+        let input: string | Array<{ role: string; content: string }>;
+        if (
+          firstChatMessage &&
+          firstChatMessage.trim() !== '' &&
+          messages.length === 1 &&
+          messages[0].role === 'assistant'
+        ) {
+          input = [
+            {
+              role: 'assistant',
+              content: firstChatMessage,
+            },
+            {
+              role: 'user',
+              content: text.trim(),
+            },
+          ];
+        } else {
+          input = text.trim();
+        }
+
         const abort = await clientRef.current!.streamChat(
           {
-            input: text.trim(),
+            input,
             assistantId: assistantId!,
             assistantOverrides,
             sessionId,
@@ -291,11 +325,24 @@ export const useVapiChat = ({
       addMessage,
       onError,
       onMessage,
+      firstChatMessage,
+      messages,
     ]
   );
 
   const clearMessages = useCallback(() => {
-    setMessages([]);
+    // Reset to firstChatMessage if provided, otherwise empty array
+    if (enabled && firstChatMessage) {
+      setMessages([
+        {
+          role: 'assistant',
+          content: firstChatMessage,
+          timestamp: new Date(),
+        },
+      ]);
+    } else {
+      setMessages([]);
+    }
 
     // Abort any ongoing stream
     abortFnRef.current?.();
@@ -310,7 +357,7 @@ export const useVapiChat = ({
 
     // Clear sessionId when clearing messages to start fresh
     setSessionId(undefined);
-  }, []);
+  }, [enabled, firstChatMessage]);
 
   return {
     // State

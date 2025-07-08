@@ -7,7 +7,7 @@ export interface AssistantOverrides {
 }
 
 export interface VapiChatMessage {
-  input: string;
+  input: string | Array<{ role: string; content: string }>;
   assistantId: string;
   assistantOverrides?: AssistantOverrides;
   sessionId?: string;

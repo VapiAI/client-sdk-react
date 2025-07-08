@@ -15,6 +15,7 @@ export interface WidgetConfig {
   termsContent: string;
   localStorageKey: string;
   showTranscript: boolean;
+  firstChatMessage?: string;
 
   // Vapi Configuration
   apiUrl?: string;

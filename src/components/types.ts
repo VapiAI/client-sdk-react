@@ -34,6 +34,9 @@ export interface VapiWidgetProps {
   emptyChatMessage?: string;
   emptyHybridMessage?: string;
 
+  // Initial Chat Message
+  firstChatMessage?: string;
+
   // Legal & Consent
   requireConsent?: boolean;
   termsContent?: string;

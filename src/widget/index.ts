@@ -90,44 +90,17 @@ function initializeWidgets() {
         attr.name !== 'data-props'
       ) {
         const propName = kebabToCamel(attr.name.replace('data-', ''));
-        props[propName] = parseAttributeValue(attr.value);
-      }
-    });
 
-    const attributeMap: Record<string, string> = {
-      mode: 'mode',
-      theme: 'theme',
-      radius: 'radius',
-      size: 'size',
-      position: 'position',
-      'base-color': 'baseColor',
-      'accent-color': 'accentColor',
-      'button-base-color': 'buttonBaseColor',
-      'button-accent-color': 'buttonAccentColor',
-      'main-label': 'mainLabel',
-      'start-button-text': 'startButtonText',
-      'end-button-text': 'endButtonText',
-      'require-consent': 'requireConsent',
-      'terms-content': 'termsContent',
-      'local-storage-key': 'localStorageKey',
-      // Vapi Configuration
-      'public-key': 'publicKey',
-      'assistant-id': 'assistantId',
-      'assistant-overrides': 'assistantOverrides',
-      assistant: 'assistant',
-    };
-
-    Object.entries(attributeMap).forEach(([htmlAttr, propName]) => {
-      const value = htmlElement.getAttribute(htmlAttr);
-      if (value !== null) {
+        // Special handling for JSON attributes
         if (propName === 'assistantOverrides' || propName === 'assistant') {
           try {
-            props[propName] = JSON.parse(value);
+            props[propName] = JSON.parse(attr.value);
           } catch (e) {
-            console.warn(`Failed to parse ${htmlAttr} JSON:`, e);
+            console.warn(`Failed to parse ${attr.name} JSON:`, e);
+            props[propName] = attr.value; // Fallback to string value
           }
         } else {
-          props[propName] = parseAttributeValue(value);
+          props[propName] = parseAttributeValue(attr.value);
         }
       }
     });
@@ -170,6 +143,11 @@ function initializeWidgets() {
       'main-label': 'mainLabel',
       'start-button-text': 'startButtonText',
       'end-button-text': 'endButtonText',
+      'empty-voice-message': 'emptyVoiceMessage',
+      'empty-voice-active-message': 'emptyVoiceActiveMessage',
+      'empty-chat-message': 'emptyChatMessage',
+      'empty-hybrid-message': 'emptyHybridMessage',
+      'first-chat-message': 'firstChatMessage',
       'require-consent': 'requireConsent',
       'terms-content': 'termsContent',
       'local-storage-key': 'localStorageKey',

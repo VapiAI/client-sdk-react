@@ -14,6 +14,7 @@ export interface UseVapiWidgetOptions {
   assistant?: any;
   assistantOverrides?: AssistantOverrides;
   apiUrl?: string;
+  firstChatMessage?: string;
   onCallStart?: () => void;
   onCallEnd?: () => void;
   onMessage?: (message: any) => void;
@@ -27,6 +28,7 @@ export const useVapiWidget = ({
   assistant,
   assistantOverrides,
   apiUrl,
+  firstChatMessage,
   onCallStart,
   onCallEnd,
   onMessage,
@@ -97,6 +99,7 @@ export const useVapiWidget = ({
     apiUrl,
     onMessage, // Keep the callback for external notifications
     onError,
+    firstChatMessage,
   } as UseVapiChatOptions);
 
   // Combine voice and chat conversations

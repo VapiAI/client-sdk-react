@@ -18,7 +18,7 @@ import VapiConfigurationSection from './components/builder/VapiConfigurationSect
 
 function App() {
   const [config, setConfig] = useState<WidgetConfig>({
-    mode: 'voice',
+    mode: 'chat',
     theme: 'light',
     // Default colors matching VapiWidget defaults
     baseColor: '#ffffff', // Light mode default (automatically switches to #000000 in dark mode)
@@ -35,7 +35,8 @@ function App() {
     termsContent:
       'By clicking "Agree," and each time I interact with this AI agent, I consent to the recording, storage, and sharing of my communications with third-party service providers, and as otherwise described in our Terms of Service.',
     localStorageKey: 'vapi_widget_consent',
-    showTranscript: true,
+    showTranscript: false,
+    firstChatMessage: 'Hey, How can I help you today?',
     // Vapi Configuration
     publicKey: import.meta.env.VITE_VAPI_API_KEY || 'your-vapi-public-key',
     assistantId: import.meta.env.VITE_VAPI_ASSISTANT_ID || 'demo-assistant-id',
@@ -75,6 +76,9 @@ function App() {
       `require-consent="${config.requireConsent}"`,
       `local-storage-key="${config.localStorageKey}"`,
       `show-transcript="${config.showTranscript}"`,
+      config.firstChatMessage
+        ? `first-chat-message="${config.firstChatMessage}"`
+        : null,
     ]
       .filter(Boolean)
       .join(' ');
@@ -187,6 +191,7 @@ function App() {
             termsContent={config.termsContent}
             localStorageKey={config.localStorageKey}
             showTranscript={config.showTranscript}
+            firstChatMessage={config.firstChatMessage}
             onCallStart={() => console.log('Call started')}
             onCallEnd={() => console.log('Call ended')}
             onMessage={(message) => console.log('Message:', message)}

@@ -64,6 +64,7 @@ export class VapiChatClient {
         headers: {
           Authorization: `Bearer ${this.publicKey}`,
           'Content-Type': 'application/json',
+          'X-Client-ID': 'vapi-widget',
         },
         body: JSON.stringify({
           ...message,

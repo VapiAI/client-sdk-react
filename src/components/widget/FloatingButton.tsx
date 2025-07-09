@@ -12,6 +12,8 @@ const FloatingButton: React.FC<FloatingButtonProps> = ({
   onClick,
   onToggleCall,
   mainLabel,
+  ctaTitle,
+  ctaSubtitle,
   colors,
   styles,
   mode,
@@ -26,13 +28,15 @@ const FloatingButton: React.FC<FloatingButtonProps> = ({
     }
   };
 
+  const displayTitle = ctaTitle || mainLabel;
+
   const buttonStyle: React.CSSProperties = {
     ...(isTinyVoice && isCallActive
       ? { width: '5rem', height: '5rem' } // w-20 h-20
       : sizeStyles[styles.size].button),
     ...buttonRadiusStyles[styles.radius],
     backgroundColor:
-      isCallActive && isTinyVoice ? '#ef4444' : colors.buttonBaseColor,
+      isCallActive && isTinyVoice ? '#ef4444' : colors.ctaButtonColor,
     boxShadow:
       '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)', // shadow-lg
     cursor: 'pointer',
@@ -41,6 +45,12 @@ const FloatingButton: React.FC<FloatingButtonProps> = ({
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative' as const,
+    // Adjust height when subtitle is present
+    ...(ctaSubtitle &&
+    (styles.size === 'compact' || styles.size === 'full') &&
+    !isTinyVoice
+      ? { height: styles.size === 'compact' ? '4rem' : '4.5rem' }
+      : {}),
   };
 
   return (
@@ -74,15 +84,39 @@ const FloatingButton: React.FC<FloatingButtonProps> = ({
 
         {(styles.size === 'compact' || styles.size === 'full') &&
           !isTinyVoice && (
-            <span
+            <div
               style={{
-                color: colors.buttonAccentColor,
-                fontSize: '0.875rem', // text-sm
-                fontWeight: '500', // font-medium
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                justifyContent: 'center',
               }}
             >
-              {mainLabel}
-            </span>
+              <span
+                style={{
+                  color: colors.ctaButtonTextColor,
+                  fontSize: ctaSubtitle ? '0.875rem' : '0.875rem', // text-sm
+                  fontWeight: '500', // font-medium
+                  lineHeight: '1.2',
+                }}
+              >
+                {displayTitle}
+              </span>
+              {ctaSubtitle && (
+                <span
+                  style={{
+                    color: colors.ctaButtonTextColor,
+                    fontSize: '0.75rem', // text-xs
+                    fontWeight: '400', // font-normal
+                    opacity: 0.8,
+                    lineHeight: '1.2',
+                    marginTop: '0.125rem',
+                  }}
+                >
+                  {ctaSubtitle}
+                </span>
+              )}
+            </div>
           )}
       </div>
     </div>

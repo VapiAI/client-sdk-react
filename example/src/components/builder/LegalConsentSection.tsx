@@ -17,17 +17,32 @@ const LegalConsentSection: React.FC<LegalConsentSectionProps> = ({
       <label className="relative inline-flex items-center cursor-pointer">
         <input
           type="checkbox"
-          checked={config.requireConsent}
-          onChange={(e) => updateConfig('requireConsent', e.target.checked)}
-          className="sr-only peer"
+          id="require-consent"
+          checked={config.consentRequired}
+          onChange={(e) => updateConfig('consentRequired', e.target.checked)}
+          className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
         />
         <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-600"></div>
       </label>
     </div>
     <p className="text-sm mb-6 text-gray-600">Require terms and Conditions</p>
 
-    {config.requireConsent && (
-      <div className="space-y-4">
+    {config.consentRequired && (
+      <div className="space-y-4 p-4 bg-gray-50 rounded-lg">
+        <div>
+          <label className="block text-sm font-medium mb-2 text-gray-700">
+            Terms Title
+          </label>
+          <input
+            type="text"
+            id="consent-title"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            value={config.consentTitle || ''}
+            onChange={(e) => updateConfig('consentTitle', e.target.value)}
+            placeholder="Terms and conditions"
+          />
+        </div>
+
         <div>
           <label className="block text-sm font-medium mb-2 text-gray-700">
             Terms Content
@@ -39,10 +54,11 @@ const LegalConsentSection: React.FC<LegalConsentSectionProps> = ({
               </span>
             </div>
             <textarea
-              value={config.termsContent}
-              onChange={(e) => updateConfig('termsContent', e.target.value)}
-              rows={4}
-              className="w-full p-2 rounded-md border resize-none bg-gray-50 border-gray-200 text-gray-900"
+              id="terms-content"
+              rows={3}
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              value={config.consentContent}
+              onChange={(e) => updateConfig('consentContent', e.target.value)}
             />
             <p className="text-xs mt-2 text-gray-500">Rich text supported</p>
           </div>
@@ -62,15 +78,18 @@ const LegalConsentSection: React.FC<LegalConsentSectionProps> = ({
           <div className="flex items-center space-x-2">
             <input
               type="text"
-              value={config.localStorageKey}
-              onChange={(e) => updateConfig('localStorageKey', e.target.value)}
-              className="flex-1 p-2 rounded-md border font-mono text-sm bg-white border-gray-300 text-gray-900"
+              id="storage-key"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              value={config.consentStorageKey}
+              onChange={(e) =>
+                updateConfig('consentStorageKey', e.target.value)
+              }
+              placeholder="vapi_widget_consent"
             />
             <button
               onClick={() => {
-                localStorage.removeItem(config.localStorageKey);
-                // Force a page refresh to reset the widget's consent state
-                window.location.reload();
+                localStorage.removeItem(config.consentStorageKey);
+                alert('Consent removed from local storage!');
               }}
               className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
               title="Clear stored consent"

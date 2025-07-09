@@ -67,26 +67,29 @@ const WidgetPreview: React.FC<WidgetPreviewProps> = ({ config }) => {
                   }
                 `}</style>
                 <VapiWidget
-                  publicKey={config.publicKey}
-                  assistantId={config.assistantId}
-                  assistantOverrides={config.assistantOverrides}
-                  assistant={config.assistant}
-                  position={config.position}
                   mode={config.mode}
                   theme={config.theme}
-                  baseColor={config.baseColor}
+                  baseBgColor={config.baseBgColor}
                   accentColor={config.accentColor}
-                  buttonBaseColor={config.buttonBaseColor}
-                  buttonAccentColor={config.buttonAccentColor}
+                  ctaButtonColor={config.ctaButtonColor}
+                  ctaButtonTextColor={config.ctaButtonTextColor}
                   radius={config.radius}
                   size={config.size}
-                  mainLabel={config.mainLabel}
+                  title={config.title}
                   startButtonText={config.startButtonText}
                   endButtonText={config.endButtonText}
-                  requireConsent={config.requireConsent}
-                  termsContent={config.termsContent}
-                  localStorageKey={config.localStorageKey}
-                  showTranscript={config.showTranscript}
+                  consentRequired={config.consentRequired}
+                  consentTitle={config.consentTitle}
+                  consentContent={config.consentContent}
+                  consentStorageKey={config.consentStorageKey}
+                  voiceShowTranscript={config.voiceShowTranscript}
+                  chatFirstMessage={config.chatFirstMessage}
+                  publicKey="test-key"
+                  assistantId="test-assistant"
+                  onVoiceStart={() => console.log('Voice started')}
+                  onVoiceEnd={() => console.log('Voice ended')}
+                  onMessage={(message) => console.log('Message:', message)}
+                  onError={(error) => console.error('Error:', error)}
                 />
               </div>
             )}
@@ -120,14 +123,14 @@ const WidgetPreview: React.FC<WidgetPreviewProps> = ({ config }) => {
               <div className="flex justify-between py-1">
                 <span className="text-gray-600">Consent:</span>
                 <span className="font-medium">
-                  {config.requireConsent ? 'Required' : 'Not Required'}
+                  {config.consentRequired ? 'Required' : 'Not Required'}
                 </span>
               </div>
               {(config.mode === 'voice' || config.mode === 'hybrid') && (
                 <div className="flex justify-between py-1">
                   <span className="text-gray-600">Transcript:</span>
                   <span className="font-medium">
-                    {config.showTranscript ? 'Shown' : 'Hidden'}
+                    {config.voiceShowTranscript ? 'Shown' : 'Hidden'}
                   </span>
                 </div>
               )}

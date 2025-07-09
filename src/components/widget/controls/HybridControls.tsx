@@ -18,6 +18,7 @@ const HybridControls: React.FC<HybridControlsProps> = ({
   colors,
   styles,
   inputRef,
+  placeholder = 'Type your message...', // Default fallback
 }) => (
   <div className="flex items-center space-x-2">
     <input
@@ -28,7 +29,7 @@ const HybridControls: React.FC<HybridControlsProps> = ({
       onKeyPress={(e) =>
         e.key === 'Enter' && isChatAvailable && !isCallActive && onSendMessage()
       }
-      placeholder="Type your message..."
+      placeholder={placeholder}
       disabled={isCallActive}
       className={`flex-1 px-3 py-2 rounded-lg border ${
         styles.theme === 'dark'
@@ -59,7 +60,7 @@ const HybridControls: React.FC<HybridControlsProps> = ({
       }`}
       style={{
         backgroundColor: colors.accentColor,
-        color: colors.buttonAccentColor || 'white',
+        color: colors.ctaButtonTextColor || 'white',
       }}
       title="Send message"
     >
@@ -75,7 +76,7 @@ const HybridControls: React.FC<HybridControlsProps> = ({
       }`}
       style={{
         backgroundColor: isCallActive ? '#ef4444' : colors.accentColor,
-        color: colors.buttonAccentColor || 'white',
+        color: colors.ctaButtonTextColor || 'white',
       }}
       title={
         connectionStatus === 'connecting'

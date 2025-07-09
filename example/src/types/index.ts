@@ -1,21 +1,27 @@
 export interface WidgetConfig {
   mode: 'voice' | 'chat' | 'hybrid';
   theme: 'light' | 'dark';
-  baseColor: string;
+  baseBgColor: string;
   accentColor: string;
-  buttonBaseColor: string;
-  buttonAccentColor: string;
+  ctaButtonColor: string;
+  ctaButtonTextColor: string;
   radius: 'none' | 'small' | 'medium' | 'large';
   size: 'tiny' | 'compact' | 'full';
-  position: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
-  mainLabel: string;
+  position:
+    | 'bottom-right'
+    | 'bottom-left'
+    | 'top-right'
+    | 'top-left'
+    | 'bottom-center';
+  title: string;
   startButtonText: string;
   endButtonText: string;
-  requireConsent: boolean;
-  termsContent: string;
-  localStorageKey: string;
-  showTranscript: boolean;
-  firstChatMessage?: string;
+  consentRequired: boolean;
+  consentTitle?: string;
+  consentContent: string;
+  consentStorageKey: string;
+  voiceShowTranscript: boolean;
+  chatFirstMessage?: string;
 
   // Vapi Configuration
   apiUrl?: string;

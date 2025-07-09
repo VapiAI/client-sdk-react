@@ -21,22 +21,23 @@ function App() {
     mode: 'chat',
     theme: 'light',
     // Default colors matching VapiWidget defaults
-    baseColor: '#ffffff', // Light mode default (automatically switches to #000000 in dark mode)
+    baseBgColor: '#ffffff', // Light mode default (automatically switches to #000000 in dark mode)
     accentColor: '#14B8A6', // Default teal accent
-    buttonBaseColor: '#000000', // Default black for buttons
-    buttonAccentColor: '#ffffff', // Default white for button text
+    ctaButtonColor: '#000000', // Default black for buttons
+    ctaButtonTextColor: '#ffffff', // Default white for button text
     radius: 'large',
     size: 'full',
     position: 'bottom-right',
-    mainLabel: 'TALK WITH AI',
+    title: 'TALK WITH AI',
     startButtonText: 'Start',
     endButtonText: 'End Call',
-    requireConsent: true,
-    termsContent:
+    consentRequired: true,
+    consentTitle: 'Terms and conditions',
+    consentContent:
       'By clicking "Agree," and each time I interact with this AI agent, I consent to the recording, storage, and sharing of my communications with third-party service providers, and as otherwise described in our Terms of Service.',
-    localStorageKey: 'vapi_widget_consent',
-    showTranscript: false,
-    firstChatMessage: 'Hey, How can I help you today?',
+    consentStorageKey: 'vapi_widget_consent',
+    voiceShowTranscript: false,
+    chatFirstMessage: 'Hey, How can I help you today?',
     // Vapi Configuration
     publicKey: import.meta.env.VITE_VAPI_API_KEY || 'your-vapi-public-key',
     assistantId: import.meta.env.VITE_VAPI_ASSISTANT_ID || 'demo-assistant-id',
@@ -63,21 +64,23 @@ function App() {
     const attributes = [
       `mode="${config.mode}"`,
       `theme="${config.theme}"`,
-      `base-color="${config.baseColor}"`,
+      `base-bg-color="${config.baseBgColor}"`,
       `accent-color="${config.accentColor}"`,
-      `button-base-color="${config.buttonBaseColor}"`,
-      `button-accent-color="${config.buttonAccentColor}"`,
+      `cta-button-color="${config.ctaButtonColor}"`,
+      `cta-button-text-color="${config.ctaButtonTextColor}"`,
       `radius="${config.radius}"`,
       `size="${config.size}"`,
       `position="${config.position}"`,
-      `main-label="${config.mainLabel}"`,
+      `title="${config.title}"`,
       `start-button-text="${config.startButtonText}"`,
       config.endButtonText ? `end-button-text="${config.endButtonText}"` : null,
-      `require-consent="${config.requireConsent}"`,
-      `local-storage-key="${config.localStorageKey}"`,
-      `show-transcript="${config.showTranscript}"`,
-      config.firstChatMessage
-        ? `first-chat-message="${config.firstChatMessage}"`
+      `consent-required="${config.consentRequired}"`,
+      config.consentTitle ? `consent-title="${config.consentTitle}"` : null,
+      `consent-content="${config.consentContent}"`,
+      `consent-storage-key="${config.consentStorageKey}"`,
+      `voice-show-transcript="${config.voiceShowTranscript}"`,
+      config.chatFirstMessage
+        ? `chat-first-message="${config.chatFirstMessage}"`
         : null,
     ]
       .filter(Boolean)
@@ -128,10 +131,10 @@ function App() {
                   {/* Mode Section */}
                   <ModeSection
                     mode={config.mode}
-                    showTranscript={config.showTranscript}
+                    showTranscript={config.voiceShowTranscript}
                     onModeChange={(mode) => updateConfig('mode', mode)}
                     onTranscriptToggle={(value) =>
-                      updateConfig('showTranscript', value)
+                      updateConfig('voiceShowTranscript', value)
                     }
                   />
 
@@ -178,22 +181,23 @@ function App() {
             position={config.position}
             mode={config.mode}
             theme={config.theme}
-            baseColor={config.baseColor}
+            baseBgColor={config.baseBgColor}
             accentColor={config.accentColor}
-            buttonBaseColor={config.buttonBaseColor}
-            buttonAccentColor={config.buttonAccentColor}
+            ctaButtonColor={config.ctaButtonColor}
+            ctaButtonTextColor={config.ctaButtonTextColor}
             radius={config.radius}
             size={config.size}
-            mainLabel={config.mainLabel}
+            title={config.title}
             startButtonText={config.startButtonText}
             endButtonText={config.endButtonText}
-            requireConsent={config.requireConsent}
-            termsContent={config.termsContent}
-            localStorageKey={config.localStorageKey}
-            showTranscript={config.showTranscript}
-            firstChatMessage={config.firstChatMessage}
-            onCallStart={() => console.log('Call started')}
-            onCallEnd={() => console.log('Call ended')}
+            consentRequired={config.consentRequired}
+            consentTitle={config.consentTitle}
+            consentContent={config.consentContent}
+            consentStorageKey={config.consentStorageKey}
+            voiceShowTranscript={config.voiceShowTranscript}
+            chatFirstMessage={config.chatFirstMessage}
+            onVoiceStart={() => console.log('Call started')}
+            onVoiceEnd={() => console.log('Call ended')}
             onMessage={(message) => console.log('Message:', message)}
             onError={(error) => console.error('Error:', error)}
           />

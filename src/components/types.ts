@@ -5,58 +5,113 @@ export interface VapiWidgetProps {
   // Vapi Configuration
   publicKey: string;
   assistantId?: string; // Supported by both voice and chat
-  assistant?: any; // Full assistant object - voice only
+  assistant?: any; // Assistant object - voice only
   assistantOverrides?: any; // Assistant overrides - supported by both voice and chat
 
   // Layout & Position
-  position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
+  position?:
+    | 'bottom-right'
+    | 'bottom-left'
+    | 'top-right'
+    | 'top-left'
+    | 'bottom-center';
   size?: 'tiny' | 'compact' | 'full';
-  radius?: 'none' | 'small' | 'medium' | 'large';
+  borderRadius?: 'none' | 'small' | 'medium' | 'large';
 
   // Mode & Theme
   mode?: 'voice' | 'chat' | 'hybrid';
   theme?: 'light' | 'dark';
 
   // Colors
-  baseColor?: string;
+  baseBgColor?: string;
   accentColor?: string;
+  ctaButtonColor?: string;
+  ctaButtonTextColor?: string;
+
+  // Text & Labels
+  title?: string;
+  startButtonText?: string;
+  endButtonText?: string;
+  ctaTitle?: string;
+  ctaSubtitle?: string;
+
+  // Empty State Messages
+  voiceEmptyMessage?: string;
+  voiceActiveEmptyMessage?: string;
+  chatEmptyMessage?: string;
+  hybridEmptyMessage?: string;
+
+  // Chat Configuration
+  chatFirstMessage?: string;
+  chatPlaceholder?: string;
+
+  // Voice Configuration
+  voiceShowTranscript?: boolean;
+
+  // Consent Configuration
+  consentRequired?: boolean;
+  consentTitle?: string;
+  consentContent?: string;
+  consentStorageKey?: string;
+
+  // Event handlers
+  onVoiceStart?: () => void;
+  onVoiceEnd?: () => void;
+  onMessage?: (message: any) => void;
+  onError?: (error: Error) => void;
+
+  // Deprecated aliases
+  /** @deprecated Use `borderRadius` instead */
+  radius?: 'none' | 'small' | 'medium' | 'large';
+
+  // Colors
+  /** @deprecated Use `baseBgColor` instead */
+  baseColor?: string;
+  /** @deprecated Use `ctaButtonColor` instead */
   buttonBaseColor?: string;
+  /** @deprecated Use `ctaButtonTextColor` instead */
   buttonAccentColor?: string;
 
   // Text & Labels
+  /** @deprecated Use `title` instead */
   mainLabel?: string;
-  startButtonText?: string;
-  endButtonText?: string;
 
   // Empty State Messages
+  /** @deprecated Use `voiceEmptyMessage` instead */
   emptyVoiceMessage?: string;
+  /** @deprecated Use `voiceActiveEmptyMessage` instead */
   emptyVoiceActiveMessage?: string;
+  /** @deprecated Use `chatEmptyMessage` instead */
   emptyChatMessage?: string;
+  /** @deprecated Use `hybridEmptyMessage` instead */
   emptyHybridMessage?: string;
 
-  // Initial Chat Message
+  /** @deprecated Use `chatFirstMessage` instead */
   firstChatMessage?: string;
 
-  // Legal & Consent
-  requireConsent?: boolean;
-  termsContent?: string;
-  localStorageKey?: string;
-
-  // Transcript
+  /** @deprecated Use `voiceShowTranscript` instead */
   showTranscript?: boolean;
 
+  // Consent
+  /** @deprecated Use `consentRequired` instead */
+  requireConsent?: boolean;
+  /** @deprecated Use `consentContent` instead */
+  termsContent?: string;
+  /** @deprecated Use `consentStorageKey` instead */
+  localStorageKey?: string;
+
   // Event handlers
+  /** @deprecated Use `onVoiceStart` instead */
   onCallStart?: () => void;
+  /** @deprecated Use `onVoiceEnd` instead */
   onCallEnd?: () => void;
-  onMessage?: (message: any) => void;
-  onError?: (error: Error) => void;
 }
 
 export interface ColorScheme {
   baseColor: string;
   accentColor: string;
-  buttonBaseColor: string;
-  buttonAccentColor: string;
+  ctaButtonColor: string;
+  ctaButtonTextColor: string;
 }
 
 export interface StyleConfig {
@@ -81,6 +136,8 @@ export interface FloatingButtonProps {
   onClick: () => void;
   onToggleCall?: () => void;
   mainLabel: string;
+  ctaTitle?: string;
+  ctaSubtitle?: string;
   colors: ColorScheme;
   styles: StyleConfig;
   mode: 'voice' | 'chat' | 'hybrid';
@@ -118,10 +175,10 @@ export interface EmptyConversationProps {
   mode: 'voice' | 'chat' | 'hybrid';
   isCallActive: boolean;
   theme: 'light' | 'dark';
-  emptyVoiceMessage: string;
-  emptyVoiceActiveMessage: string;
-  emptyChatMessage: string;
-  emptyHybridMessage: string;
+  voiceEmptyMessage: string;
+  voiceActiveEmptyMessage: string;
+  chatEmptyMessage: string;
+  hybridEmptyMessage: string;
 }
 
 export interface VoiceControlsProps {
@@ -142,6 +199,7 @@ export interface ChatControlsProps {
   colors: ColorScheme;
   styles: StyleConfig;
   inputRef?: React.RefObject<HTMLInputElement>;
+  placeholder?: string;
 }
 
 export interface HybridControlsProps {
@@ -156,4 +214,5 @@ export interface HybridControlsProps {
   colors: ColorScheme;
   styles: StyleConfig;
   inputRef?: React.RefObject<HTMLInputElement>;
+  placeholder?: string;
 }

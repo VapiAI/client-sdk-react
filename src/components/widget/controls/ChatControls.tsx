@@ -10,6 +10,7 @@ const ChatControls: React.FC<ChatControlsProps> = ({
   colors,
   styles,
   inputRef,
+  placeholder = 'Type your message...', // Default fallback
 }) => (
   <div className="flex items-center space-x-2">
     <input
@@ -18,7 +19,7 @@ const ChatControls: React.FC<ChatControlsProps> = ({
       value={chatInput}
       onChange={onInputChange}
       onKeyPress={(e) => e.key === 'Enter' && isAvailable && onSendMessage()}
-      placeholder="Type your message..."
+      placeholder={placeholder}
       className={`flex-1 px-3 py-2 rounded-lg border ${
         styles.theme === 'dark'
           ? 'border-gray-600 text-white placeholder-gray-400'
@@ -46,7 +47,7 @@ const ChatControls: React.FC<ChatControlsProps> = ({
       }`}
       style={{
         backgroundColor: colors.accentColor,
-        color: colors.buttonAccentColor || 'white',
+        color: colors.ctaButtonTextColor || 'white',
       }}
     >
       <PaperPlaneTiltIcon size={20} weight="fill" />

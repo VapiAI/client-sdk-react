@@ -22,7 +22,7 @@ const VoiceControls: React.FC<VoiceControlsProps> = ({
       }`}
       style={{
         backgroundColor: isCallActive ? '#ef4444' : colors.accentColor,
-        color: colors.buttonAccentColor || 'white',
+        color: colors.ctaButtonTextColor || 'white',
       }}
     >
       {connectionStatus === 'connecting' ? (

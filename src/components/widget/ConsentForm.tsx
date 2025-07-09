@@ -3,8 +3,8 @@ import React from 'react';
 interface ColorScheme {
   baseColor: string;
   accentColor: string;
-  buttonBaseColor: string;
-  buttonAccentColor: string;
+  ctaButtonColor: string;
+  ctaButtonTextColor: string;
 }
 
 interface StyleConfig {
@@ -21,7 +21,8 @@ const radiusStyles = {
 };
 
 export interface ConsentFormProps {
-  termsContent: string;
+  consentTitle?: string;
+  consentContent: string;
   onAccept: () => void;
   onCancel: () => void;
   colors: ColorScheme;
@@ -30,7 +31,8 @@ export interface ConsentFormProps {
 }
 
 const ConsentForm: React.FC<ConsentFormProps> = ({
-  termsContent,
+  consentTitle = 'Terms and conditions',
+  consentContent,
   onAccept,
   onCancel,
   colors,
@@ -98,11 +100,11 @@ const ConsentForm: React.FC<ConsentFormProps> = ({
     ...radiusStyles[radius],
     // Invert colors based on theme - white bg in dark mode, use configured colors in light mode
     backgroundColor: isDark
-      ? colors.buttonAccentColor || '#FFFFFF'
-      : colors.buttonBaseColor || '#000000',
+      ? colors.ctaButtonTextColor || '#FFFFFF'
+      : colors.ctaButtonColor || '#000000',
     color: isDark
-      ? colors.buttonBaseColor || '#000000'
-      : colors.buttonAccentColor || '#FFFFFF',
+      ? colors.ctaButtonColor || '#000000'
+      : colors.ctaButtonTextColor || '#FFFFFF',
     border: 'none',
     padding: '0.5rem 1rem',
     fontSize: '0.75rem',
@@ -138,12 +140,12 @@ const ConsentForm: React.FC<ConsentFormProps> = ({
         }
       `}</style>
 
-      <h3 style={headingStyle}>Terms and conditions</h3>
+      <h3 style={headingStyle}>{consentTitle}</h3>
 
       <div
         className="consent-terms-content"
         style={termsContentStyle}
-        dangerouslySetInnerHTML={{ __html: termsContent }}
+        dangerouslySetInnerHTML={{ __html: consentContent }}
       />
 
       <div style={buttonContainerStyle}>

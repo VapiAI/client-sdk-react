@@ -25,27 +25,54 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
   apiUrl,
   position = 'bottom-right',
   size = 'full',
-  radius = 'medium',
+  borderRadius,
+  radius = 'medium', // deprecated
   mode = 'chat',
   theme = 'light',
-  baseColor,
+  // Colors
+  baseBgColor,
+  baseColor, // deprecated
   accentColor,
-  buttonBaseColor,
-  buttonAccentColor,
-  mainLabel = 'Talk with AI',
-  startButtonText = 'Start',
-  endButtonText = 'End Call',
-  emptyVoiceMessage = 'Click the start button to begin a conversation',
-  emptyVoiceActiveMessage = 'Listening...',
-  emptyChatMessage = 'Type a message to start chatting',
-  emptyHybridMessage = 'Use voice or text to communicate',
-  firstChatMessage,
-  requireConsent = false,
-  termsContent = 'By clicking "Agree," and each time I interact with this AI agent, I consent to the recording, storage, and sharing of my communications with third-party service providers, and as otherwise described in our Terms of Service.',
-  localStorageKey = 'vapi_widget_consent',
-  showTranscript = false,
-  onCallStart,
-  onCallEnd,
+  ctaButtonColor,
+  buttonBaseColor, // deprecated
+  ctaButtonTextColor,
+  buttonAccentColor, // deprecated
+  // Text labels
+  title,
+  mainLabel = 'Talk with AI', // deprecated
+  startButtonText,
+  endButtonText,
+  ctaTitle = 'Talk with AI',
+  ctaSubtitle,
+  // Empty messages
+  voiceEmptyMessage,
+  emptyVoiceMessage = 'Click the start button to begin a conversation', // deprecated
+  voiceActiveEmptyMessage,
+  emptyVoiceActiveMessage = 'Listening...', // deprecated
+  chatEmptyMessage,
+  emptyChatMessage = 'Type a message to start chatting', // deprecated
+  hybridEmptyMessage,
+  emptyHybridMessage = 'Use voice or text to communicate', // deprecated
+  // Chat configuration
+  chatFirstMessage,
+  firstChatMessage, // deprecated
+  chatPlaceholder,
+  // Voice configuration
+  voiceShowTranscript,
+  showTranscript = false, // deprecated
+  // Consent configuration
+  consentRequired,
+  requireConsent = false, // deprecated
+  consentTitle,
+  consentContent,
+  termsContent = 'By clicking "Agree," and each time I interact with this AI agent, I consent to the recording, storage, and sharing of my communications with third-party service providers, and as otherwise described in our Terms of Service.', // deprecated
+  consentStorageKey,
+  localStorageKey = 'vapi_widget_consent', // deprecated
+  // Event handlers
+  onVoiceStart,
+  onCallStart, // deprecated
+  onVoiceEnd,
+  onCallEnd, // deprecated
   onMessage,
   onError,
 }) => {
@@ -56,6 +83,33 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
   const conversationEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const effectiveBorderRadius = borderRadius ?? radius;
+  const effectiveBaseBgColor = baseBgColor ?? baseColor;
+  const effectiveAccentColor = accentColor ?? '#14B8A6';
+  const effectiveColorButtonBase =
+    buttonBaseColor ?? ctaButtonColor ?? '#000000';
+  const effectiveColorButtonAccent =
+    buttonAccentColor ?? ctaButtonTextColor ?? '#FFFFFF';
+  const effectiveTextWidgetTitle = title ?? mainLabel;
+  const effectiveCtaTitle = ctaTitle ?? effectiveTextWidgetTitle;
+  const effectiveCtaSubtitle = ctaSubtitle;
+  const effectiveStartButtonText = startButtonText ?? 'Start';
+  const effectiveEndButtonText = endButtonText ?? 'End Call';
+  const effectiveVoiceEmptyMessage = voiceEmptyMessage ?? emptyVoiceMessage;
+  const effectiveVoiceActiveEmptyMessage =
+    voiceActiveEmptyMessage ?? emptyVoiceActiveMessage;
+  const effectiveChatEmptyMessage = chatEmptyMessage ?? emptyChatMessage;
+  const effectiveHybridEmptyMessage = hybridEmptyMessage ?? emptyHybridMessage;
+  const effectiveChatFirstMessage = chatFirstMessage ?? firstChatMessage;
+  const effectiveVoiceShowTranscript = voiceShowTranscript ?? showTranscript;
+  const effectiveConsentRequired = consentRequired ?? requireConsent;
+  const effectiveConsentTitle = consentTitle;
+  const effectiveConsentContent = consentContent ?? termsContent;
+  const effectiveConsentStorageKey = consentStorageKey ?? localStorageKey;
+  const effectiveOnVoiceStart = onVoiceStart ?? onCallStart;
+  const effectiveOnVoiceEnd = onVoiceEnd ?? onCallEnd;
+  const effectiveChatPlaceholder = chatPlaceholder ?? 'Type your message...';
+
   const vapi = useVapiWidget({
     mode,
     publicKey,
@@ -63,30 +117,30 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
     assistant,
     assistantOverrides,
     apiUrl,
-    firstChatMessage,
-    onCallStart,
-    onCallEnd,
+    firstChatMessage: effectiveChatFirstMessage,
+    onCallStart: effectiveOnVoiceStart,
+    onCallEnd: effectiveOnVoiceEnd,
     onMessage,
     onError,
   });
 
   const colors: ColorScheme = {
-    baseColor: baseColor
-      ? theme === 'dark' && baseColor === '#FFFFFF'
+    baseColor: effectiveBaseBgColor
+      ? theme === 'dark' && effectiveBaseBgColor === '#FFFFFF'
         ? '#000000'
-        : baseColor
+        : effectiveBaseBgColor
       : theme === 'dark'
         ? '#000000'
         : '#FFFFFF',
-    accentColor: accentColor || '#14B8A6',
-    buttonBaseColor: buttonBaseColor || '#000000',
-    buttonAccentColor: buttonAccentColor || '#FFFFFF',
+    accentColor: effectiveAccentColor,
+    ctaButtonColor: effectiveColorButtonBase,
+    ctaButtonTextColor: effectiveColorButtonAccent,
   };
 
   const effectiveSize = mode !== 'voice' && size === 'tiny' ? 'compact' : size;
   const styles: StyleConfig = {
     size: effectiveSize,
-    radius,
+    radius: effectiveBorderRadius,
     theme,
   };
 
@@ -126,7 +180,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
   const getConversationLayoutStyle = (): React.CSSProperties => {
     const isEmpty = vapi.conversation.length === 0;
     const hideTranscript =
-      !showTranscript &&
+      !effectiveVoiceShowTranscript &&
       vapi.voice.isCallActive &&
       (mode === 'voice' || mode === 'hybrid');
     const showingEmptyState = mode === 'voice' && !vapi.voice.isCallActive;
@@ -147,14 +201,14 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
   };
 
   useEffect(() => {
-    if (requireConsent) {
-      const storedConsent = localStorage.getItem(localStorageKey);
+    if (effectiveConsentRequired) {
+      const storedConsent = localStorage.getItem(effectiveConsentStorageKey);
       const hasStoredConsent = storedConsent === 'true';
       setHasConsent(hasStoredConsent);
     } else {
       setHasConsent(true);
     }
-  }, [requireConsent, localStorageKey]);
+  }, [effectiveConsentRequired, effectiveConsentStorageKey]);
 
   useEffect(() => {
     conversationEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -169,7 +223,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
   }, [isExpanded, mode]);
 
   const handleConsentAgree = () => {
-    localStorage.setItem(localStorageKey, 'true');
+    localStorage.setItem(effectiveConsentStorageKey, 'true');
     setHasConsent(true);
   };
 
@@ -224,10 +278,10 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
           mode={mode}
           isCallActive={vapi.voice.isCallActive}
           theme={styles.theme}
-          emptyVoiceMessage={emptyVoiceMessage}
-          emptyVoiceActiveMessage={emptyVoiceActiveMessage}
-          emptyChatMessage={emptyChatMessage}
-          emptyHybridMessage={emptyHybridMessage}
+          voiceEmptyMessage={effectiveVoiceEmptyMessage}
+          voiceActiveEmptyMessage={effectiveVoiceActiveEmptyMessage}
+          chatEmptyMessage={effectiveChatEmptyMessage}
+          hybridEmptyMessage={effectiveHybridEmptyMessage}
         />
       );
     }
@@ -271,7 +325,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
     if (mode === 'hybrid') {
       if (!vapi.voice.isCallActive) {
         return renderConversationMessages();
-      } else if (showTranscript) {
+      } else if (effectiveVoiceShowTranscript) {
         return renderConversationMessages();
       } else {
         return (
@@ -292,7 +346,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
     // Voice mode: respect showTranscript when call is active
     if (mode === 'voice') {
       if (vapi.voice.isCallActive) {
-        if (showTranscript) {
+        if (effectiveVoiceShowTranscript) {
           return renderConversationMessages();
         } else {
           return (
@@ -317,10 +371,10 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
         mode={mode}
         isCallActive={vapi.voice.isCallActive}
         theme={styles.theme}
-        emptyVoiceMessage={emptyVoiceMessage}
-        emptyVoiceActiveMessage={emptyVoiceActiveMessage}
-        emptyChatMessage={emptyChatMessage}
-        emptyHybridMessage={emptyHybridMessage}
+        voiceEmptyMessage={effectiveVoiceEmptyMessage}
+        voiceActiveEmptyMessage={effectiveVoiceActiveEmptyMessage}
+        chatEmptyMessage={effectiveChatEmptyMessage}
+        hybridEmptyMessage={effectiveHybridEmptyMessage}
       />
     );
   };
@@ -333,8 +387,8 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
           connectionStatus={vapi.voice.connectionStatus}
           isAvailable={vapi.voice.isAvailable}
           onToggleCall={handleToggleCall}
-          startButtonText={startButtonText}
-          endButtonText={endButtonText}
+          startButtonText={effectiveStartButtonText}
+          endButtonText={effectiveEndButtonText}
           colors={colors}
         />
       );
@@ -350,6 +404,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
           colors={colors}
           styles={styles}
           inputRef={inputRef}
+          placeholder={effectiveChatPlaceholder}
         />
       );
     }
@@ -368,6 +423,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
           colors={colors}
           styles={styles}
           inputRef={inputRef}
+          placeholder={effectiveChatPlaceholder}
         />
       );
     }
@@ -376,10 +432,11 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
   };
 
   const renderExpandedWidget = () => {
-    if (requireConsent && !hasConsent) {
+    if (effectiveConsentRequired && !hasConsent) {
       return (
         <ConsentForm
-          termsContent={termsContent}
+          consentTitle={effectiveConsentTitle}
+          consentContent={effectiveConsentContent}
           onAccept={handleConsentAgree}
           onCancel={handleConsentCancel}
           colors={colors}
@@ -398,7 +455,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
           isSpeaking={vapi.voice.isSpeaking}
           isTyping={vapi.chat.isTyping}
           hasActiveConversation={vapi.conversation.length > 0}
-          mainLabel={mainLabel}
+          mainLabel={effectiveTextWidgetTitle}
           onClose={() => setIsExpanded(false)}
           onReset={handleReset}
           colors={colors}
@@ -442,7 +499,9 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
             volumeLevel={vapi.voice.volumeLevel}
             onClick={handleFloatingButtonClick}
             onToggleCall={handleToggleCall}
-            mainLabel={mainLabel}
+            mainLabel={effectiveTextWidgetTitle}
+            ctaTitle={effectiveCtaTitle}
+            ctaSubtitle={effectiveCtaSubtitle}
             colors={colors}
             styles={styles}
             mode={mode}

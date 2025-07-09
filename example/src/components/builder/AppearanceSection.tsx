@@ -38,9 +38,9 @@ const AppearanceSection: React.FC<AppearanceSectionProps> = ({
           updateConfig('theme', newTheme);
           // Automatically adjust base color based on theme
           if (newTheme === 'dark') {
-            updateConfig('baseColor', '#000000');
+            updateConfig('baseBgColor', '#000000');
           } else {
-            updateConfig('baseColor', '#ffffff');
+            updateConfig('baseBgColor', '#ffffff');
           }
         }}
         className="w-full p-2 rounded-md border bg-white border-gray-300 text-gray-900"
@@ -53,16 +53,17 @@ const AppearanceSection: React.FC<AppearanceSectionProps> = ({
       </p>
     </div>
 
+    {/* Base Background Color */}
+    <div className="space-y-2">
+      <ColorPickerInput
+        label="Base Background Color"
+        value={config.baseBgColor}
+        onChange={(color) => updateConfig('baseBgColor', color)}
+      />
+    </div>
+
     {/* Color Inputs */}
     <div className="grid grid-cols-2 gap-4">
-      <div>
-        <ColorPickerInput
-          label="Base Color"
-          value={config.baseColor}
-          onChange={(color) => updateConfig('baseColor', color)}
-        />
-      </div>
-
       <div>
         <ColorPickerInput
           label="Accent Color"
@@ -71,19 +72,21 @@ const AppearanceSection: React.FC<AppearanceSectionProps> = ({
         />
       </div>
 
+      {/* Button Base Color */}
       <div>
         <ColorPickerInput
-          label="Button Base Color"
-          value={config.buttonBaseColor}
-          onChange={(color) => updateConfig('buttonBaseColor', color)}
+          label="CTA Button Color"
+          value={config.ctaButtonColor}
+          onChange={(color) => updateConfig('ctaButtonColor', color)}
         />
       </div>
 
+      {/* Button Accent Color */}
       <div>
         <ColorPickerInput
-          label="Button Accent Color"
-          value={config.buttonAccentColor}
-          onChange={(color) => updateConfig('buttonAccentColor', color)}
+          label="CTA Button Text Color"
+          value={config.ctaButtonTextColor}
+          onChange={(color) => updateConfig('ctaButtonTextColor', color)}
         />
       </div>
     </div>

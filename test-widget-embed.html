@@ -29,29 +29,37 @@
     <div
       id="vapi-widget-2"
       data-client-widget="VapiWidget"
-      data-props='{"publicKey":"your-public-key-here","assistantId":"your-assistant-id-here","mode":"chat","theme":"dark","position":"bottom-left"}'
+      data-props='{"publicKey":"your-public-key-here","assistantId":"your-assistant-id-here","mode":"chat","theme":"dark","position":"top-right"}'
     ></div>
 
     <!-- Example 3: Using <vapi-widget> custom element -->
     <vapi-widget
-      mode="chat"
+      mode="hybrid"
       theme="light"
-      base-color="#ffffff"
+      base-bg-color="#ffffff"
       accent-color="#14B8A6"
-      button-base-color="#000000"
-      button-accent-color="#ffffff"
-      radius="large"
+      cta-button-color="#000000"
+      cta-button-text-color="#ffffff"
+      border-radius="large"
       size="full"
-      position="top-right"
-      main-label="TALK WITH AI"
-      start-button-text="Start"
-      end-button-text="End Call"
-      require-consent="true"
-      local-storage-key="vapi_widget_consent"
-      show-transcript="true"
+      position="bottom-left"
+      title="Vapi AI"
+      cta-title="Talk with AI"
+      start-button-text="Call"
+      end-button-text="Hang Up"
+      consent-required="true"
+      consent-title="Privacy Agreement"
+      consent-content="By using this service, you agree to our terms..."
+      consent-storage-key="vapi_widget_consent"
+      voice-show-transcript="true"
       public-key="your-public-key-here"
       assistant-id="your-assistant-id-here"
-      first-chat-message="Hello there, How can I help you today?"
+      chat-first-message="Hello there, How can I help you today?"
+      chat-placeholder="Ask me anything..."
+      voice-empty-message="Voice empty message"
+      voice-active-empty-message="Voice active empty message"
+      chat-empty-message="Chat empty message"
+      hybrid-empty-message="Hybrid empty message"
     ></vapi-widget>
 
     <script

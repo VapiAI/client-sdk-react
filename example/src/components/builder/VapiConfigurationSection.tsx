@@ -140,10 +140,11 @@ const VapiConfigurationSection: React.FC<VapiConfigurationSectionProps> = ({
           </label>
           <input
             type="text"
-            value={config.firstChatMessage || ''}
-            onChange={(e) => updateConfig('firstChatMessage', e.target.value)}
-            className="w-full p-2 rounded-md border bg-white border-gray-300 text-gray-900 text-sm"
-            placeholder="Hey, How can I help you today?"
+            id="first-chat-message"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            value={config.chatFirstMessage || ''}
+            onChange={(e) => updateConfig('chatFirstMessage', e.target.value)}
+            placeholder="Hi! How can I help you today?"
           />
           <p className="text-xs mt-1 text-gray-500">
             The initial message displayed when the chat opens

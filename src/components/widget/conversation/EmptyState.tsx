@@ -6,10 +6,10 @@ const EmptyConversation: React.FC<EmptyConversationProps> = ({
   mode,
   isCallActive,
   theme,
-  emptyVoiceMessage,
-  emptyVoiceActiveMessage,
-  emptyChatMessage,
-  emptyHybridMessage,
+  voiceEmptyMessage,
+  voiceActiveEmptyMessage,
+  chatEmptyMessage,
+  hybridEmptyMessage,
 }) => (
   <div className="text-center">
     <div
@@ -34,11 +34,11 @@ const EmptyConversation: React.FC<EmptyConversationProps> = ({
     >
       {mode === 'voice'
         ? isCallActive
-          ? emptyVoiceActiveMessage
-          : emptyVoiceMessage
+          ? voiceActiveEmptyMessage
+          : voiceEmptyMessage
         : mode === 'chat'
-          ? emptyChatMessage
-          : emptyHybridMessage}
+          ? chatEmptyMessage
+          : hybridEmptyMessage}
     </p>
   </div>
 );

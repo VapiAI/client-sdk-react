@@ -30,7 +30,7 @@ function App() {
     position: 'bottom-right',
     title: 'TALK WITH AI',
     ctaTitle: 'Chat with Support',
-    ctaSubtitle: 'We\'re here to help',
+    ctaSubtitle: "We're here to help",
     startButtonText: 'Start',
     endButtonText: 'End Call',
     consentRequired: true,

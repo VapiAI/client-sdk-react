@@ -1,7 +1,7 @@
 {
   "name": "@vapi-ai/client-sdk-react",
   "description": "Vapi Client React SDK",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "type": "module",
   "publishConfig": {
     "access": "public",

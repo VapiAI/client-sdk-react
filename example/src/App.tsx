@@ -29,6 +29,8 @@ function App() {
     size: 'full',
     position: 'bottom-right',
     title: 'TALK WITH AI',
+    ctaTitle: 'Chat with Support',
+    ctaSubtitle: 'We\'re here to help',
     startButtonText: 'Start',
     endButtonText: 'End Call',
     consentRequired: true,
@@ -72,6 +74,8 @@ function App() {
       `size="${config.size}"`,
       `position="${config.position}"`,
       `title="${config.title}"`,
+      config.ctaTitle ? `cta-title="${config.ctaTitle}"` : null,
+      config.ctaSubtitle ? `cta-subtitle="${config.ctaSubtitle}"` : null,
       `start-button-text="${config.startButtonText}"`,
       config.endButtonText ? `end-button-text="${config.endButtonText}"` : null,
       `consent-required="${config.consentRequired}"`,
@@ -196,6 +200,8 @@ function App() {
             consentStorageKey={config.consentStorageKey}
             voiceShowTranscript={config.voiceShowTranscript}
             chatFirstMessage={config.chatFirstMessage}
+            ctaTitle={config.ctaTitle}
+            ctaSubtitle={config.ctaSubtitle}
             onVoiceStart={() => console.log('Call started')}
             onVoiceEnd={() => console.log('Call ended')}
             onMessage={(message) => console.log('Message:', message)}

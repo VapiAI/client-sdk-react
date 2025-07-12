@@ -130,40 +130,80 @@ function initializeWidgets() {
     const htmlElement = element as HTMLElement;
     const props: any = {};
 
+    // Note: Event handlers (onVoiceStart, onVoiceEnd, onMessage, onError) and their deprecated versions
+    // cannot be passed via HTML attributes. They must be set programmatically or via React props.
     const attributeMap: Record<string, string> = {
+      // Mode & Theme
       mode: 'mode',
       theme: 'theme',
-      radius: 'radius',
-      size: 'size',
+
+      // Layout & Position
       position: 'position',
-      title: 'title',
+      size: 'size',
+      'border-radius': 'borderRadius',
+      radius: 'radius', // deprecated alias
+
+      // Colors
       'base-bg-color': 'baseBgColor',
       'accent-color': 'accentColor',
       'cta-button-color': 'ctaButtonColor',
       'cta-button-text-color': 'ctaButtonTextColor',
+
+      // Text & Labels
+      title: 'title',
+      'cta-title': 'ctaTitle',
+      'cta-subtitle': 'ctaSubtitle',
       'start-button-text': 'startButtonText',
       'end-button-text': 'endButtonText',
+
+      // Empty State Messages
       'voice-empty-message': 'voiceEmptyMessage',
       'voice-active-empty-message': 'voiceActiveEmptyMessage',
       'chat-empty-message': 'chatEmptyMessage',
       'hybrid-empty-message': 'hybridEmptyMessage',
+
+      // Chat Configuration
       'chat-first-message': 'chatFirstMessage',
       'chat-placeholder': 'chatPlaceholder',
+
+      // Voice Configuration
       'voice-show-transcript': 'voiceShowTranscript',
+
+      // Consent Configuration
       'consent-required': 'consentRequired',
       'consent-title': 'consentTitle',
       'consent-content': 'consentContent',
       'consent-storage-key': 'consentStorageKey',
+
+      // API Configuration
+      'api-url': 'apiUrl',
+
       // Vapi Configuration
       'public-key': 'publicKey',
       'assistant-id': 'assistantId',
       'assistant-overrides': 'assistantOverrides',
       assistant: 'assistant',
+
+      // Deprecated properties
+      'base-color': 'baseColor',
+      'button-base-color': 'buttonBaseColor',
+      'button-accent-color': 'buttonAccentColor',
+      'main-label': 'mainLabel',
+      'empty-voice-message': 'emptyVoiceMessage',
+      'empty-voice-active-message': 'emptyVoiceActiveMessage',
+      'empty-chat-message': 'emptyChatMessage',
+      'empty-hybrid-message': 'emptyHybridMessage',
+      'first-chat-message': 'firstChatMessage',
+      'show-transcript': 'showTranscript',
+      'require-consent': 'requireConsent',
+      'terms-content': 'termsContent',
+      'local-storage-key': 'localStorageKey',
     };
 
     Object.entries(attributeMap).forEach(([htmlAttr, propName]) => {
       const value = htmlElement.getAttribute(htmlAttr);
       if (value !== null) {
+        // Special handling for JSON attributes
         if (propName === 'assistantOverrides' || propName === 'assistant') {
           try {
             props[propName] = JSON.parse(value);

@@ -76,6 +76,8 @@ const WidgetPreview: React.FC<WidgetPreviewProps> = ({ config }) => {
                   radius={config.radius}
                   size={config.size}
                   title={config.title}
+                  ctaTitle={config.ctaTitle}
+                  ctaSubtitle={config.ctaSubtitle}
                   startButtonText={config.startButtonText}
                   endButtonText={config.endButtonText}
                   consentRequired={config.consentRequired}

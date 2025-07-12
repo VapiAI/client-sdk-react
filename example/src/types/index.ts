@@ -14,6 +14,8 @@ export interface WidgetConfig {
     | 'top-left'
     | 'bottom-center';
   title: string;
+  ctaTitle?: string;
+  ctaSubtitle?: string;
   startButtonText: string;
   endButtonText: string;
   consentRequired: boolean;

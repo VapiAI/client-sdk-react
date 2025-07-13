@@ -39,10 +39,10 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
   buttonAccentColor, // deprecated
   // Text labels
   title,
-  mainLabel = 'Talk with AI', // deprecated
+  mainLabel, // deprecated
   startButtonText,
   endButtonText,
-  ctaTitle = 'Talk with AI',
+  ctaTitle,
   ctaSubtitle,
   // Empty messages
   voiceEmptyMessage,

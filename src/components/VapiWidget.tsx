@@ -90,7 +90,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
     buttonBaseColor ?? ctaButtonColor ?? '#000000';
   const effectiveColorButtonAccent =
     buttonAccentColor ?? ctaButtonTextColor ?? '#FFFFFF';
-  const effectiveTextWidgetTitle = title ?? mainLabel;
+  const effectiveTextWidgetTitle = title ?? mainLabel ?? 'Talk with AI';
   const effectiveCtaTitle = ctaTitle ?? effectiveTextWidgetTitle;
   const effectiveCtaSubtitle = ctaSubtitle;
   const effectiveStartButtonText = startButtonText ?? 'Start';

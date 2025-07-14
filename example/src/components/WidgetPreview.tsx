@@ -73,7 +73,7 @@ const WidgetPreview: React.FC<WidgetPreviewProps> = ({ config }) => {
                   accentColor={config.accentColor}
                   ctaButtonColor={config.ctaButtonColor}
                   ctaButtonTextColor={config.ctaButtonTextColor}
-                  radius={config.radius}
+                  borderRadius={config.borderRadius}
                   size={config.size}
                   title={config.title}
                   ctaTitle={config.ctaTitle}
@@ -119,8 +119,10 @@ const WidgetPreview: React.FC<WidgetPreviewProps> = ({ config }) => {
                 </span>
               </div>
               <div className="flex justify-between py-1">
-                <span className="text-gray-600">Radius:</span>
-                <span className="font-medium capitalize">{config.radius}</span>
+                <span className="text-gray-600">Border Radius:</span>
+                <span className="font-medium capitalize">
+                  {config.borderRadius}
+                </span>
               </div>
               <div className="flex justify-between py-1">
                 <span className="text-gray-600">Consent:</span>

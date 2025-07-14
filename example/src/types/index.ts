@@ -5,7 +5,7 @@ export interface WidgetConfig {
   accentColor: string;
   ctaButtonColor: string;
   ctaButtonTextColor: string;
-  radius: 'none' | 'small' | 'medium' | 'large';
+  borderRadius: 'none' | 'small' | 'medium' | 'large';
   size: 'tiny' | 'compact' | 'full';
   position:
     | 'bottom-right'

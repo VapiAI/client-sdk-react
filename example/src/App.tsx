@@ -25,7 +25,7 @@ function App() {
     accentColor: '#14B8A6', // Default teal accent
     ctaButtonColor: '#000000', // Default black for buttons
     ctaButtonTextColor: '#ffffff', // Default white for button text
-    radius: 'large',
+    borderRadius: 'large',
     size: 'full',
     position: 'bottom-right',
     title: 'TALK WITH AI',
@@ -70,7 +70,7 @@ function App() {
       `accent-color="${config.accentColor}"`,
       `cta-button-color="${config.ctaButtonColor}"`,
       `cta-button-text-color="${config.ctaButtonTextColor}"`,
-      `radius="${config.radius}"`,
+      `border-radius="${config.borderRadius}"`,
       `size="${config.size}"`,
       `position="${config.position}"`,
       `title="${config.title}"`,
@@ -189,7 +189,7 @@ function App() {
             accentColor={config.accentColor}
             ctaButtonColor={config.ctaButtonColor}
             ctaButtonTextColor={config.ctaButtonTextColor}
-            radius={config.radius}
+            borderRadius={config.borderRadius}
             size={config.size}
             title={config.title}
             startButtonText={config.startButtonText}

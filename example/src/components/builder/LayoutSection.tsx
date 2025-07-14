@@ -41,28 +41,28 @@ const LayoutSection: React.FC<LayoutSectionProps> = ({
     {/* Radius */}
     <div className="mb-6">
       <label className="block text-sm font-medium mb-3 text-gray-700">
-        Radius
+        Border Radius
       </label>
       <div className="flex gap-3">
         {(['none', 'small', 'medium', 'large'] as const).map((radius) => (
           <div
             key={radius}
             className={`flex-1 p-4 rounded-lg border cursor-pointer transition-all ${
-              config.radius === radius
+              config.borderRadius === radius
                 ? 'border-gray-700 bg-gray-50'
                 : 'border-gray-300 hover:border-gray-400 bg-white'
             }`}
-            onClick={() => updateConfig('radius', radius)}
+            onClick={() => updateConfig('borderRadius', radius)}
           >
             <div className="flex items-center gap-3">
               <div
                 className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                  config.radius === radius
+                  config.borderRadius === radius
                     ? 'border-teal-500'
                     : 'border-gray-400'
                 }`}
               >
-                {config.radius === radius && (
+                {config.borderRadius === radius && (
                   <div className="w-3 h-3 bg-teal-500 rounded-full"></div>
                 )}
               </div>

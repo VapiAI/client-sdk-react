@@ -48,11 +48,6 @@ const LegalConsentSection: React.FC<LegalConsentSectionProps> = ({
             Terms Content
           </label>
           <div className="border rounded-md p-3 border-gray-300 bg-white">
-            <div className="flex items-center space-x-2 mb-3">
-              <span className="text-sm font-medium text-gray-700">
-                #### Terms and conditions
-              </span>
-            </div>
             <textarea
               id="terms-content"
               rows={3}

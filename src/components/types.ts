@@ -198,7 +198,7 @@ export interface ChatControlsProps {
   onSendMessage: () => void;
   colors: ColorScheme;
   styles: StyleConfig;
-  inputRef?: React.RefObject<HTMLInputElement>;
+  inputRef?: React.RefObject<HTMLInputElement | null>;
   placeholder?: string;
 }
 
@@ -213,6 +213,6 @@ export interface HybridControlsProps {
   onToggleCall: () => void;
   colors: ColorScheme;
   styles: StyleConfig;
-  inputRef?: React.RefObject<HTMLInputElement>;
+  inputRef?: React.RefObject<HTMLInputElement | null>;
   placeholder?: string;
 }

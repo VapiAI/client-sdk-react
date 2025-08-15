@@ -6,7 +6,10 @@ import { resolve } from 'path';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    react(),
+    react({
+      // Ensure compatibility with React 19
+      jsxRuntime: 'automatic',
+    }),
     dts({
       insertTypesEntry: true,
     }),
@@ -19,11 +22,12 @@ export default defineConfig({
       fileName: (format) => `index.${format === 'es' ? 'js' : 'cjs'}`,
     },
     rollupOptions: {
-      external: ['react', 'react-dom', '@vapi-ai/web'],
+      external: ['react', 'react-dom', 'react/jsx-runtime', '@vapi-ai/web'],
       output: {
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
+          'react/jsx-runtime': 'React',
           '@vapi-ai/web': 'Vapi',
         },
       },

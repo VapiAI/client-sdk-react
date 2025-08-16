@@ -1,17 +1,41 @@
 import React from 'react';
-import { MicrophoneIcon, StopIcon } from '@phosphor-icons/react';
+import {
+  MicrophoneIcon,
+  StopIcon,
+  MicrophoneSlashIcon,
+  WaveformIcon,
+} from '@phosphor-icons/react';
 import { VoiceControlsProps } from '../../types';
 
 const VoiceControls: React.FC<VoiceControlsProps> = ({
   isCallActive,
   connectionStatus,
   isAvailable,
+  isMuted,
   onToggleCall,
+  onToggleMute,
   startButtonText,
   endButtonText,
   colors,
 }) => (
-  <div className="flex items-center justify-center">
+  <div className="flex items-center justify-center space-x-2">
+    {isCallActive && connectionStatus === 'connected' && (
+      <button
+        onClick={onToggleMute}
+        className="h-12 w-12 flex items-center justify-center rounded-full transition-all hover:opacity-90 active:scale-95"
+        style={{
+          backgroundColor: isMuted ? '#ef4444' : colors.accentColor,
+          color: colors.ctaButtonTextColor || 'white',
+        }}
+        title={isMuted ? 'Unmute microphone' : 'Mute microphone'}
+      >
+        {isMuted ? (
+          <MicrophoneSlashIcon size={20} weight="fill" />
+        ) : (
+          <MicrophoneIcon size={20} weight="fill" />
+        )}
+      </button>
+    )}
     <button
       onClick={onToggleCall}
       disabled={!isAvailable && !isCallActive}
@@ -37,7 +61,7 @@ const VoiceControls: React.FC<VoiceControlsProps> = ({
         </>
       ) : (
         <>
-          <MicrophoneIcon size={16} weight="fill" />
+          <WaveformIcon size={16} weight="bold" />
           <span>{startButtonText}</span>
         </>
       )}

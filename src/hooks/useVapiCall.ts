@@ -6,12 +6,14 @@ export interface VapiCallState {
   isSpeaking: boolean;
   volumeLevel: number;
   connectionStatus: 'disconnected' | 'connecting' | 'connected';
+  isMuted: boolean;
 }
 
 export interface VapiCallHandlers {
   startCall: () => Promise<void>;
   endCall: () => Promise<void>;
   toggleCall: () => Promise<void>;
+  toggleMute: () => void;
 }
 
 export interface UseVapiCallOptions {
@@ -47,6 +49,7 @@ export const useVapiCall = ({
 
   const [isCallActive, setIsCallActive] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
   const [volumeLevel, setVolumeLevel] = useState(0);
   const [connectionStatus, setConnectionStatus] = useState<
     'disconnected' | 'connecting' | 'connected'
@@ -86,6 +89,7 @@ export const useVapiCall = ({
       setConnectionStatus('disconnected');
       setVolumeLevel(0);
       setIsSpeaking(false);
+      setIsMuted(false);
       callbacksRef.current.onCallEnd?.();
     };
 
@@ -185,15 +189,28 @@ export const useVapiCall = ({
     }
   }, [isCallActive, startCall, endCall]);
 
+  const toggleMute = useCallback(() => {
+    if (!vapi || !isCallActive) {
+      console.log('Cannot toggle mute: no vapi instance or call not active');
+      return;
+    }
+
+    const newMutedState = !isMuted;
+    vapi.setMuted(newMutedState);
+    setIsMuted(newMutedState);
+  }, [vapi, isCallActive, isMuted]);
+
   return {
     // State
     isCallActive,
     isSpeaking,
     volumeLevel,
     connectionStatus,
+    isMuted,
     // Handlers
     startCall,
     endCall,
     toggleCall,
+    toggleMute,
   };
 };

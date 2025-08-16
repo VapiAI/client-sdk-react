@@ -185,7 +185,9 @@ export interface VoiceControlsProps {
   isCallActive: boolean;
   connectionStatus: 'disconnected' | 'connecting' | 'connected';
   isAvailable: boolean;
+  isMuted: boolean;
   onToggleCall: () => void;
+  onToggleMute: () => void;
   startButtonText: string;
   endButtonText: string;
   colors: ColorScheme;
@@ -208,9 +210,11 @@ export interface HybridControlsProps {
   connectionStatus: 'disconnected' | 'connecting' | 'connected';
   isChatAvailable: boolean;
   isVoiceAvailable: boolean;
+  isMuted: boolean;
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSendMessage: () => void;
   onToggleCall: () => void;
+  onToggleMute: () => void;
   colors: ColorScheme;
   styles: StyleConfig;
   inputRef?: React.RefObject<HTMLInputElement>;

@@ -2,7 +2,9 @@ import React from 'react';
 import {
   PaperPlaneTiltIcon,
   MicrophoneIcon,
+  MicrophoneSlashIcon,
   StopIcon,
+  WaveformIcon,
 } from '@phosphor-icons/react';
 import { HybridControlsProps } from '../../types';
 
@@ -12,9 +14,11 @@ const HybridControls: React.FC<HybridControlsProps> = ({
   connectionStatus,
   isChatAvailable,
   isVoiceAvailable,
+  isMuted,
   onInputChange,
   onSendMessage,
   onToggleCall,
+  onToggleMute,
   colors,
   styles,
   inputRef,
@@ -66,6 +70,23 @@ const HybridControls: React.FC<HybridControlsProps> = ({
     >
       <PaperPlaneTiltIcon size={20} weight="fill" />
     </button>
+    {isCallActive && connectionStatus === 'connected' && (
+      <button
+        onClick={onToggleMute}
+        className="h-10 w-10 flex items-center justify-center rounded-lg transition-all hover:opacity-90 active:scale-95"
+        style={{
+          backgroundColor: isMuted ? '#ef4444' : colors.accentColor,
+          color: colors.ctaButtonTextColor || 'white',
+        }}
+        title={isMuted ? 'Unmute microphone' : 'Mute microphone'}
+      >
+        {isMuted ? (
+          <MicrophoneSlashIcon size={20} weight="fill" />
+        ) : (
+          <MicrophoneIcon size={20} weight="fill" />
+        )}
+      </button>
+    )}
     <button
       onClick={onToggleCall}
       disabled={!isVoiceAvailable && !isCallActive}
@@ -91,7 +112,7 @@ const HybridControls: React.FC<HybridControlsProps> = ({
       ) : isCallActive ? (
         <StopIcon size={20} weight="fill" />
       ) : (
-        <MicrophoneIcon size={20} weight="fill" />
+        <WaveformIcon size={20} weight="bold" />
       )}
     </button>
   </div>

@@ -127,9 +127,9 @@ export const handleStreamChunk = (
 
     // Since we pre-allocated, we know the index is always valid
     if (assistantMessageIndexRef.current !== null) {
+      const targetIndex = assistantMessageIndexRef.current!;
       setMessages((prev) => {
         const newMessages = [...prev];
-        const targetIndex = assistantMessageIndexRef.current!;
 
         if (targetIndex < newMessages.length) {
           newMessages[targetIndex] = {

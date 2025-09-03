@@ -2,47 +2,13 @@
 
 ## Overview
 
-The VAPI Widget is a versatile floating conversation component that integrates with VAPI AI to provide voice, chat, or hybrid (voice + chat) interactions on any website. It appears as a floating button that expands into a full conversation interface.
+This document contains internal technical implementation details for the VAPI Widget. For user documentation and API reference, see README.md.
 
-## Key Features
+## Key Technical Features
 
-### 🎙️ Voice Functionality
+> **Note**: For user-facing features list, see README.md.
 
-- **Real-time Voice Conversations**: Direct integration with VAPI AI for natural voice interactions
-- **Visual Transcript**: Optional live conversation display with user and assistant messages
-- **Voice Level Indicators**: Real-time audio level visualization
-- **Connection Status**: Clear status indicators (connecting, connected, disconnected)
-
-### 💬 Chat Functionality
-
-- **Text-based Conversations**: Full chat support with VAPI or custom API backend
-- **Markdown Support**: Rich text rendering with links, code blocks, lists, and more
-- **Real-time Typing Indicators**: Shows when assistant is typing
-- **Smooth Message Streaming**: Character-by-character message display
-
-### 🔀 Hybrid Mode
-
-- **Seamless Mode Switching**: Users can switch between voice and chat
-- **Unified Conversation History**: Combined transcript from both modes
-- **Intelligent Mode Management**: Automatic handling of mode transitions
-
-### 🎨 UI/UX Features
-
-- **Floating Widget**: Positions in any corner of the screen
-- **Multiple Sizes**: Tiny (voice-only), compact, and full sizes
-- **Theme Support**: Light and dark themes with full customization
-- **Responsive Design**: Works on desktop and mobile devices
-- **Customizable Styling**: Extensive color, size, and radius options
-- **Smooth Animations**: Professional transitions and hover effects
-- **Consent Management**: Optional consent form with customizable terms
-
-### 🔧 Technical Features
-
-- **TypeScript Support**: Full type safety and IntelliSense
-- **Event Callbacks**: Comprehensive event handling system
-- **Error Handling**: Graceful error recovery and user feedback
-- **Memory Management**: Proper cleanup and resource management
-- **Flexible Configuration**: Support for all VAPI start() patterns
+This document focuses on the technical implementation details of the widget's features.
 
 ## Component Architecture
 
@@ -62,6 +28,8 @@ Located at `src/components/VapiWidget.tsx`, this component handles:
 - **useVapiChat**: Manages chat functionality with VAPI or custom API
 
 ## Implementation Details
+
+> **Note**: Hybrid mode is not fully supported yet. When switching between modes, conversation history is not maintained.
 
 ### Props Interface
 
@@ -337,39 +305,6 @@ const widget = new WidgetLoader({
 - Conversation cleared when switching modes
 - Input disabled during voice calls
 - Smart mode detection
-
-## Styling and Customization
-
-### Size Variants
-
-- **Tiny**: Minimal floating button, best for voice-only
-- **Compact**: Standard size with good balance
-- **Full**: Larger interface for extended conversations
-
-### Theme System
-
-- **Light Theme**: Clean, bright interface
-- **Dark Theme**: Elegant dark mode with proper contrast
-- **Custom Colors**: Full control over all color aspects
-
-### Border Radius Options
-
-- `none`: Sharp corners
-- `small`: Subtle rounding
-- `medium`: Moderate rounding (default)
-- `large`: Heavily rounded corners
-
-### Color Customization
-
-```typescript
-// Example: Custom color scheme
-<VapiWidget
-  baseColor="#1a1a1a"        // Main background
-  accentColor="#ff6b6b"      // Primary actions
-  buttonBaseColor="#2a2a2a"  // Floating button bg
-  buttonAccentColor="#ffffff" // Floating button text
-/>
-```
 
 ## Advanced Features
 

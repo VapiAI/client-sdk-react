@@ -12,7 +12,7 @@ const ChatControls: React.FC<ChatControlsProps> = ({
   inputRef,
   placeholder = 'Type your message...', // Default fallback
 }) => (
-  <div className="flex items-center space-x-2">
+  <div className="vapi-flex vapi-items-center vapi-space-x-2">
     <input
       ref={inputRef}
       type="text"
@@ -20,11 +20,11 @@ const ChatControls: React.FC<ChatControlsProps> = ({
       onChange={onInputChange}
       onKeyPress={(e) => e.key === 'Enter' && isAvailable && onSendMessage()}
       placeholder={placeholder}
-      className={`flex-1 px-3 py-2 rounded-lg border ${
+      className={`vapi-flex-1 vapi-px-3 vapi-py-2 vapi-rounded-lg vapi-border ${
         styles.theme === 'dark'
-          ? 'border-gray-600 text-white placeholder-gray-400'
-          : 'border-gray-300 text-gray-900 placeholder-gray-500'
-      } focus:outline-none focus:ring-2`}
+          ? 'vapi-border-gray-600 vapi-text-white vapi-placeholder-gray-400'
+          : 'vapi-border-gray-300 vapi-text-gray-900 vapi-placeholder-gray-500'
+      } focus:vapi-outline-none focus:vapi-ring-2`}
       style={
         {
           '--tw-ring-color':
@@ -40,10 +40,10 @@ const ChatControls: React.FC<ChatControlsProps> = ({
     <button
       onClick={onSendMessage}
       disabled={!chatInput.trim() || !isAvailable}
-      className={`h-10 w-10 flex items-center justify-center rounded-lg transition-all ${
+      className={`vapi-h-10 vapi-w-10 vapi-flex vapi-items-center vapi-justify-center vapi-rounded-lg vapi-transition-all ${
         !chatInput.trim() || !isAvailable
-          ? 'opacity-50 cursor-not-allowed'
-          : 'hover:opacity-90 active:scale-95'
+          ? 'vapi-opacity-50 vapi-cursor-not-allowed'
+          : 'hover:vapi-opacity-90 active:vapi-scale-95'
       }`}
       style={{
         backgroundColor: colors.accentColor,

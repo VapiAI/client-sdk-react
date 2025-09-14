@@ -11,26 +11,26 @@ const EmptyConversation: React.FC<EmptyConversationProps> = ({
   chatEmptyMessage,
   hybridEmptyMessage,
 }) => (
-  <div className="text-center">
+  <div className="vapi-text-center">
     <div
-      className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${
-        theme === 'dark' ? 'bg-gray-700' : 'bg-gray-100'
+      className={`vapi-w-16 vapi-h-16 vapi-rounded-full vapi-flex vapi-items-center vapi-justify-center vapi-mx-auto vapi-mb-4 ${
+        theme === 'dark' ? 'vapi-bg-gray-700' : 'vapi-bg-gray-100'
       }`}
     >
       {mode === 'voice' ? (
         <MicrophoneIcon
           size={32}
-          className={theme === 'dark' ? 'text-gray-400' : 'text-gray-400'}
+          className={theme === 'dark' ? 'vapi-text-gray-400' : 'vapi-text-gray-400'}
         />
       ) : (
         <ChatCircleIcon
           size={32}
-          className={theme === 'dark' ? 'text-gray-400' : 'text-gray-400'}
+          className={theme === 'dark' ? 'vapi-text-gray-400' : 'vapi-text-gray-400'}
         />
       )}
     </div>
     <p
-      className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}
+      className={`vapi-text-sm ${theme === 'dark' ? 'vapi-text-gray-400' : 'vapi-text-gray-500'}`}
     >
       {mode === 'voice'
         ? isCallActive

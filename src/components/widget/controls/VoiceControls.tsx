@@ -18,11 +18,11 @@ const VoiceControls: React.FC<VoiceControlsProps> = ({
   endButtonText,
   colors,
 }) => (
-  <div className="flex items-center justify-center space-x-2">
+  <div className="vapi-flex vapi-items-center vapi-justify-center vapi-space-x-2">
     {isCallActive && connectionStatus === 'connected' && (
       <button
         onClick={onToggleMute}
-        className="h-12 w-12 flex items-center justify-center rounded-full transition-all hover:opacity-90 active:scale-95"
+        className="vapi-h-12 vapi-w-12 vapi-flex vapi-items-center vapi-justify-center vapi-rounded-full vapi-transition-all hover:vapi-opacity-90 active:vapi-scale-95"
         style={{
           backgroundColor: isMuted ? '#ef4444' : colors.accentColor,
           color: colors.ctaButtonTextColor || 'white',
@@ -39,10 +39,10 @@ const VoiceControls: React.FC<VoiceControlsProps> = ({
     <button
       onClick={onToggleCall}
       disabled={!isAvailable && !isCallActive}
-      className={`px-6 py-3 rounded-full font-medium transition-all flex items-center space-x-2 ${
+      className={`vapi-px-6 vapi-py-3 vapi-rounded-full vapi-font-medium vapi-transition-all vapi-flex vapi-items-center vapi-space-x-2 ${
         !isAvailable && !isCallActive
-          ? 'opacity-50 cursor-not-allowed'
-          : 'hover:opacity-90 active:scale-95'
+          ? 'vapi-opacity-50 vapi-cursor-not-allowed'
+          : 'hover:vapi-opacity-90 active:vapi-scale-95'
       }`}
       style={{
         backgroundColor: isCallActive ? '#ef4444' : colors.accentColor,
@@ -51,7 +51,7 @@ const VoiceControls: React.FC<VoiceControlsProps> = ({
     >
       {connectionStatus === 'connecting' ? (
         <>
-          <div className="animate-spin w-4 h-4 border-2 border-current border-t-transparent rounded-full"></div>
+          <div className="vapi-animate-spin vapi-w-4 vapi-h-4 vapi-border-2 vapi-border-current vapi-border-t-transparent vapi-rounded-full"></div>
           <span>Connecting...</span>
         </>
       ) : isCallActive ? (

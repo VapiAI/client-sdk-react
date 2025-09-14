@@ -5,7 +5,7 @@ import { resolve } from 'path';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 
 // Set build target for PostCSS conditional processing
-// process.env.VITE_BUILD_TARGET = 'widget';
+process.env.VITE_BUILD_TARGET = 'widget';
 
 export default defineConfig({
   plugins: [

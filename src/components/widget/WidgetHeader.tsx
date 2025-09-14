@@ -38,14 +38,14 @@ const WidgetHeader: React.FC<WidgetHeaderProps> = ({
 
   return (
     <div
-      className={`relative z-10 p-4 flex items-center justify-between border-b ${
+      className={`vapi-relative vapi-z-10 vapi-p-4 vapi-flex vapi-items-center vapi-justify-between vapi-border-b ${
         styles.theme === 'dark'
-          ? 'text-white border-gray-800 shadow-lg'
-          : 'text-gray-900 border-gray-200 shadow-sm'
+          ? 'vapi-text-white vapi-border-gray-800 vapi-shadow-lg'
+          : 'vapi-text-gray-900 vapi-border-gray-200 vapi-shadow-sm'
       }`}
       style={{ backgroundColor: colors.baseColor }}
     >
-      <div className="flex items-center space-x-3">
+      <div className="vapi-flex vapi-items-center vapi-space-x-3">
         <AnimatedStatusIcon
           size={40}
           connectionStatus={connectionStatus}
@@ -57,27 +57,27 @@ const WidgetHeader: React.FC<WidgetHeaderProps> = ({
         />
 
         <div>
-          <div className="font-medium">{mainLabel}</div>
+          <div className="vapi-font-medium">{mainLabel}</div>
           <div
-            className={`text-sm ${
-              styles.theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+            className={`vapi-text-sm ${
+              styles.theme === 'dark' ? 'vapi-text-gray-300' : 'vapi-text-gray-600'
             }`}
           >
             {getStatusMessage()}
           </div>
         </div>
       </div>
-      <div className="flex items-center space-x-2">
+      <div className="vapi-flex vapi-items-center vapi-space-x-2">
         <button
           onClick={onReset}
-          className={`w-8 h-8 rounded-full flex items-center justify-center transition-all}`}
+          className={`vapi-w-8 vapi-h-8 vapi-rounded-full vapi-flex vapi-items-center vapi-justify-center vapi-transition-all}`}
           title="Reset conversation"
         >
           <ArrowsClockwiseIcon size={16} weight="bold" />
         </button>
         <button
           onClick={onClose}
-          className={`w-8 h-8 rounded-full flex items-center justify-center transition-all`}
+          className={`vapi-w-8 vapi-h-8 vapi-rounded-full vapi-flex vapi-items-center vapi-justify-center vapi-transition-all`}
         >
           <XIcon size={16} weight="bold" />
         </button>

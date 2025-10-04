@@ -44,6 +44,7 @@ export interface VapiWidgetProps {
   // Chat Configuration
   chatFirstMessage?: string;
   chatPlaceholder?: string;
+  chatEndMessage?: string;
 
   // Voice Configuration
   voiceShowTranscript?: boolean;
@@ -153,6 +154,8 @@ export interface WidgetHeaderProps {
   mainLabel: string;
   onClose: () => void;
   onReset: () => void;
+  onChatComplete: () => void;
+  showEndChatButton?: boolean;
   colors: ColorScheme;
   styles: StyleConfig;
 }

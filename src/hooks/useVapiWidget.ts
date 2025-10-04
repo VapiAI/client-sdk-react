@@ -119,7 +119,7 @@ export const useVapiWidget = ({
   }, []);
 
   const sendMessage = useCallback(
-    async (text: string) => {
+    async (text: string, sessionEnd: boolean = false) => {
       // In hybrid mode, switch to chat and clear all conversations only if switching from voice
       if (mode === 'hybrid') {
         if (voice.isCallActive) {
@@ -132,7 +132,7 @@ export const useVapiWidget = ({
         }
         setActiveMode('chat');
       }
-      await chat.sendMessage(text);
+      await chat.sendMessage(text, sessionEnd);
     },
     [mode, chat, voice, activeMode]
   );

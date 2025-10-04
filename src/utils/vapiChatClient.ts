@@ -12,6 +12,7 @@ export interface VapiChatMessage {
   assistantOverrides?: AssistantOverrides;
   sessionId?: string;
   stream?: boolean;
+  sessionEnd?: boolean;
 }
 
 export interface VapiChatStreamChunk {

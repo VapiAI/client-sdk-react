@@ -21,7 +21,7 @@ export interface VapiChatState {
 }
 
 export interface VapiChatHandlers {
-  sendMessage: (text: string) => Promise<void>;
+  sendMessage: (text: string, sessionEnd?: boolean) => Promise<void>;
   clearMessages: () => void;
 }
 
@@ -195,6 +195,7 @@ export const useVapiChat = ({
   const abortFnRef = useRef<(() => void) | null>(null);
   const currentAssistantMessageRef = useRef<string>(''); // Accumulates assistant message content
   const assistantMessageIndexRef = useRef<number | null>(null); // Tracks array position
+  const isEndingSessionRef = useRef<boolean>(false);
 
   useEffect(() => {
     if (publicKey && enabled) {
@@ -223,8 +224,15 @@ export const useVapiChat = ({
   );
 
   const sendMessage = useCallback(
-    async (text: string) => {
+    async (text: string, sessionEnd: boolean = false) => {
       try {
+        if (sessionEnd) {
+          if (isEndingSessionRef.current) {
+            return; // IMP: Prevent duplicate end-session sends
+          }
+          isEndingSessionRef.current = true;
+        }
+
         validateChatInput(
           text,
           enabled,
@@ -235,15 +243,30 @@ export const useVapiChat = ({
 
         setIsLoading(true);
 
-        const userMessage = createUserMessage(text);
-        addMessage(userMessage);
+        if (!sessionEnd && text.trim()) {
+          const userMessage = createUserMessage(text);
+          addMessage(userMessage);
+        }
 
-        resetAssistantMessageTracking(
-          currentAssistantMessageRef,
-          assistantMessageIndexRef
-        );
-        preallocateAssistantMessage(assistantMessageIndexRef, setMessages);
-        setIsTyping(true);
+        if (!sessionEnd) {
+          resetAssistantMessageTracking(
+            currentAssistantMessageRef,
+            assistantMessageIndexRef
+          );
+          preallocateAssistantMessage(assistantMessageIndexRef, setMessages);
+          setIsTyping(true);
+        } else {
+          const endingText = text.trim() || 'Ending chat...';
+          setMessages((prev) => [
+            ...prev,
+            {
+              role: 'assistant',
+              content: endingText,
+              timestamp: new Date(),
+            },
+          ]);
+          setIsTyping(true);
+        }
 
         const onStreamError = (error: Error) =>
           handleStreamError(
@@ -263,33 +286,42 @@ export const useVapiChat = ({
             setMessages
           );
 
-        const onComplete = () =>
-          handleStreamComplete(
-            setIsTyping,
-            assistantMessageIndexRef,
-            currentAssistantMessageRef,
-            onMessage
-          );
+        const onComplete = sessionEnd
+          ? () => {
+              setIsTyping(false);
+              assistantMessageIndexRef.current = null;
+            }
+          : () =>
+              handleStreamComplete(
+                setIsTyping,
+                assistantMessageIndexRef,
+                currentAssistantMessageRef,
+                onMessage
+              );
 
         let input: string | Array<{ role: string; content: string }>;
-        if (
-          firstChatMessage &&
-          firstChatMessage.trim() !== '' &&
-          messages.length === 1 &&
-          messages[0].role === 'assistant'
-        ) {
-          input = [
-            {
-              role: 'assistant',
-              content: firstChatMessage,
-            },
-            {
-              role: 'user',
-              content: text.trim(),
-            },
-          ];
-        } else {
+        if (sessionEnd) {
           input = text.trim();
+        } else {
+          if (
+            firstChatMessage &&
+            firstChatMessage.trim() !== '' &&
+            messages.length === 1 &&
+            messages[0].role === 'assistant'
+          ) {
+            input = [
+              {
+                role: 'assistant',
+                content: firstChatMessage,
+              },
+              {
+                role: 'user',
+                content: text.trim(),
+              },
+            ];
+          } else {
+            input = text.trim();
+          }
         }
 
         const abort = await clientRef.current!.streamChat(
@@ -299,6 +331,7 @@ export const useVapiChat = ({
             assistantOverrides,
             sessionId,
             stream: true,
+            sessionEnd,
           },
           onChunk,
           onStreamError,
@@ -314,6 +347,9 @@ export const useVapiChat = ({
         throw error;
       } finally {
         setIsLoading(false);
+        if (sessionEnd) {
+          isEndingSessionRef.current = false;
+        }
       }
     },
     [

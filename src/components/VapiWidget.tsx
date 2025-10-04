@@ -55,6 +55,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
   emptyHybridMessage = 'Use voice or text to communicate', // deprecated
   // Chat configuration
   chatFirstMessage,
+  chatEndMessage,
   firstChatMessage, // deprecated
   chatPlaceholder,
   // Voice configuration
@@ -79,6 +80,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
   const [isExpanded, setIsExpanded] = useState(false);
   const [hasConsent, setHasConsent] = useState(false);
   const [chatInput, setChatInput] = useState('');
+  const [showEndScreen, setShowEndScreen] = useState(false);
 
   const conversationEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -109,6 +111,8 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
   const effectiveOnVoiceStart = onVoiceStart ?? onCallStart;
   const effectiveOnVoiceEnd = onVoiceEnd ?? onCallEnd;
   const effectiveChatPlaceholder = chatPlaceholder ?? 'Type your message...';
+  const effectiveChatEndMessage =
+    chatEndMessage ?? 'This chat has ended. Thank you.';
 
   const vapi = useVapiWidget({
     mode,
@@ -253,6 +257,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
 
   const handleReset = () => {
     vapi.clearConversation();
+    setShowEndScreen(false);
 
     if (vapi.voice.isCallActive) {
       vapi.voice.endCall();
@@ -265,6 +270,34 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
         inputRef.current?.focus();
       }, 100);
     }
+  };
+
+  const handleChatComplete = async () => {
+    try {
+      await vapi.chat.sendMessage('Ending chat...', true);
+      setShowEndScreen(true);
+    } finally {
+      setChatInput('');
+    }
+  };
+
+  const handleStartNewChat = () => {
+    vapi.clearConversation();
+    setShowEndScreen(false);
+    if (mode === 'chat' || mode === 'hybrid') {
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
+    }
+  };
+
+  const handleCloseWidget = () => {
+    if (showEndScreen) {
+      vapi.clearConversation();
+      setShowEndScreen(false);
+      setChatInput('');
+    }
+    setIsExpanded(false);
   };
 
   const handleFloatingButtonClick = () => {
@@ -316,6 +349,38 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
   };
 
   const renderConversationArea = () => {
+    if (showEndScreen) {
+      return (
+        <div
+          className="flex flex-col items-center justify-center text-center gap-4"
+          style={{ width: '100%' }}
+        >
+          <div
+            className={`text-base ${styles.theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}
+          >
+            {effectiveChatEndMessage}
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleStartNewChat}
+              className="px-3 py-1.5 rounded-md"
+              style={{
+                backgroundColor: colors.ctaButtonColor,
+                color: colors.ctaButtonTextColor,
+              }}
+            >
+              Start new chat
+            </button>
+            <button
+              onClick={handleCloseWidget}
+              className={`px-3 py-1.5 rounded-md ${styles.theme === 'dark' ? 'bg-gray-800 text-gray-100' : 'bg-gray-100 text-gray-800'}`}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      );
+    }
     // Chat mode: always show conversation messages
     if (mode === 'chat') {
       return renderConversationMessages();
@@ -380,6 +445,9 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
   };
 
   const renderControls = () => {
+    if (showEndScreen) {
+      return null;
+    }
     if (mode === 'voice') {
       return (
         <VoiceControls
@@ -460,8 +528,10 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
           isTyping={vapi.chat.isTyping}
           hasActiveConversation={vapi.conversation.length > 0}
           mainLabel={effectiveTextWidgetTitle}
-          onClose={() => setIsExpanded(false)}
+          onClose={handleCloseWidget}
           onReset={handleReset}
+          onChatComplete={handleChatComplete}
+          showEndChatButton={!showEndScreen}
           colors={colors}
           styles={styles}
         />

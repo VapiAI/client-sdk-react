@@ -1,12 +1,40 @@
-@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Custom base styles for the library */
-@layer base {
-  * {
-    box-sizing: border-box;
-  }
+/* Scoped base styles only for the widget */
+.vapi-widget-wrapper {
+  box-sizing: border-box;
+}
+
+.vapi-widget-wrapper *,
+.vapi-widget-wrapper *::before,
+.vapi-widget-wrapper *::after {
+  box-sizing: border-box;
+}
+
+/* Reset only within widget to prevent inheritance from host page */
+.vapi-widget-wrapper {
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  -moz-tab-size: 4;
+  tab-size: 4;
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    'Noto Sans',
+    sans-serif,
+    'Apple Color Emoji',
+    'Segoe UI Emoji',
+    'Segoe UI Symbol',
+    'Noto Color Emoji';
+  font-feature-settings: normal;
+  font-variation-settings: normal;
 }
 
 /* Hide scrollbar completely */

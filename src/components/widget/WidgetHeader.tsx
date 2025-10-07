@@ -70,7 +70,7 @@ const WidgetHeader: React.FC<WidgetHeaderProps> = ({
         </div>
       </div>
       <div className="flex items-center space-x-2">
-        {showEndChatButton !== false && (
+        {showEndChatButton !== false && mode === 'chat' && (
           <button
             onClick={onChatComplete}
             className={`text-red-600 text-sm font-medium px-2 py-1 border border-transparent hover:border-red-600 rounded-md transition-colors`}

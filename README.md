@@ -100,6 +100,8 @@ The simplest way to add the widget to your website:
 | `chatPlaceholder`         | `string`                                                                          | `'Type your message...'` | Chat input placeholder text        |
 | **Voice Configuration**   |                                                                                   |                          |                                    |
 | `voiceShowTranscript`     | `boolean`                                                                         | `false`                  | Show/hide voice transcript         |
+| `voiceAutoReconnect`      | `boolean`                                                                         | `false`                  | Auto-reconnect to an active web call within the same browser tab (uses session storage)       |
+| `reconnectStorageKey`     | `string`                                                                          | `'vapi_widget_web_call'` | Key for storing reconnection data (uses session storage)  |
 | **Consent Configuration** |                                                                                   |                          |                                    |
 | `consentRequired`         | `boolean`                                                                         | `false`                  | Show consent form before first use |
 | `consentTitle`            | `string`                                                                          | `"Terms and conditions"` | Consent form title                 |
@@ -274,6 +276,16 @@ Use this approach if your environment doesn't support custom elements or for bet
   size="full"
 />
 ```
+
+### Voice-Only with Auto-Reconnect
+
+```tsx
+<VapiWidget
+  publicKey="pk_123"
+  assistantId="asst_456"
+  mode="voice"
+  voiceAutoReconnect={true}
+/>
 
 ## Development
 

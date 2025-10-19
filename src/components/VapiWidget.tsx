@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useVapiWidget } from '../hooks';
 
 import { VapiWidgetProps, ColorScheme, StyleConfig } from './types';
@@ -61,6 +61,8 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
   // Voice configuration
   voiceShowTranscript,
   showTranscript = false, // deprecated
+  voiceAutoReconnect = false,
+  reconnectStorageKey = 'vapi_widget_web_call',
   // Consent configuration
   consentRequired,
   requireConsent = false, // deprecated
@@ -77,13 +79,38 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
   onMessage,
   onError,
 }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  // Create storage key for expanded state
+  const expandedStorageKey = `vapi_widget_expanded`;
+
+  // Initialize expanded state from localStorage
+  const [isExpanded, setIsExpanded] = useState(() => {
+    try {
+      const stored = localStorage.getItem(expandedStorageKey);
+      return stored === 'true';
+    } catch {
+      return false;
+    }
+  });
+
   const [hasConsent, setHasConsent] = useState(false);
   const [chatInput, setChatInput] = useState('');
   const [showEndScreen, setShowEndScreen] = useState(false);
 
   const conversationEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Custom setter that updates both state and localStorage
+  const updateExpandedState = useCallback(
+    (expanded: boolean) => {
+      setIsExpanded(expanded);
+      try {
+        localStorage.setItem(expandedStorageKey, expanded.toString());
+      } catch (error) {
+        console.warn('Failed to save expanded state to localStorage:', error);
+      }
+    },
+    [expandedStorageKey]
+  );
 
   const effectiveBorderRadius = borderRadius ?? radius;
   const effectiveBaseBgColor = baseBgColor ?? baseColor;
@@ -122,6 +149,8 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
     assistantOverrides,
     apiUrl,
     firstChatMessage: effectiveChatFirstMessage,
+    voiceAutoReconnect,
+    reconnectStorageKey,
     onCallStart: effectiveOnVoiceStart,
     onCallEnd: effectiveOnVoiceEnd,
     onMessage,
@@ -232,11 +261,11 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
   };
 
   const handleConsentCancel = () => {
-    setIsExpanded(false);
+    updateExpandedState(false);
   };
 
   const handleToggleCall = async () => {
-    await vapi.voice.toggleCall();
+    await vapi.voice.toggleCall({ force: voiceAutoReconnect });
   };
 
   const handleSendMessage = async () => {
@@ -260,7 +289,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
     setShowEndScreen(false);
 
     if (vapi.voice.isCallActive) {
-      vapi.voice.endCall();
+      vapi.voice.endCall({ force: voiceAutoReconnect });
     }
 
     setChatInput('');
@@ -297,11 +326,11 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
       setShowEndScreen(false);
       setChatInput('');
     }
-    setIsExpanded(false);
+    updateExpandedState(false);
   };
 
   const handleFloatingButtonClick = () => {
-    setIsExpanded(true);
+    updateExpandedState(true);
   };
 
   const renderConversationMessages = () => {

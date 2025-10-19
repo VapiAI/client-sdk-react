@@ -67,7 +67,7 @@ export const useVapiWidget = ({
     callOptions: buildCallOptions(),
     apiUrl,
     enabled: voiceEnabled,
-    roomDeleteOnUserLeaveEnabled: voiceAutoReconnect,
+    voiceAutoReconnect,
     reconnectStorageKey,
     onCallStart: () => {
       // In hybrid mode, clear all conversations when starting voice

@@ -168,6 +168,8 @@ function initializeWidgets() {
 
       // Voice Configuration
       'voice-show-transcript': 'voiceShowTranscript',
+      'voice-auto-reconnect': 'voiceAutoReconnect',
+      'reconnect-storage-key': 'reconnectStorageKey',
 
       // Consent Configuration
       'consent-required': 'consentRequired',

@@ -68,7 +68,7 @@
   ],
   "license": "",
   "peerDependencies": {
-    "@vapi-ai/web": "^2.3.7",
+    "@vapi-ai/web": "^2.5.0",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
   },

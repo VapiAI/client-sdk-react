@@ -48,6 +48,8 @@ export interface VapiWidgetProps {
 
   // Voice Configuration
   voiceShowTranscript?: boolean;
+  voiceAutoReconnect?: boolean;
+  reconnectStorageKey?: string;
 
   // Consent Configuration
   consentRequired?: boolean;

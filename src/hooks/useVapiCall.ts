@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Vapi from '@vapi-ai/web';
+import * as vapiCallStorage from '../utils/vapiCallStorage';
 
 export interface VapiCallState {
   isCallActive: boolean;
@@ -11,9 +12,11 @@ export interface VapiCallState {
 
 export interface VapiCallHandlers {
   startCall: () => Promise<void>;
-  endCall: () => Promise<void>;
-  toggleCall: () => Promise<void>;
+  endCall: (opts?: { force?: boolean }) => Promise<void>;
+  toggleCall: (opts?: { force?: boolean }) => Promise<void>;
   toggleMute: () => void;
+  reconnect: () => Promise<void>;
+  clearStoredCall: () => void;
 }
 
 export interface UseVapiCallOptions {
@@ -21,6 +24,8 @@ export interface UseVapiCallOptions {
   callOptions: any;
   apiUrl?: string;
   enabled?: boolean;
+  voiceAutoReconnect?: boolean;
+  reconnectStorageKey?: string;
   onCallStart?: () => void;
   onCallEnd?: () => void;
   onMessage?: (message: any) => void;
@@ -37,6 +42,8 @@ export const useVapiCall = ({
   callOptions,
   apiUrl,
   enabled = true,
+  voiceAutoReconnect = false,
+  reconnectStorageKey = 'vapi_widget_web_call',
   onCallStart,
   onCallEnd,
   onMessage,
@@ -90,6 +97,8 @@ export const useVapiCall = ({
       setVolumeLevel(0);
       setIsSpeaking(false);
       setIsMuted(false);
+      // Clear stored call data on successful call end
+      vapiCallStorage.clearStoredCall(reconnectStorageKey);
       callbacksRef.current.onCallEnd?.();
     };
 
@@ -144,7 +153,7 @@ export const useVapiCall = ({
       vapi.removeListener('message', handleMessage);
       vapi.removeListener('error', handleError);
     };
-  }, [vapi]);
+  }, [vapi, reconnectStorageKey]);
 
   useEffect(() => {
     return () => {
@@ -161,33 +170,68 @@ export const useVapiCall = ({
     }
 
     try {
-      console.log('Starting call with options:', callOptions);
+      console.log('Starting call with configuration:', callOptions);
+      console.log('Starting call with options:', {
+        voiceAutoReconnect,
+      });
       setConnectionStatus('connecting');
-      await vapi.start(callOptions);
+      const call = await vapi.start(
+        // assistant
+        callOptions,
+        // assistant overrides,
+        undefined,
+        // squad
+        undefined,
+        // workflow
+        undefined,
+        // workflow overrides
+        undefined,
+        // options
+        {
+          roomDeleteOnUserLeaveEnabled: !voiceAutoReconnect,
+        }
+      );
+
+      // Store call data for reconnection if call was successful and auto-reconnect is enabled
+      if (call && voiceAutoReconnect) {
+        vapiCallStorage.storeCallData(reconnectStorageKey, call, callOptions);
+      }
     } catch (error) {
       console.error('Error starting call:', error);
       setConnectionStatus('disconnected');
       callbacksRef.current.onError?.(error as Error);
     }
-  }, [vapi, callOptions, enabled]);
+  }, [vapi, callOptions, enabled, voiceAutoReconnect, reconnectStorageKey]);
 
-  const endCall = useCallback(async () => {
-    if (!vapi) {
-      console.log('Cannot end call: no vapi instance');
-      return;
-    }
+  const endCall = useCallback(
+    async ({ force = false }: { force?: boolean } = {}) => {
+      if (!vapi) {
+        console.log('Cannot end call: no vapi instance');
+        return;
+      }
 
-    console.log('Ending call');
-    vapi.stop();
-  }, [vapi]);
+      console.log('Ending call with force:', force);
+      if (force) {
+        // end vapi call and delete daily room
+        vapi.end();
+      } else {
+        // simply disconnect from daily room
+        vapi.stop();
+      }
+    },
+    [vapi]
+  );
 
-  const toggleCall = useCallback(async () => {
-    if (isCallActive) {
-      await endCall();
-    } else {
-      await startCall();
-    }
-  }, [isCallActive, startCall, endCall]);
+  const toggleCall = useCallback(
+    async ({ force = false }: { force?: boolean } = {}) => {
+      if (isCallActive) {
+        await endCall({ force });
+      } else {
+        await startCall();
+      }
+    },
+    [isCallActive, startCall, endCall]
+  );
 
   const toggleMute = useCallback(() => {
     if (!vapi || !isCallActive) {
@@ -199,6 +243,59 @@ export const useVapiCall = ({
     vapi.setMuted(newMutedState);
     setIsMuted(newMutedState);
   }, [vapi, isCallActive, isMuted]);
+
+  const reconnect = useCallback(async () => {
+    if (!vapi || !enabled) {
+      console.error('Cannot reconnect: no vapi instance or not enabled');
+      return;
+    }
+
+    const storedData = vapiCallStorage.getStoredCallData(reconnectStorageKey);
+
+    if (!storedData) {
+      console.warn('No stored call data found for reconnection');
+      return;
+    }
+
+    // Check if callOptions match before reconnecting
+    if (
+      !vapiCallStorage.areCallOptionsEqual(storedData.callOptions, callOptions)
+    ) {
+      console.warn(
+        'CallOptions have changed since last call, clearing stored data and skipping reconnection'
+      );
+      vapiCallStorage.clearStoredCall(reconnectStorageKey);
+      return;
+    }
+
+    setConnectionStatus('connecting');
+
+    try {
+      await vapi.reconnect({
+        webCallUrl: storedData.webCallUrl,
+        id: storedData.id,
+        artifactPlan: storedData.artifactPlan,
+        assistant: storedData.assistant,
+      });
+      console.log('Successfully reconnected to call');
+    } catch (error) {
+      setConnectionStatus('disconnected');
+      console.error('Reconnection failed:', error);
+      vapiCallStorage.clearStoredCall(reconnectStorageKey);
+      callbacksRef.current.onError?.(error as Error);
+    }
+  }, [vapi, enabled, reconnectStorageKey, callOptions]);
+
+  const clearStoredCall = useCallback(() => {
+    vapiCallStorage.clearStoredCall(reconnectStorageKey);
+  }, [reconnectStorageKey]);
+
+  useEffect(() => {
+    if (!vapi || !enabled || !voiceAutoReconnect) {
+      return;
+    }
+    reconnect();
+  }, [vapi, enabled, voiceAutoReconnect, reconnect, reconnectStorageKey]);
 
   return {
     // State
@@ -212,5 +309,7 @@ export const useVapiCall = ({
     endCall,
     toggleCall,
     toggleMute,
+    reconnect,
+    clearStoredCall,
   };
 };

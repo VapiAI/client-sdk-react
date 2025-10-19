@@ -15,6 +15,8 @@ export interface UseVapiWidgetOptions {
   assistantOverrides?: AssistantOverrides;
   apiUrl?: string;
   firstChatMessage?: string;
+  voiceAutoReconnect?: boolean;
+  reconnectStorageKey?: string;
   onCallStart?: () => void;
   onCallEnd?: () => void;
   onMessage?: (message: any) => void;
@@ -29,6 +31,8 @@ export const useVapiWidget = ({
   assistantOverrides,
   apiUrl,
   firstChatMessage,
+  voiceAutoReconnect = false,
+  reconnectStorageKey,
   onCallStart,
   onCallEnd,
   onMessage,
@@ -63,6 +67,8 @@ export const useVapiWidget = ({
     callOptions: buildCallOptions(),
     apiUrl,
     enabled: voiceEnabled,
+    voiceAutoReconnect,
+    reconnectStorageKey,
     onCallStart: () => {
       // In hybrid mode, clear all conversations when starting voice
       if (mode === 'hybrid') {
@@ -123,7 +129,7 @@ export const useVapiWidget = ({
       // In hybrid mode, switch to chat and clear all conversations only if switching from voice
       if (mode === 'hybrid') {
         if (voice.isCallActive) {
-          await voice.endCall();
+          await voice.endCall({ force: true });
         }
         // Only clear conversations if we're switching from voice mode
         if (activeMode !== 'chat') {
@@ -137,16 +143,19 @@ export const useVapiWidget = ({
     [mode, chat, voice, activeMode]
   );
 
-  const toggleCall = useCallback(async () => {
-    if (mode === 'hybrid' && !voice.isCallActive) {
-      // Clear all conversations when switching to voice
-      chat.clearMessages();
-      setVoiceConversation([]);
-      setActiveMode('voice');
-      setIsUserTyping(false);
-    }
-    await voice.toggleCall();
-  }, [mode, voice, chat]);
+  const toggleCall = useCallback(
+    async ({ force }: { force?: boolean } = {}) => {
+      if (mode === 'hybrid' && !voice.isCallActive) {
+        // Clear all conversations when switching to voice
+        chat.clearMessages();
+        setVoiceConversation([]);
+        setActiveMode('voice');
+        setIsUserTyping(false);
+      }
+      await voice.toggleCall({ force });
+    },
+    [mode, voice, chat]
+  );
 
   const clearConversation = useCallback(() => {
     setVoiceConversation([]);

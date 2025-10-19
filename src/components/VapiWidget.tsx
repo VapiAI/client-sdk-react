@@ -85,7 +85,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
   // Initialize expanded state from localStorage
   const [isExpanded, setIsExpanded] = useState(() => {
     try {
-      const stored = localStorage.getItem(expandedStorageKey);
+      const stored = sessionStorage.getItem(expandedStorageKey);
       return stored === 'true';
     } catch {
       return false;
@@ -104,7 +104,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
     (expanded: boolean) => {
       setIsExpanded(expanded);
       try {
-        localStorage.setItem(expandedStorageKey, expanded.toString());
+        sessionStorage.setItem(expandedStorageKey, expanded.toString());
       } catch (error) {
         console.warn('Failed to save expanded state to localStorage:', error);
       }

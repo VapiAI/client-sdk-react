@@ -16,6 +16,7 @@ export interface UseVapiWidgetOptions {
   apiUrl?: string;
   firstChatMessage?: string;
   voiceAutoReconnect?: boolean;
+  voiceReconnectStorage?: 'session' | 'cookies';
   reconnectStorageKey?: string;
   onCallStart?: () => void;
   onCallEnd?: () => void;
@@ -32,6 +33,7 @@ export const useVapiWidget = ({
   apiUrl,
   firstChatMessage,
   voiceAutoReconnect = false,
+  voiceReconnectStorage = 'session',
   reconnectStorageKey,
   onCallStart,
   onCallEnd,
@@ -68,6 +70,7 @@ export const useVapiWidget = ({
     apiUrl,
     enabled: voiceEnabled,
     voiceAutoReconnect,
+    voiceReconnectStorage,
     reconnectStorageKey,
     onCallStart: () => {
       // In hybrid mode, clear all conversations when starting voice

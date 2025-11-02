@@ -62,6 +62,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
   voiceShowTranscript,
   showTranscript = false, // deprecated
   voiceAutoReconnect = false,
+  voiceReconnectStorage = 'session',
   reconnectStorageKey = 'vapi_widget_web_call',
   // Consent configuration
   consentRequired,
@@ -150,6 +151,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
     apiUrl,
     firstChatMessage: effectiveChatFirstMessage,
     voiceAutoReconnect,
+    voiceReconnectStorage,
     reconnectStorageKey,
     onCallStart: effectiveOnVoiceStart,
     onCallEnd: effectiveOnVoiceEnd,

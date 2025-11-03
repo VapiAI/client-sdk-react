@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Vapi from '@vapi-ai/web';
 import * as vapiCallStorage from '../utils/vapiCallStorage';
+import type { StorageType } from '../utils/vapiCallStorage';
 
 export interface VapiCallState {
   isCallActive: boolean;
@@ -25,6 +26,7 @@ export interface UseVapiCallOptions {
   apiUrl?: string;
   enabled?: boolean;
   voiceAutoReconnect?: boolean;
+  voiceReconnectStorage?: StorageType;
   reconnectStorageKey?: string;
   onCallStart?: () => void;
   onCallEnd?: () => void;
@@ -43,6 +45,7 @@ export const useVapiCall = ({
   apiUrl,
   enabled = true,
   voiceAutoReconnect = false,
+  voiceReconnectStorage = 'session',
   reconnectStorageKey = 'vapi_widget_web_call',
   onCallStart,
   onCallEnd,
@@ -98,7 +101,10 @@ export const useVapiCall = ({
       setIsSpeaking(false);
       setIsMuted(false);
       // Clear stored call data on successful call end
-      vapiCallStorage.clearStoredCall(reconnectStorageKey);
+      vapiCallStorage.clearStoredCall(
+        reconnectStorageKey,
+        voiceReconnectStorage
+      );
       callbacksRef.current.onCallEnd?.();
     };
 
@@ -153,7 +159,7 @@ export const useVapiCall = ({
       vapi.removeListener('message', handleMessage);
       vapi.removeListener('error', handleError);
     };
-  }, [vapi, reconnectStorageKey]);
+  }, [vapi, reconnectStorageKey, voiceReconnectStorage]);
 
   useEffect(() => {
     return () => {
@@ -194,14 +200,26 @@ export const useVapiCall = ({
 
       // Store call data for reconnection if call was successful and auto-reconnect is enabled
       if (call && voiceAutoReconnect) {
-        vapiCallStorage.storeCallData(reconnectStorageKey, call, callOptions);
+        vapiCallStorage.storeCallData(
+          reconnectStorageKey,
+          call,
+          callOptions,
+          voiceReconnectStorage
+        );
       }
     } catch (error) {
       console.error('Error starting call:', error);
       setConnectionStatus('disconnected');
       callbacksRef.current.onError?.(error as Error);
     }
-  }, [vapi, callOptions, enabled, voiceAutoReconnect, reconnectStorageKey]);
+  }, [
+    vapi,
+    callOptions,
+    enabled,
+    voiceAutoReconnect,
+    voiceReconnectStorage,
+    reconnectStorageKey,
+  ]);
 
   const endCall = useCallback(
     async ({ force = false }: { force?: boolean } = {}) => {
@@ -250,7 +268,10 @@ export const useVapiCall = ({
       return;
     }
 
-    const storedData = vapiCallStorage.getStoredCallData(reconnectStorageKey);
+    const storedData = vapiCallStorage.getStoredCallData(
+      reconnectStorageKey,
+      voiceReconnectStorage
+    );
 
     if (!storedData) {
       console.warn('No stored call data found for reconnection');
@@ -264,7 +285,10 @@ export const useVapiCall = ({
       console.warn(
         'CallOptions have changed since last call, clearing stored data and skipping reconnection'
       );
-      vapiCallStorage.clearStoredCall(reconnectStorageKey);
+      vapiCallStorage.clearStoredCall(
+        reconnectStorageKey,
+        voiceReconnectStorage
+      );
       return;
     }
 
@@ -281,14 +305,17 @@ export const useVapiCall = ({
     } catch (error) {
       setConnectionStatus('disconnected');
       console.error('Reconnection failed:', error);
-      vapiCallStorage.clearStoredCall(reconnectStorageKey);
+      vapiCallStorage.clearStoredCall(
+        reconnectStorageKey,
+        voiceReconnectStorage
+      );
       callbacksRef.current.onError?.(error as Error);
     }
-  }, [vapi, enabled, reconnectStorageKey, callOptions]);
+  }, [vapi, enabled, reconnectStorageKey, voiceReconnectStorage, callOptions]);
 
   const clearStoredCall = useCallback(() => {
-    vapiCallStorage.clearStoredCall(reconnectStorageKey);
-  }, [reconnectStorageKey]);
+    vapiCallStorage.clearStoredCall(reconnectStorageKey, voiceReconnectStorage);
+  }, [reconnectStorageKey, voiceReconnectStorage]);
 
   useEffect(() => {
     if (!vapi || !enabled || !voiceAutoReconnect) {

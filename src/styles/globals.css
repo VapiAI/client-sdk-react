@@ -37,6 +37,96 @@
   font-variation-settings: normal;
 }
 
+/* Reset form elements to remove browser defaults */
+.vapi-widget-wrapper button,
+.vapi-widget-wrapper [role='button'],
+.vapi-widget-wrapper input,
+.vapi-widget-wrapper textarea,
+.vapi-widget-wrapper select {
+  margin: 0;
+  padding: 0;
+  border: 0 solid;
+  border-radius: 0;
+  background-color: transparent;
+  background-image: none;
+  font-family: inherit;
+  font-size: 100%;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+
+/* Remove default button styling */
+.vapi-widget-wrapper button,
+.vapi-widget-wrapper [role='button'] {
+  cursor: pointer;
+  text-align: inherit;
+  -webkit-appearance: button;
+  appearance: button;
+}
+
+/* Normalize input appearance */
+.vapi-widget-wrapper input,
+.vapi-widget-wrapper textarea,
+.vapi-widget-wrapper select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Remove default focus outlines (widget provides custom focus rings) */
+.vapi-widget-wrapper button:focus,
+.vapi-widget-wrapper input:focus,
+.vapi-widget-wrapper textarea:focus,
+.vapi-widget-wrapper select:focus {
+  outline: 0;
+  outline-offset: 0;
+}
+
+/* Reset typography elements */
+.vapi-widget-wrapper h1,
+.vapi-widget-wrapper h2,
+.vapi-widget-wrapper h3,
+.vapi-widget-wrapper h4,
+.vapi-widget-wrapper h5,
+.vapi-widget-wrapper h6,
+.vapi-widget-wrapper p {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+/* Reset list elements */
+.vapi-widget-wrapper ul,
+.vapi-widget-wrapper ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Reset links */
+.vapi-widget-wrapper a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+/* Remove default fieldset/legend styling */
+.vapi-widget-wrapper fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.vapi-widget-wrapper legend {
+  padding: 0;
+}
+
+/* Prevent iOS text size adjustment */
+.vapi-widget-wrapper input,
+.vapi-widget-wrapper textarea {
+  -webkit-text-size-adjust: 100%;
+}
+
 /* Hide scrollbar completely */
 .vapi-conversation-area {
   /* Firefox */

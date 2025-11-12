@@ -13,23 +13,9 @@ export interface StoredCallData {
   };
   callOptions?: any;
   timestamp: number;
-  tabId?: string;
 }
 
 export type StorageType = 'session' | 'cookies';
-
-// Generate or retrieve tab-specific ID (stored in sessionStorage)
-function getTabId(): string {
-  const TAB_ID_KEY = '_vapi_tab_id';
-  let tabId = sessionStorage.getItem(TAB_ID_KEY);
-
-  if (!tabId) {
-    tabId = `tab_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    sessionStorage.setItem(TAB_ID_KEY, tabId);
-  }
-
-  return tabId;
-}
 
 // Get root domain for cookie (e.g., ".domain.com")
 function getRootDomain(): string {
@@ -83,13 +69,10 @@ export const storeCallData = (
   if (storageType === 'session') {
     sessionStorage.setItem(reconnectStorageKey, JSON.stringify(webCallToStore));
   } else if (storageType === 'cookies') {
-    const tabId = getTabId();
-    const webCallToStoreWithTab = { ...webCallToStore, tabId };
-
     try {
       const rootDomain = getRootDomain();
 
-      Cookies.set(reconnectStorageKey, JSON.stringify(webCallToStoreWithTab), {
+      Cookies.set(reconnectStorageKey, JSON.stringify(webCallToStore), {
         domain: rootDomain,
         path: '/',
         secure: true,
@@ -113,20 +96,11 @@ export const getStoredCallData = (
 
       return JSON.parse(sessionData);
     } else if (storageType === 'cookies') {
-      const currentTabId = getTabId();
       const cookieValue = Cookies.get(reconnectStorageKey);
 
       if (!cookieValue) return null;
 
-      const data = JSON.parse(cookieValue);
-
-      // Verify tab ID matches (prevents multi-tab reconnection)
-      if (data.tabId !== currentTabId) {
-        console.warn('Tab ID mismatch - ignoring call data from different tab');
-        return null;
-      }
-
-      return data;
+      return JSON.parse(cookieValue);
     }
 
     return null;

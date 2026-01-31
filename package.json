@@ -1,7 +1,7 @@
 {
   "name": "@vapi-ai/client-sdk-react",
   "description": "Vapi Client React SDK",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "type": "module",
   "publishConfig": {
     "access": "public",
@@ -95,7 +95,7 @@
     "react-dom": "^18.2.0",
     "serve": "^14.2.4",
     "tailwindcss": "3.4.14",
-    "typescript": "^5.2.2",
+    "typescript": "^5.9.3",
     "vite": "^7.0.0",
     "vite-plugin-css-injected-by-js": "^3.5.2",
     "vite-plugin-dts": "^3.9.1"

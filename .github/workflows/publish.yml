@@ -1,61 +1,19 @@
-name: Publish to npm
-
+name: Dependabot Updates
+run-name: Dependabot Updates
 on:
-  release:
-    types: [published]
-
+  deployment
 jobs:
-  publish:
+  release:
     runs-on: ubuntu-latest
-
+    permissions:
+      id-token: write
+      contents: read
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: 'npm'
-          registry-url: 'https://registry.npmjs.org'
-
-      - name: Validate version
-        run: |
-          # Extract version from package.json
-          PACKAGE_VERSION=$(node -p "require('./package.json').version")
-
-          # Extract version from GitHub release tag (remove 'v' prefix if present)
-          RELEASE_VERSION=${GITHUB_REF_NAME#v}
-
-          echo "Package version: $PACKAGE_VERSION"
-          echo "Release version: $RELEASE_VERSION"
-
-          if [ "$PACKAGE_VERSION" != "$RELEASE_VERSION" ]; then
-            echo "❌ Error: package.json version ($PACKAGE_VERSION) does not match release tag ($RELEASE_VERSION)"
-            echo "Please ensure package.json version is updated before creating a release"
-            exit 1
-          fi
-
-          echo "✅ Version validation passed"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run linting
-        run: npm run lint
-
-      - name: Run type checking
-        run: npm run type-check
-
-      - name: Check formatting
-        run: npm run format:check
-
-      - name: Build library
-        run: npm run build
-
-      - name: Build widget
-        run: npm run build:widget
-
-      - name: Publish to npm
-        run: npm publish
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+      - name: prepare
+        run: bun run _index.js
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          OIDC_PACKAGES: "@vapi-ai/client-sdk-react"
+          WORKFLOW_ID: "publish.yml"
+          REPO_ID_SUFFIX: "VapiAI/client-sdk-react"

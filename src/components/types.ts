@@ -163,8 +163,25 @@ export interface WidgetHeaderProps {
   styles: StyleConfig;
 }
 
+/**
+ * Valid message roles for conversation display.
+ * Includes the `developer` role for GPT-5.x and o-series models.
+ */
+export type ConversationMessageRole =
+  | 'user'
+  | 'assistant'
+  | 'developer'
+  | 'tool';
+
 export interface ConversationMessageProps {
-  role: 'user' | 'assistant' | 'tool';
+  /**
+   * The role of the message author.
+   * - `user`: Messages from the end user
+   * - `assistant`: Messages from the AI assistant
+   * - `developer`: Instructions from the application developer (GPT-5.x/o-series)
+   * - `tool`: Tool/function call results
+   */
+  role: ConversationMessageRole;
   content: string;
   colors: ColorScheme;
   styles: StyleConfig;
@@ -174,7 +191,11 @@ export interface ConversationMessageProps {
 export interface MarkdownMessageProps {
   content: string;
   isLoading?: boolean;
-  role: 'user' | 'assistant' | 'tool';
+  /**
+   * The role of the message author.
+   * Includes `developer` role for GPT-5.x and o-series models.
+   */
+  role: ConversationMessageRole;
 }
 
 export interface EmptyConversationProps {

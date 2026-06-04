@@ -5,10 +5,23 @@ import {
   extractContentFromPath,
 } from '../utils/vapiChatClient';
 
+/**
+ * Valid message roles for chat messages.
+ * Includes the `developer` role required for GPT-5.x and o-series models.
+ */
+export type ChatMessageRole = 'user' | 'assistant' | 'developer' | 'tool';
+
 export interface ChatMessage {
   id?: string;
   sessionId?: string;
-  role: 'user' | 'assistant' | 'tool';
+  /**
+   * The role of the message author.
+   * - `user`: Messages from the end user
+   * - `assistant`: Messages from the AI assistant
+   * - `developer`: Instructions from the application developer (GPT-5.x/o-series)
+   * - `tool`: Tool/function call results
+   */
+  role: ChatMessageRole;
   content: string;
   timestamp: Date;
 }

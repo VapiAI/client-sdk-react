@@ -3,6 +3,7 @@
   "description": "Vapi Client React SDK",
   "version": "0.1.1",
   "type": "module",
+    "license": "MIT",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"

@@ -3,7 +3,12 @@ import { useVapiWidget } from '../hooks';
 
 import { VapiWidgetProps, ColorScheme, StyleConfig } from './types';
 
-import { sizeStyles, radiusStyles, positionStyles } from './constants';
+import {
+  sizeStyles,
+  radiusStyles,
+  positionStyles,
+  defaultLabels,
+} from './constants';
 
 import ConsentForm from './widget/ConsentForm';
 import FloatingButton from './widget/FloatingButton';
@@ -72,6 +77,8 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
   termsContent = 'By clicking "Agree," and each time I interact with this AI agent, I consent to the recording, storage, and sharing of my communications with third-party service providers, and as otherwise described in our Terms of Service.', // deprecated
   consentStorageKey,
   localStorageKey = 'vapi_widget_consent', // deprecated
+  // Localization
+  labels,
   // Event handlers
   onVoiceStart,
   onCallStart, // deprecated
@@ -141,6 +148,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
   const effectiveChatPlaceholder = chatPlaceholder ?? 'Type your message...';
   const effectiveChatEndMessage =
     chatEndMessage ?? 'This chat has ended. Thank you.';
+  const effectiveLabels = { ...defaultLabels, ...labels };
 
   const vapi = useVapiWidget({
     mode,
@@ -400,13 +408,13 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
                 color: colors.ctaButtonTextColor,
               }}
             >
-              Start new chat
+              {effectiveLabels.startNewChat}
             </button>
             <button
               onClick={handleCloseWidget}
               className={`px-3 py-1.5 rounded-md ${styles.theme === 'dark' ? 'bg-gray-800 text-gray-100' : 'bg-gray-100 text-gray-800'}`}
             >
-              Close
+              {effectiveLabels.close}
             </button>
           </div>
         </div>
@@ -491,6 +499,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
           startButtonText={effectiveStartButtonText}
           endButtonText={effectiveEndButtonText}
           colors={colors}
+          labels={effectiveLabels}
         />
       );
     }
@@ -506,6 +515,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
           styles={styles}
           inputRef={inputRef}
           placeholder={effectiveChatPlaceholder}
+          labels={effectiveLabels}
         />
       );
     }
@@ -527,6 +537,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
           styles={styles}
           inputRef={inputRef}
           placeholder={effectiveChatPlaceholder}
+          labels={effectiveLabels}
         />
       );
     }
@@ -545,6 +556,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
           colors={colors}
           styles={styles}
           radius={radius}
+          labels={effectiveLabels}
         />
       );
     }
@@ -565,6 +577,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
           showEndChatButton={!showEndScreen}
           colors={colors}
           styles={styles}
+          labels={effectiveLabels}
         />
 
         {/* Conversation Area */}

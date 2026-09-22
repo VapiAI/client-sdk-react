@@ -5,7 +5,7 @@ import './styles/globals.css';
 export { default as VapiWidget } from './components/VapiWidget';
 
 // Export types
-export type { VapiWidgetProps } from './components';
+export type { VapiWidgetProps, WidgetLabels } from './components';
 
 // Export hooks
 export * from './hooks';

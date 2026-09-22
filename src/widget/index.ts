@@ -46,6 +46,9 @@ class WidgetLoader {
   }
 }
 
+// Props whose HTML attribute carries a JSON object rather than a string
+const JSON_PROPS = ['assistantOverrides', 'assistant', 'labels'];
+
 function kebabToCamel(str: string): string {
   return str.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
 }
@@ -92,7 +95,7 @@ function initializeWidgets() {
         const propName = kebabToCamel(attr.name.replace('data-', ''));
 
         // Special handling for JSON attributes
-        if (propName === 'assistantOverrides' || propName === 'assistant') {
+        if (JSON_PROPS.includes(propName)) {
           try {
             props[propName] = JSON.parse(attr.value);
           } catch (e) {
@@ -178,6 +181,9 @@ function initializeWidgets() {
       'consent-content': 'consentContent',
       'consent-storage-key': 'consentStorageKey',
 
+      // Localization (a JSON object, see README "Localization")
+      labels: 'labels',
+
       // API Configuration
       'api-url': 'apiUrl',
 
@@ -207,7 +213,7 @@ function initializeWidgets() {
       const value = htmlElement.getAttribute(htmlAttr);
       if (value !== null) {
         // Special handling for JSON attributes
-        if (propName === 'assistantOverrides' || propName === 'assistant') {
+        if (JSON_PROPS.includes(propName)) {
           try {
             props[propName] = JSON.parse(value);
           } catch (e) {

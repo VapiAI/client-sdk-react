@@ -11,6 +11,7 @@ const ChatControls: React.FC<ChatControlsProps> = ({
   styles,
   inputRef,
   placeholder = 'Type your message...', // Default fallback
+  labels,
 }) => (
   <div className="flex items-center space-x-2">
     <input
@@ -49,6 +50,7 @@ const ChatControls: React.FC<ChatControlsProps> = ({
         backgroundColor: colors.accentColor,
         color: colors.ctaButtonTextColor || 'white',
       }}
+      title={labels.sendMessage}
     >
       <PaperPlaneTiltIcon size={20} weight="fill" />
     </button>

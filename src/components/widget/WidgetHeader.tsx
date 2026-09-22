@@ -17,25 +17,26 @@ const WidgetHeader: React.FC<WidgetHeaderProps> = ({
   showEndChatButton,
   colors,
   styles,
+  labels,
 }) => {
   const getStatusMessage = () => {
-    if (connectionStatus === 'connecting') return 'Connecting...';
+    if (connectionStatus === 'connecting') return labels.connecting;
 
     if (isCallActive) {
-      return isSpeaking ? 'Assistant Speaking...' : 'Listening...';
+      return isSpeaking ? labels.assistantSpeaking : labels.listening;
     }
 
-    if (isTyping) return 'Assistant is typing...';
+    if (isTyping) return labels.assistantTyping;
 
     if (hasActiveConversation) {
-      if (mode === 'chat') return 'Chat active';
-      if (mode === 'hybrid') return 'Ready to assist';
-      return 'Connected';
+      if (mode === 'chat') return labels.chatActive;
+      if (mode === 'hybrid') return labels.readyToAssist;
+      return labels.connected;
     }
 
-    if (mode === 'voice') return 'Click the microphone to start';
-    if (mode === 'chat') return 'Type a message below';
-    return 'Choose voice or text';
+    if (mode === 'voice') return labels.voiceIdle;
+    if (mode === 'chat') return labels.chatIdle;
+    return labels.hybridIdle;
   };
 
   return (
@@ -74,21 +75,22 @@ const WidgetHeader: React.FC<WidgetHeaderProps> = ({
           <button
             onClick={onChatComplete}
             className={`text-red-600 text-sm font-medium px-2 py-1 border border-transparent hover:border-red-600 rounded-md transition-colors`}
-            title="End Chat"
+            title={labels.endChat}
           >
-            End Chat
+            {labels.endChat}
           </button>
         )}
         <button
           onClick={onReset}
           className={`w-8 h-8 rounded-full flex items-center justify-center transition-all}`}
-          title="Reset conversation"
+          title={labels.resetConversation}
         >
           <ArrowsClockwiseIcon size={16} weight="bold" />
         </button>
         <button
           onClick={onClose}
           className={`w-8 h-8 rounded-full flex items-center justify-center transition-all`}
+          title={labels.close}
         >
           <XIcon size={16} weight="bold" />
         </button>

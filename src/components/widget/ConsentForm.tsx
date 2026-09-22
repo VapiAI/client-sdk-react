@@ -1,4 +1,5 @@
 import React from 'react';
+import type { WidgetLabels } from '../types';
 
 interface ColorScheme {
   baseColor: string;
@@ -28,6 +29,7 @@ export interface ConsentFormProps {
   colors: ColorScheme;
   styles: StyleConfig;
   radius: 'none' | 'small' | 'medium' | 'large';
+  labels: Pick<WidgetLabels, 'consentAccept' | 'consentCancel'>;
 }
 
 const ConsentForm: React.FC<ConsentFormProps> = ({
@@ -38,6 +40,7 @@ const ConsentForm: React.FC<ConsentFormProps> = ({
   colors,
   styles,
   radius,
+  labels,
 }) => {
   // Use the configured base color and derive other colors based on theme
   const isDark = styles.theme === 'dark';
@@ -154,14 +157,14 @@ const ConsentForm: React.FC<ConsentFormProps> = ({
           onClick={onCancel}
           style={cancelButtonStyle}
         >
-          Cancel
+          {labels.consentCancel}
         </button>
         <button
           className="consent-accept-button"
           onClick={onAccept}
           style={acceptButtonStyle}
         >
-          Accept
+          {labels.consentAccept}
         </button>
       </div>
     </div>

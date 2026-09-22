@@ -23,6 +23,7 @@ const HybridControls: React.FC<HybridControlsProps> = ({
   styles,
   inputRef,
   placeholder = 'Type your message...', // Default fallback
+  labels,
 }) => (
   <div className="flex items-center space-x-2">
     <input
@@ -66,7 +67,7 @@ const HybridControls: React.FC<HybridControlsProps> = ({
         backgroundColor: colors.accentColor,
         color: colors.ctaButtonTextColor || 'white',
       }}
-      title="Send message"
+      title={labels.sendMessage}
     >
       <PaperPlaneTiltIcon size={20} weight="fill" />
     </button>
@@ -78,7 +79,7 @@ const HybridControls: React.FC<HybridControlsProps> = ({
           backgroundColor: isMuted ? '#ef4444' : colors.accentColor,
           color: colors.ctaButtonTextColor || 'white',
         }}
-        title={isMuted ? 'Unmute microphone' : 'Mute microphone'}
+        title={isMuted ? labels.unmuteMicrophone : labels.muteMicrophone}
       >
         {isMuted ? (
           <MicrophoneSlashIcon size={20} weight="fill" />
@@ -101,10 +102,10 @@ const HybridControls: React.FC<HybridControlsProps> = ({
       }}
       title={
         connectionStatus === 'connecting'
-          ? 'Connecting...'
+          ? labels.connecting
           : isCallActive
-            ? 'Stop voice call'
-            : 'Start voice call'
+            ? labels.stopVoiceCall
+            : labels.startVoiceCall
       }
     >
       {connectionStatus === 'connecting' ? (

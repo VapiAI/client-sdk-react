@@ -108,6 +108,8 @@ The simplest way to add the widget to your website:
 | `consentTitle`            | `string`                                                                          | `"Terms and conditions"` | Consent form title                                                                |
 | `consentContent`          | `string`                                                                          | _(default message)_      | Terms & conditions content                                                        |
 | `consentStorageKey`       | `string`                                                                          | `"vapi_widget_consent"`  | Key for storing consent                                                           |
+| **Localization**          |                                                                                   |                          |                                                                                   |
+| `labels`                  | `Partial<WidgetLabels>`                                                           | _(English)_              | Built-in UI strings to override — see [Localization](#localization)               |
 
 ### Event Callbacks
 
@@ -300,6 +302,77 @@ Use this approach if your environment doesn't support custom elements or for bet
   voiceReconnectStorage="cookies"
 />
 ```
+
+## Localization
+
+Everything the widget says can be set from outside. Content-like strings have
+their own props (`title`, `ctaTitle`, `chatPlaceholder`, `chatEmptyMessage`,
+`chatFirstMessage`, `chatEndMessage`, `consentTitle`, `consentContent`,
+`startButtonText`, `endButtonText`, ...). The remaining UI strings — the
+header's status line, button labels and tooltips — are grouped in the
+`labels` prop. Pass any subset; keys you leave out keep their English default.
+
+| Key                 | Default                           | Where it shows                                                       |
+| ------------------- | --------------------------------- | -------------------------------------------------------------------- |
+| `connecting`        | `'Connecting...'`                 | Status line while a call connects; voice button; hybrid call tooltip |
+| `assistantSpeaking` | `'Assistant Speaking...'`         | Status line during a call                                            |
+| `listening`         | `'Listening...'`                  | Status line during a call                                            |
+| `assistantTyping`   | `'Assistant is typing...'`        | Status line while a reply streams                                    |
+| `chatActive`        | `'Chat active'`                   | Status line, chat mode, once the conversation has started            |
+| `readyToAssist`     | `'Ready to assist'`               | Status line, hybrid mode, once the conversation has started          |
+| `connected`         | `'Connected'`                     | Status line, voice mode, once the conversation has started           |
+| `voiceIdle`         | `'Click the microphone to start'` | Status line, voice mode, before the first call                       |
+| `chatIdle`          | `'Type a message below'`          | Status line, chat mode, before the first message                     |
+| `hybridIdle`        | `'Choose voice or text'`          | Status line, hybrid mode, before the first interaction               |
+| `endChat`           | `'End Chat'`                      | Header button (chat mode)                                            |
+| `resetConversation` | `'Reset conversation'`            | Header reset button tooltip                                          |
+| `close`             | `'Close'`                         | Header close button tooltip; close button after a chat has ended     |
+| `startNewChat`      | `'Start new chat'`                | Button after a chat has ended                                        |
+| `consentAccept`     | `'Accept'`                        | Consent form                                                         |
+| `consentCancel`     | `'Cancel'`                        | Consent form                                                         |
+| `sendMessage`       | `'Send message'`                  | Send button tooltip                                                  |
+| `muteMicrophone`    | `'Mute microphone'`               | Mute button tooltip during a call                                    |
+| `unmuteMicrophone`  | `'Unmute microphone'`             | Mute button tooltip during a call                                    |
+| `startVoiceCall`    | `'Start voice call'`              | Hybrid call button tooltip                                           |
+| `stopVoiceCall`     | `'Stop voice call'`               | Hybrid call button tooltip                                           |
+
+React:
+
+```tsx
+<VapiWidget
+  publicKey="your-public-key"
+  assistantId="your-assistant-id"
+  mode="chat"
+  title="Chat mit uns"
+  chatPlaceholder="Ihre Frage …"
+  consentRequired
+  consentTitle="Hinweis zum Chat"
+  consentContent="Ihre Nachrichten werden an unseren Dienstleister übermittelt."
+  labels={{
+    chatIdle: 'Nachricht eingeben',
+    chatActive: 'Chat aktiv',
+    assistantTyping: 'Der Assistent schreibt …',
+    endChat: 'Beenden',
+    consentAccept: 'Akzeptieren',
+    consentCancel: 'Abbrechen',
+  }}
+/>
+```
+
+Custom element — `labels` is a JSON attribute, like `assistant-overrides`:
+
+```html
+<vapi-widget
+  public-key="your-public-key"
+  assistant-id="your-assistant-id"
+  mode="chat"
+  title="Chat mit uns"
+  labels='{"chatIdle":"Nachricht eingeben","endChat":"Beenden","consentAccept":"Akzeptieren","consentCancel":"Abbrechen"}'
+></vapi-widget>
+```
+
+The data-attribute embed takes the same object as `data-labels`. The
+`WidgetLabels` type is exported, so a translation table can be typed.
 
 ## Development
 

@@ -17,6 +17,7 @@ const VoiceControls: React.FC<VoiceControlsProps> = ({
   startButtonText,
   endButtonText,
   colors,
+  labels,
 }) => (
   <div className="flex items-center justify-center space-x-2">
     {isCallActive && connectionStatus === 'connected' && (
@@ -27,7 +28,7 @@ const VoiceControls: React.FC<VoiceControlsProps> = ({
           backgroundColor: isMuted ? '#ef4444' : colors.accentColor,
           color: colors.ctaButtonTextColor || 'white',
         }}
-        title={isMuted ? 'Unmute microphone' : 'Mute microphone'}
+        title={isMuted ? labels.unmuteMicrophone : labels.muteMicrophone}
       >
         {isMuted ? (
           <MicrophoneSlashIcon size={20} weight="fill" />
@@ -52,7 +53,7 @@ const VoiceControls: React.FC<VoiceControlsProps> = ({
       {connectionStatus === 'connecting' ? (
         <>
           <div className="animate-spin w-4 h-4 border-2 border-current border-t-transparent rounded-full"></div>
-          <span>Connecting...</span>
+          <span>{labels.connecting}</span>
         </>
       ) : isCallActive ? (
         <>

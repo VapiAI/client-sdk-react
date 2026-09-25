@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { ConversationMessageProps, MarkdownMessageProps } from '../../types';
 import { messageRadiusClasses } from '../../constants';
 
@@ -10,6 +11,7 @@ const MarkdownMessage: React.FC<MarkdownMessageProps> = ({
 }) => (
   <div className="markdown-content">
     <ReactMarkdown
+      remarkPlugins={[remarkGfm]}
       components={{
         p: ({ children }) => <p className="mb-3 last:mb-0">{children}</p>,
         ul: ({ children }) => (
@@ -60,6 +62,41 @@ const MarkdownMessage: React.FC<MarkdownMessageProps> = ({
           <blockquote className="border-l-2 pl-2 my-3 opacity-80">
             {children}
           </blockquote>
+        ),
+        // The widget's CSS reset strips input appearance, which would leave
+        // GFM task-list checkboxes invisible.
+        input: ({ type, checked }) =>
+          type === 'checkbox' ? (
+            <input
+              type="checkbox"
+              checked={checked}
+              disabled
+              className="appearance-auto mr-1 align-middle"
+            />
+          ) : null,
+        del: ({ children }) => <del className="line-through">{children}</del>,
+        // The message bubble is max-w-xs, so wide tables scroll sideways
+        // instead of overflowing the widget.
+        table: ({ children }) => (
+          <div className="overflow-x-auto mb-3 last:mb-0">
+            <table className="border-collapse text-xs">{children}</table>
+          </div>
+        ),
+        th: ({ children, style }) => (
+          <th
+            className="border border-solid border-current bg-black bg-opacity-10 px-2 py-1 font-semibold text-left align-top"
+            style={style}
+          >
+            {children}
+          </th>
+        ),
+        td: ({ children, style }) => (
+          <td
+            className="border border-solid border-current px-2 py-1 align-top"
+            style={style}
+          >
+            {children}
+          </td>
         ),
       }}
     >

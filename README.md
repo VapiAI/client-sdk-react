@@ -7,7 +7,7 @@ A modern React component library with embeddable voice and chat widgets built wi
 ## Features
 
 - 🎙️ **Voice Conversations**: Real-time voice calls with VAPI AI assistants
-- 💬 **Chat Interface**: Text-based conversations with markdown support
+- 💬 **Chat Interface**: Text-based conversations with markdown support (including GFM tables, strikethrough, autolinks and task lists)
 - 🔀 **Hybrid Mode**: Seamlessly switch between voice and chat
 - 🎨 **Highly Customizable**: Themes, colors, sizes, and positions
 - 🔒 **Consent Management**: Built-in consent form for compliance

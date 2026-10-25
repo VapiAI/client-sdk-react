@@ -3,6 +3,17 @@ import Vapi from '@vapi-ai/web';
 import * as vapiCallStorage from '../utils/vapiCallStorage';
 import type { StorageType } from '../utils/vapiCallStorage';
 
+// @vapi-ai/web emits these on 'error' but keeps the call running (3.x can emit
+// the first three after the call has started), so they must not reset the
+// widget to its idle state while the call and microphone are still live.
+const NON_FATAL_ERROR_TYPES = new Set([
+  'audio-processing-setup-error',
+  'audio-processor-recovery-error',
+  'audio-start-failed',
+  'audio-observer-setup-error',
+  'video-recording-setup-error',
+]);
+
 export interface VapiCallState {
   isCallActive: boolean;
   isSpeaking: boolean;
@@ -134,8 +145,12 @@ export const useVapiCall = ({
       callbacksRef.current.onMessage?.(message);
     };
 
-    const handleError = (error: Error) => {
+    const handleError = (error: Error & { type?: string }) => {
       console.error('Vapi error:', error);
+      if (error?.type && NON_FATAL_ERROR_TYPES.has(error.type)) {
+        callbacksRef.current.onError?.(error);
+        return;
+      }
       setConnectionStatus('disconnected');
       setIsCallActive(false);
       setIsSpeaking(false);

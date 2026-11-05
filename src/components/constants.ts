@@ -1,3 +1,31 @@
+import type { WidgetLabels } from './types';
+
+// English defaults for every UI string the widget renders on its own. The
+// `labels` prop overrides any subset of them (see README, "Localization").
+export const defaultLabels: WidgetLabels = {
+  connecting: 'Connecting...',
+  assistantSpeaking: 'Assistant Speaking...',
+  listening: 'Listening...',
+  assistantTyping: 'Assistant is typing...',
+  chatActive: 'Chat active',
+  readyToAssist: 'Ready to assist',
+  connected: 'Connected',
+  voiceIdle: 'Click the microphone to start',
+  chatIdle: 'Type a message below',
+  hybridIdle: 'Choose voice or text',
+  endChat: 'End Chat',
+  resetConversation: 'Reset conversation',
+  close: 'Close',
+  startNewChat: 'Start new chat',
+  consentAccept: 'Accept',
+  consentCancel: 'Cancel',
+  sendMessage: 'Send message',
+  muteMicrophone: 'Mute microphone',
+  unmuteMicrophone: 'Unmute microphone',
+  startVoiceCall: 'Start voice call',
+  stopVoiceCall: 'Stop voice call',
+};
+
 export const sizeClasses = {
   tiny: {
     button: 'w-12 h-12',

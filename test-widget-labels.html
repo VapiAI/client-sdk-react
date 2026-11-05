@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VapiWidget Labels Test</title>
+  </head>
+
+  <body>
+    <h1>VapiWidget Labels Test</h1>
+    <p>
+      This page tests the <code>labels</code> prop through both embed
+      mechanisms. Keys that are left out keep their English default.
+    </p>
+
+    <!-- Example 1: <vapi-widget> custom element, labels as a JSON attribute -->
+    <div id="labels-widget-1">
+      <vapi-widget
+        mode="chat"
+        title="Chat"
+        position="bottom-right"
+        consent-required="true"
+        consent-title="Hinweis"
+        consent-content="Testinhalt"
+        consent-storage-key="vapi_widget_labels_test_1"
+        labels='{"consentAccept":"Akzeptieren","consentCancel":"Abbrechen","chatIdle":"Nachricht eingeben","endChat":"Beenden","resetConversation":"Zurücksetzen"}'
+        public-key="your-public-key-here"
+        assistant-id="your-assistant-id-here"
+      ></vapi-widget>
+    </div>
+
+    <!-- Example 2: data attributes, labels as a JSON data attribute -->
+    <div
+      id="labels-widget-2"
+      data-client-widget="VapiWidget"
+      data-public-key="your-public-key-here"
+      data-assistant-id="your-assistant-id-here"
+      data-mode="chat"
+      data-title="Chat"
+      data-position="bottom-left"
+      data-consent-required="true"
+      data-consent-title="Hinweis"
+      data-consent-content="Testinhalt"
+      data-consent-storage-key="vapi_widget_labels_test_2"
+      data-labels='{"consentAccept":"Akzeptieren","consentCancel":"Abbrechen","chatIdle":"Nachricht eingeben","endChat":"Beenden"}'
+    ></div>
+
+    <script
+      src="./dist/embed/widget.umd.js"
+      async
+      type="text/javascript"
+    ></script>
+  </body>
+</html>

@@ -1,3 +1,53 @@
+/**
+ * Every piece of UI text the widget renders on its own — status line,
+ * button labels and tooltips — as opposed to content that already has a
+ * dedicated prop (`title`, `chatPlaceholder`, `chatEmptyMessage`,
+ * `consentTitle`, `consentContent`, `chatEndMessage`, ...). Pass any subset
+ * through the `labels` prop to localize the widget; keys you leave out keep
+ * their English default.
+ */
+export interface WidgetLabels {
+  // Header status line
+  /** While a voice call is being established. Also the voice button text and the hybrid call button tooltip. */
+  connecting: string;
+  assistantSpeaking: string;
+  listening: string;
+  assistantTyping: string;
+  /** Chat mode, once the conversation has started */
+  chatActive: string;
+  /** Hybrid mode, once the conversation has started */
+  readyToAssist: string;
+  /** Voice mode, once the conversation has started */
+  connected: string;
+  /** Voice mode, before the first call */
+  voiceIdle: string;
+  /** Chat mode, before the first message */
+  chatIdle: string;
+  /** Hybrid mode, before the first interaction */
+  hybridIdle: string;
+
+  // Header controls
+  endChat: string;
+  /** Tooltip of the reset button */
+  resetConversation: string;
+  /** Tooltip of the close button, and the close button after a chat has ended */
+  close: string;
+
+  // After a chat has ended
+  startNewChat: string;
+
+  // Consent form buttons
+  consentAccept: string;
+  consentCancel: string;
+
+  // Control tooltips
+  sendMessage: string;
+  muteMicrophone: string;
+  unmuteMicrophone: string;
+  startVoiceCall: string;
+  stopVoiceCall: string;
+}
+
 export interface VapiWidgetProps {
   // API Configuration
   apiUrl?: string;
@@ -57,6 +107,10 @@ export interface VapiWidgetProps {
   consentTitle?: string;
   consentContent?: string;
   consentStorageKey?: string;
+
+  // Localization
+  /** Overrides for the widget's built-in UI strings; see `WidgetLabels` */
+  labels?: Partial<WidgetLabels>;
 
   // Event handlers
   onVoiceStart?: () => void;
@@ -161,6 +215,7 @@ export interface WidgetHeaderProps {
   showEndChatButton?: boolean;
   colors: ColorScheme;
   styles: StyleConfig;
+  labels: WidgetLabels;
 }
 
 export interface ConversationMessageProps {
@@ -197,6 +252,7 @@ export interface VoiceControlsProps {
   startButtonText: string;
   endButtonText: string;
   colors: ColorScheme;
+  labels: WidgetLabels;
 }
 
 export interface ChatControlsProps {
@@ -208,6 +264,7 @@ export interface ChatControlsProps {
   styles: StyleConfig;
   inputRef?: React.RefObject<HTMLInputElement>;
   placeholder?: string;
+  labels: WidgetLabels;
 }
 
 export interface HybridControlsProps {
@@ -225,4 +282,5 @@ export interface HybridControlsProps {
   styles: StyleConfig;
   inputRef?: React.RefObject<HTMLInputElement>;
   placeholder?: string;
+  labels: WidgetLabels;
 }

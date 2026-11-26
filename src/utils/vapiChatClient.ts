@@ -59,9 +59,16 @@ export class VapiChatClient {
     // Create new abort controller
     this.abortController = new AbortController();
 
+    // Once the server has accepted the message, re-sending it would duplicate
+    // the user message and repeat the reply text, so it is never retried.
+    let accepted = false;
+
     try {
       await fetchEventSource(`${this.apiUrl}/chat/web`, {
         method: 'POST',
+        // Without this, fetch-event-source aborts the request when the page is
+        // hidden and re-sends it when the page is visible again.
+        openWhenHidden: true,
         headers: {
           Authorization: `Bearer ${this.publicKey}`,
           'Content-Type': 'application/json',
@@ -79,6 +86,7 @@ export class VapiChatClient {
             response.ok &&
             response.headers.get('content-type')?.includes('text/event-stream')
           ) {
+            accepted = true;
             return; // everything's good
           } else if (
             response.status >= 400 &&
@@ -126,6 +134,10 @@ export class VapiChatClient {
             // Stream was intentionally aborted
             onComplete?.();
             throw err; // Stop the operation
+          } else if (accepted) {
+            // The stream broke mid-reply. Surface the error instead of
+            // re-sending a message the server already accepted.
+            throw err;
           } else {
             // Retriable error - return nothing to retry
             // You can also return a retry interval in milliseconds
